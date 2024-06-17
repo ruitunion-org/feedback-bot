@@ -1,0 +1,31 @@
+version: "3.8"
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+  feedback_bot:
+    container_name: feedback_bot_app
+    image: feedback_bot
+    restart: always
+    environment:
+      - AppOptions__DbConnectionString=Host=db;Port=5432;Database=feedback_bot;Username=postgres;Password=123
+      - AppOptions__FeedbackBotToken=<bot_token>
+      - AppOptions__FeedbackBotId=<bot_id>
+      - AppOptions__FeedbackChatId=<chat_id>
+      - AppOptions__Start="Текст приветствия"
+      - AppOptions__Help="Текст справки"
+
+  db:
+    container_name: feedback_bot_db
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: feedback_bot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data

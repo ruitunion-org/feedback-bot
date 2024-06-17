@@ -1,0 +1,10 @@
+**/bin
+**/obj
+
+.dockerignore
+.gitattributes
+.gitignore
+.gitlab-ci.yml
+docker-compose.yml
+dockerfile
+README.md
