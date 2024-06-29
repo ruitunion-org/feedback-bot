@@ -43,6 +43,31 @@ The bot needs only a connection string: `Host=db;Port=5432;Database=feedback_bot
 
 ## 🚀 Run
 
+### From GitHub Container Registry
+
+1. Specify the required image from the GitHub Container Registry and the environment variables in `docker-compose.yml` file:
+
+    ``` yml
+    services:
+      feedback_bot:
+        container_name: feedback_bot
+        image: ghcr.io/ruitunion-org/feedback-bot:v0.1.0
+        restart: always
+        environment:
+          - AppOptions__DbConnectionString=Host=db;Port=5432;Database=feedback_bot;Username=postgres;Password=123
+          - AppOptions__FeedbackBotToken=YOUR_TELEGRAM_BOT_TOKEN
+          - AppOptions__FeedbackBotId=YOUR_TELEGRAM_BOT_ID
+          - AppOptions__FeedbackChatId=YOUR_TELEGRAM_CHAT_ID
+          - AppOptions__Start=YOUR_START_MESSAGE
+          - AppOptions__Help=YOUR_HELP_MESSAGE
+    ```
+
+3. Run the following command:
+
+    ``` sh
+    docker compsoe up 
+    ```
+
 ### From source code
 
 1. Clone this repo.
@@ -55,12 +80,12 @@ The bot needs only a connection string: `Host=db;Port=5432;Database=feedback_bot
         image: feedback_bot
         restart: always
         environment:
-          - AppOptions__DbConnectionString=
-          - AppOptions__FeedbackBotToken= 
-          - AppOptions__FeedbackBotId=
-          - AppOptions__FeedbackChatId=
-          - AppOptions__Start=
-          - AppOptions__Help=
+          - AppOptions__DbConnectionString=Host=db;Port=5432;Database=feedback_bot;Username=postgres;Password=123
+          - AppOptions__FeedbackBotToken=YOUR_TELEGRAM_BOT_TOKEN
+          - AppOptions__FeedbackBotId=YOUR_TELEGRAM_BOT_ID
+          - AppOptions__FeedbackChatId=YOUR_TELEGRAM_CHAT_ID
+          - AppOptions__Start=YOUR_START_MESSAGE
+          - AppOptions__Help=YOUR_HELP_MESSAGE
     ```
 
 3. Run the following commands:
