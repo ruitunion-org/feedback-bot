@@ -65,7 +65,7 @@ The bot needs only a connection string: `Host=db;Port=5432;Database=feedback_bot
 3. Run the following command:
 
     ``` sh
-    docker compsoe up 
+    docker compose up 
     ```
 
 ### From source code
@@ -92,7 +92,7 @@ The bot needs only a connection string: `Host=db;Port=5432;Database=feedback_bot
 
     ``` sh
     docker build -t feedback_bot .
-    docker compsoe up 
+    docker compose up 
     ```
 
 ## 🌟 Features
