@@ -24,7 +24,7 @@ services.AddSingleton(x =>
 
 var app = builder.Build();
 
-using var db = app.Services.GetRequiredService<Repository.DatabaseContext>();
+await using var db = app.Services.GetRequiredService<Repository.DatabaseContext>();
 db.Database.Migrate();
 
 app.MapHealthChecks("/health");
