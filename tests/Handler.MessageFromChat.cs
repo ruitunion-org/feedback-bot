@@ -30,7 +30,10 @@ public partial class HandlerTests
                 ReplyToMessage = new Message()
                 {
                     From = new() { Id = OptionsMock.Value.FeedbackBotId },
-                    ForwardDate = DateTime.Now,
+                    ForwardOrigin = new MessageOriginUser()
+                    {
+                        Date = DateTime.Now
+                    }
                 }
             }
         };

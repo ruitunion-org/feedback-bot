@@ -314,7 +314,10 @@ public partial class HandlerTests
                 {
                     MessageId = replyMessageId,
                     From = new() { Id = feedbackChatUserId },
-                    ForwardDate = DateTime.Now,
+                    ForwardOrigin = new MessageOriginUser()
+                    {
+                        Date = DateTime.Now
+                    }
                 }
             }
         };
@@ -361,7 +364,10 @@ public partial class HandlerTests
                 {
                     MessageId = 1235135,
                     From = new() { Id = 112412 },
-                    ForwardDate = DateTime.Now,
+                    ForwardOrigin = new MessageOriginUser()
+                    {
+                        Date = DateTime.Now
+                    }
                 }
             }
         };
