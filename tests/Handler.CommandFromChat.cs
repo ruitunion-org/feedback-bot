@@ -66,7 +66,7 @@ public partial class HandlerTests
 
         var repository = new Mock<IRepository>(MockBehavior.Strict);
         var messenger = new Mock<IMessenger>(MockBehavior.Strict);
-        messenger.Setup(x => x.GetChatAdmins(CancellationToken.None)).ReturnsAsync([1, 2, 3]);
+        messenger.Setup(x => x.GetChatAdmins(CancellationToken.None)).Returns(Task.FromResult((long[])[1L, 2L, 3L]));
 
         var sut = new Handler(Mock.Of<ILogger<Handler>>(), OptionsMock, repository.Object, messenger.Object);
 

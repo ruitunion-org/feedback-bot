@@ -63,7 +63,7 @@ public class Handler(
                     From: not null,
                     Type: MessageType.Text,
                     MessageThreadId: not null,
-                    ReplyToMessage: { From: not null, ForwardOrigin: not null }
+                    ReplyToMessage: { From: not null, ForwardDate: not null }
                 } m
             } when !m.Text.StartsWith('/') &&
                 m.ReplyToMessage.From.Id == _options.Value.FeedbackBotId =>
@@ -75,7 +75,7 @@ public class Handler(
                     From: not null,
                     Type: MessageType.Photo or MessageType.Document,
                     MessageThreadId: not null,
-                    ReplyToMessage: { From: not null, ForwardOrigin: not null }
+                    ReplyToMessage: { From: not null, ForwardDate: not null }
                 } m
             } when m.ReplyToMessage.From.Id == _options.Value.FeedbackBotId =>
                 new MessageFromChat(m.Chat.Id, m.From.Id, m.MessageThreadId.Value, m.MessageId, string.Empty),

@@ -1,38 +1,31 @@
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
-using Telegram.Bot.Requests;
 
 namespace Bot;
 
 public interface IMessenger
 {
     public Task<long> CreateTopic(string name, CancellationToken ct);
-    public Task SendToUserAsync(long userId, string Text, CancellationToken ct);
-    public Task SendToChatAsync(long topicId, string Text, CancellationToken ct);
-    public Task<long?> ForwardToUserAsync(long userId, int feedbackChatMessageId, CancellationToken ct);
-    public Task ForwardToChatAsync(long topicId, long fromChatId, int messageId, CancellationToken ct);
-    public Task DeleteMessageAsync(long userId, long messageId, CancellationToken ct);
-    public Task OpenTopic(long topicId, CancellationToken ct);
-    public Task CloseTopic(long topicId, CancellationToken ct);
-    public Task<long[]> GetChatAdmins(CancellationToken ct);
+    public Task SendToUserAsync(long userId, string text, CancellationToken ct = default);
+    public Task SendToChatAsync(long topicId, string text, CancellationToken ct = default);
+    public Task<long?> ForwardToUserAsync(long userId, int feedbackChatMessageId, CancellationToken ct = default);
+    public Task ForwardToChatAsync(long topicId, long fromChatId, int messageId, CancellationToken ct = default);
+    public Task DeleteMessageAsync(long userId, long messageId, CancellationToken ct = default);
+    public Task OpenTopic(long topicId, CancellationToken ct = default);
+    public Task CloseTopic(long topicId, CancellationToken ct = default);
+    public Task<long[]> GetChatAdmins(CancellationToken ct = default);
 }
 
 public class Messenger(
     IOptions<AppOptions> _options,
     TelegramBotClient _client) : IMessenger
 {
-    public async Task OpenTopic(long topicId, CancellationToken ct)
+    public async Task OpenTopic(long topicId, CancellationToken ct = default)
     {
         try
         {
-            var request = new ReopenForumTopicRequest
-            {
-                ChatId = _options.Value.FeedbackChatId,
-                MessageThreadId = (int)topicId
-            };
-
-            await _client.ReopenForumTopicAsync(request, ct);
+            await _client.ReopenForumTopicAsync(_options.Value.FeedbackChatId, (int)topicId, ct);
         }
         catch (ApiRequestException e) when (e.Message == "Bad Request: TOPIC_NOT_MODIFIED")
         {
@@ -40,17 +33,11 @@ public class Messenger(
         }
     }
 
-    public async Task CloseTopic(long topicId, CancellationToken ct)
+    public async Task CloseTopic(long topicId, CancellationToken ct = default)
     {
         try
         {
-            var request = new CloseForumTopicRequest()
-            {
-                ChatId = _options.Value.FeedbackChatId,
-                MessageThreadId = (int)topicId
-            };
-
-            await _client.CloseForumTopicAsync(request, ct);
+            await _client.CloseForumTopicAsync(_options.Value.FeedbackChatId, (int)topicId, ct);
         }
         catch (ApiRequestException e) when (e.Message == "Bad Request: TOPIC_NOT_MODIFIED")
         {
@@ -58,67 +45,33 @@ public class Messenger(
         }
     }
 
-    public async Task<long> CreateTopic(string name, CancellationToken ct)
+    public async Task<long> CreateTopic(string name, CancellationToken ct = default)
     {
-        var request = new CreateForumTopicRequest()
-        {
-            ChatId = _options.Value.FeedbackChatId,
-            Name = name,
-        };
-
-        var topic = await _client.CreateForumTopicAsync(request, ct);
-
+        var topic = await _client.CreateForumTopicAsync(_options.Value.FeedbackChatId, name, cancellationToken: ct);
         return topic.MessageThreadId;
     }
 
     public async Task DeleteMessageAsync(long userId, long messageId, CancellationToken ct)
     {
-        var request = new DeleteMessageRequest()
-        {
-            ChatId = userId,
-            MessageId = (int)messageId
-        };
-
-        await _client.DeleteMessageAsync(request, ct);
+        await _client.DeleteMessageAsync(userId, (int)messageId, ct);
     }
 
-    public async Task<long[]> GetChatAdmins(CancellationToken ct)
+    public async Task<long[]> GetChatAdmins(CancellationToken ct = default)
     {
-        var request = new GetChatAdministratorsRequest()
-        {
-            ChatId = _options.Value.FeedbackChatId
-        };
-
-        var admins = await _client.GetChatAdministratorsAsync(request, ct);
-
+        var admins = await _client.GetChatAdministratorsAsync(_options.Value.FeedbackChatId, ct);
         return admins.Select(x => x.User.Id).ToArray();
     }
 
-    public async Task ForwardToChatAsync(long topicId, long fromChatId, int messageId, CancellationToken ct)
+    public async Task ForwardToChatAsync(long topicId, long fromChatId, int messageId, CancellationToken ct = default)
     {
-        var request = new ForwardMessageRequest()
-        {
-            FromChatId = fromChatId,
-            MessageId = messageId,
-            ChatId = _options.Value.FeedbackChatId,
-            MessageThreadId = (int)topicId
-        };
-
-        await _client.ForwardMessageAsync(request, ct);
+        await _client.ForwardMessageAsync(_options.Value.FeedbackChatId, fromChatId, messageId, (int)topicId, cancellationToken: ct);
     }
 
-    public async Task<long?> ForwardToUserAsync(long userId, int feedbackChatMessageId, CancellationToken ct)
+    public async Task<long?> ForwardToUserAsync(long userId, int feedbackChatMessageId, CancellationToken ct = default)
     {
-        var request = new CopyMessageRequest()
-        {
-            ChatId = userId,
-            FromChatId = _options.Value.FeedbackChatId,
-            MessageId = feedbackChatMessageId
-        };
-
         try
         {
-            var message = await _client.CopyMessageAsync(request, ct);
+            var message = await _client.CopyMessageAsync(userId, _options.Value.FeedbackChatId, feedbackChatMessageId, cancellationToken: ct);
             return message.Id;
         }
         catch (ApiRequestException ex) when (ex.ErrorCode == 403)
@@ -128,29 +81,16 @@ public class Messenger(
         }
     }
 
-    public async Task SendToChatAsync(long topicId, string text, CancellationToken ct)
+    public async Task SendToChatAsync(long topicId, string text, CancellationToken ct = default)
     {
-        var request = new SendMessageRequest()
-        {
-            ChatId = _options.Value.FeedbackChatId,
-            MessageThreadId = (int)topicId,
-            Text = text
-        };
-
-        await _client.SendMessageAsync(request, ct);
+        await _client.SendTextMessageAsync(_options.Value.FeedbackChatId, text, (int)topicId, cancellationToken: ct);
     }
 
-    public async Task SendToUserAsync(long userId, string text, CancellationToken ct)
+    public async Task SendToUserAsync(long userId, string text, CancellationToken ct = default)
     {
-        var request = new SendMessageRequest()
-        {
-            ChatId = userId,
-            Text = text
-        };
-
         try
         {
-            var message = await _client.SendMessageAsync(request, ct);
+            var message = await _client.SendTextMessageAsync(userId, text, cancellationToken: ct);
         }
         catch (ApiRequestException ex) when (ex.ErrorCode == 403)
         {
