@@ -2,6 +2,7 @@
 
 # Этот этап используется при запуске из VS в быстром режиме (по умолчанию для конфигурации отладки)
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+RUN apt-get -y update && apt-get -y install curl
 USER app
 WORKDIR /app
 EXPOSE 8080
@@ -29,5 +30,5 @@ RUN dotnet publish "./RuItUnion.FeedbackBot.csproj" -c $BUILD_CONFIGURATION -o /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-HEALTHCHECK --interval=5s --timeout=10s CMD curl -f http://localhost/health || exit 1 
+HEALTHCHECK --interval=5s --timeout=10s CMD curl -f http://localhost:8080/health || exit 1 
 ENTRYPOINT ["dotnet", "RuItUnion.FeedbackBot.dll"]
