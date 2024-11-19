@@ -10,17 +10,16 @@ Created and supported by [Russian IT Union](https://ruitunion.org/en/about/).
 
 ## 📝 Prerequisites
 
-1. Telegram Bot Token.
-2. Telegram Bot ID.
-3. Telegram Chat ID.
-4. PostgreSQL connection string.
+1. Telegram Bot Token;
+2. Telegram Chat ID;
+3. PostgreSQL connection string.
 
 ## 🛠️ Prepare the Environment
 
 ### Telegram bot
 
-1. Create a bot with [@BotFather](https://t.me/BotFather).
-2. After successfully creating the bot, you will receive a **Telegram Bot Token**.
+1. Create a bot with [@BotFather](https://t.me/BotFather);
+2. After successfully creating the bot, you will receive a **Telegram Bot Token**;
 3. Get the **Telegram Bot ID** of the bot.
 
 ❗You can get the ID of any user / chat / bot using desktop Telegram client. To do that go to *Settings* / *Advanced* / *Experimental settings* and enable *Show peer ID in Profile*. Now you will be able to see all the IDs.
@@ -29,17 +28,17 @@ Created and supported by [Russian IT Union](https://ruitunion.org/en/about/).
 
 ### Feedback Chat
 
-1. Create a private chat.
-2. Enable topics.
-3. Get the **Telegram Chat ID**.
-4. Add the bot from the previous step and make it Administrator.
+1. Create a private chat;
+2. Enable topics;
+3. Get the **Telegram Chat ID**;
+4. Add the bot from the previous step and make it Administrator;
 5. The only permission required for the bot is to manage topics.
 
 ![required_permissions](./docs/image02.png)
 
 ### PostgreSQL
 
-The bot needs only a connection string: `Host=db;Port=5432;Database=feedback_bot;Username=postgres;Password=qwerty`.
+The bot needs only a connection string: `User ID=postgres;Password=123;Host=ruitunion_feedbackbot_database;Port=5432;Database=feedback_bot;`.
 
 ## 🚀 Run
 
@@ -49,23 +48,25 @@ The bot needs only a connection string: `Host=db;Port=5432;Database=feedback_bot
 
     ``` yml
     services:
-      feedback_bot:
-        container_name: feedback_bot
-        image: ghcr.io/ruitunion-org/feedback-bot:v0.1.0
+      ruitunion_feedbackbot:
+        container_name: RuItUnion.FeedbackBot
+        image: ghcr.io/ruitunion-org/feedback-bot:v0.2.0
         restart: always
+      healthcheck:
+        test: curl -f http://localhost/health || exit 1 
+        interval: 5s
+        timeout: 10s
         environment:
-          - AppOptions__DbConnectionString=Host=db;Port=5432;Database=feedback_bot;Username=postgres;Password=123
-          - AppOptions__FeedbackBotToken=YOUR_TELEGRAM_BOT_TOKEN
-          - AppOptions__FeedbackBotId=YOUR_TELEGRAM_BOT_ID
+          - ConnectionStrings__Postgres=Host=ruitunion_feedbackbot_database;Port=5432;Database=feedback_bot;User ID=postgres;Password=123;
+          - ConnectionStrings__Telegram=YOUR_TELEGRAM_BOT_TOKEN
           - AppOptions__FeedbackChatId=YOUR_TELEGRAM_CHAT_ID
           - AppOptions__Start=YOUR_START_MESSAGE
-          - AppOptions__Help=YOUR_HELP_MESSAGE
     ```
 
 3. Run the following command:
 
     ``` sh
-    docker compsoe up 
+    docker compose up -d 
     ```
 
 ### From source code
@@ -75,24 +76,28 @@ The bot needs only a connection string: `Host=db;Port=5432;Database=feedback_bot
 
     ``` yml
     services:
-      feedback_bot:
-        container_name: feedback_bot
-        image: feedback_bot
+      ruitunion_feedbackbot:
+        container_name: RuItUnion.FeedbackBot
+        build:
+          context: .
+          dockerfile: RuItUnion.FeedbackBot/Dockerfile
         restart: always
+        healthcheck:
+          test: curl -f http://localhost/health || exit 1 
+          interval: 5s
+          timeout: 10s
         environment:
-          - AppOptions__DbConnectionString=Host=db;Port=5432;Database=feedback_bot;Username=postgres;Password=123
-          - AppOptions__FeedbackBotToken=YOUR_TELEGRAM_BOT_TOKEN
-          - AppOptions__FeedbackBotId=YOUR_TELEGRAM_BOT_ID
+          - ConnectionStrings__Postgres=Host=ruitunion_feedbackbot_database;Port=5432;Database=feedback_bot;User ID=postgres;Password=123;
+          - ConnectionStrings__Telegram=YOUR_TELEGRAM_BOT_TOKEN
           - AppOptions__FeedbackChatId=YOUR_TELEGRAM_CHAT_ID
           - AppOptions__Start=YOUR_START_MESSAGE
-          - AppOptions__Help=YOUR_HELP_MESSAGE
     ```
 
 3. Run the following commands:
 
     ``` sh
     docker build -t feedback_bot .
-    docker compsoe up 
+    docker compose up -d 
     ```
 
 ## 🌟 Features
@@ -123,6 +128,6 @@ The bot needs only a connection string: `Host=db;Port=5432;Database=feedback_bot
 
 Contributions are welcome. Here are some ways you can help:
 
-1. **Report bugs**: If you find a bug, please report it by creating an issue on GitHub.
-2. **Request features**: Have an idea for a new feature? Let us know by creating a feature request.
+1. **Report bugs**: If you find a bug, please report it by creating an issue on GitHub;
+2. **Request features**: Have an idea for a new feature? Let us know by creating a feature request;
 3. **Submit pull requests**: If you'd like to fix a bug or add a feature, feel free to fork the repository and submit a pull request.

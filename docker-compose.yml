@@ -1,31 +1,36 @@
-version: "3.8"
-
 volumes:
   postgres_data:
     driver: local
 
 services:
-  feedback_bot:
-    container_name: feedback_bot_app
-    image: feedback_bot
+  ruitunion_feedbackbot:
+    container_name: RuItUnion.FeedbackBot
+    image: ${DOCKER_REGISTRY-}ruitunionfeedbackbot
     restart: always
+    build:
+      context: .
+      dockerfile: RuItUnion.FeedbackBot/Dockerfile
+    healthcheck:
+      test: curl -f http://localhost/health || exit 1 
+      interval: 5s
+      timeout: 10s
     environment:
-      - AppOptions__DbConnectionString=Host=db;Port=5432;Database=feedback_bot;Username=postgres;Password=123
-      - AppOptions__FeedbackBotToken=<bot_token>
-      - AppOptions__FeedbackBotId=<bot_id>
-      - AppOptions__FeedbackChatId=<chat_id>
-      - AppOptions__Start="Текст приветствия"
-      - AppOptions__Help="Текст справки"
+      - ASPNETCORE_HTTP_PORTS=8080
 
-  db:
-    container_name: feedback_bot_db
-    image: postgres:latest
+
+  ruitunion_feedbackbot_database:
+    container_name: RuItUnion.FeedbackBot.Database
+    image: postgres:17-alpine
     restart: always
-    environment:
-      POSTGRES_DB: feedback_bot
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -h localhost -U $$POSTGRES_USER
+      interval: 5s
+      timeout: 10s
+    environment:
+      POSTGRES_DB: feedback_bot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
