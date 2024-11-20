@@ -127,4 +127,7 @@
   <data name="MessageCopier_BotBanned" xml:space="preserve">
     <value>Пользователь заблокировал бота, пересылка сообщения невозможна</value>
   </data>
+  <data name="Command_Description_Sync" xml:space="preserve">
+    <value>Обновляет названия всех тем в чате</value>
+  </data>
 </root>

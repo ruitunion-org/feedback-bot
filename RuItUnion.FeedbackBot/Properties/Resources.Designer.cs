@@ -22,7 +22,7 @@ namespace RuItUnion.FeedbackBot.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         ///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RuItUnion.FeedbackBot.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         ///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Команды данной категории повзволяют управлять темами и сообщениями в ней.
         /// </summary>
-        internal static string Category_Description_Thread {
+        public static string Category_Description_Thread {
             get {
                 return ResourceManager.GetString("Category_Description_Thread", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Тема.
         /// </summary>
-        internal static string Category_Name_Thread {
+        public static string Category_Name_Thread {
             get {
                 return ResourceManager.GetString("Category_Name_Thread", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Закрывает тему.
         /// </summary>
-        internal static string Command_Description_Close {
+        public static string Command_Description_Close {
             get {
                 return ResourceManager.GetString("Command_Description_Close", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Удаляет сообщение в чате с пользователем.
         /// </summary>
-        internal static string Command_Description_Delete {
+        public static string Command_Description_Delete {
             get {
                 return ResourceManager.GetString("Command_Description_Delete", resourceCulture);
             }
@@ -99,16 +99,25 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Открывает тему.
         /// </summary>
-        internal static string Command_Description_Open {
+        public static string Command_Description_Open {
             get {
                 return ResourceManager.GetString("Command_Description_Open", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Обновляет названия всех тем в чате.
+        /// </summary>
+        public static string Command_Description_Sync {
+            get {
+                return ResourceManager.GetString("Command_Description_Sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Пользователь заблокировал бота, пересылка сообщения невозможна.
         /// </summary>
-        internal static string MessageCopier_BotBanned {
+        public static string MessageCopier_BotBanned {
             get {
                 return ResourceManager.GetString("MessageCopier_BotBanned", resourceCulture);
             }
@@ -117,7 +126,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Изменение сообщений не передается, в случае, если вам необходимо изменить текст сообщения — отправьте новое сообщение.
         /// </summary>
-        internal static string MessageEditorMiddleware_NotSupported {
+        public static string MessageEditorMiddleware_NotSupported {
             get {
                 return ResourceManager.GetString("MessageEditorMiddleware_NotSupported", resourceCulture);
             }
@@ -126,7 +135,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Привет! Этот бот перенаправит все ваши сообщения в чат операторам, а их ответы - перенаправит вам..
         /// </summary>
-        internal static string StartMessage {
+        public static string StartMessage {
             get {
                 return ResourceManager.GetString("StartMessage", resourceCulture);
             }
@@ -135,7 +144,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Данное сообщение не было отправлено пользователю, его достаточно удалить стандартными средствами Telegram.
         /// </summary>
-        internal static string ThreadController_Delete_NotFound {
+        public static string ThreadController_Delete_NotFound {
             get {
                 return ResourceManager.GetString("ThreadController_Delete_NotFound", resourceCulture);
             }
@@ -144,7 +153,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Данную команду необходимо использовать, отвечая ей на сообщение.
         /// </summary>
-        internal static string ThreadController_Delete_NotReply {
+        public static string ThreadController_Delete_NotReply {
             get {
                 return ResourceManager.GetString("ThreadController_Delete_NotReply", resourceCulture);
             }
