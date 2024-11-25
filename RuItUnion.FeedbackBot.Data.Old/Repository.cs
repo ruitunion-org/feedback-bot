@@ -1,6 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using RuItUnion.FeedbackBot.Data.Old.Models;
 
 namespace RuItUnion.FeedbackBot.Data.Old;
