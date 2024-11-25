@@ -26,13 +26,13 @@ public class MessageForwarderMiddleware(
         if (update.Message is not null && update.Message?.Chat.Id != _chatId
                                        && string.IsNullOrEmpty(context.GetCommandName()))
         {
-            await ProcessMessage(update.Message!, ct).ConfigureAwait(false);
+            await ProcessMessage(update.Message!, context, ct).ConfigureAwait(false);
         }
 
         await Next(update, context, ct).ConfigureAwait(false);
     }
 
-    private async Task ProcessMessage(Message message, CancellationToken ct)
+    private async Task ProcessMessage(Message message, FrameContext context, CancellationToken ct = default)
     {
         DbTopic? dbTopic = await db.Topics.AsNoTracking().FirstOrDefaultAsync(x => x.UserChatId == message.Chat.Id, ct)
             .ConfigureAwait(false);
@@ -56,6 +56,7 @@ public class MessageForwarderMiddleware(
                 .ConfigureAwait(false);
             db.Topics.Update(dbTopic).State = EntityState.Detached;
             dbTopic.ThreadId = topic.MessageThreadId;
+            await CreateInfoMessage(context, dbTopic, user, ct).ConfigureAwait(false);
         }
         else if (!dbTopic.IsOpen)
         {
@@ -66,7 +67,7 @@ public class MessageForwarderMiddleware(
             {
                 db.Topics.Remove(dbTopic);
                 await db.SaveChangesAsync(ct).ConfigureAwait(false);
-                await ProcessMessage(message, ct).ConfigureAwait(false);
+                await ProcessMessage(message, context, ct).ConfigureAwait(false);
             }
 
             Task<int> saveTask = db.SaveChangesAsync(ct);
@@ -85,9 +86,24 @@ public class MessageForwarderMiddleware(
                                                 StringComparison.OrdinalIgnoreCase))
         {
             await db.Topics.Where(x => x.Id == dbTopic.Id).Take(1).ExecuteDeleteAsync(ct).ConfigureAwait(false);
-            await ProcessMessage(message, ct).ConfigureAwait(false);
+            await ProcessMessage(message, context, ct).ConfigureAwait(false);
         }
 
         feedbackMetricsService.IncMessagesForwarded(dbTopic.ThreadId, message.From?.Id ?? 0L);
+    }
+
+    private async Task CreateInfoMessage(FrameContext context, DbTopic topic, DbUser user,
+        CancellationToken ct = default)
+    {
+        string noData = ResourceManager.GetString(nameof(UserInfoMessage_NoData), context.GetCultureInfo())!;
+        string message = ResourceManager.GetString(nameof(UserInfoMessage), context.GetCultureInfo())!;
+        string username = user.UserName is not null ? @"@" + user.UserName : noData;
+        message = string.Format(message, user.FirstName, user.LastName ?? noData, username, user.Id,
+            context.GetCultureInfo().NativeName);
+
+        Message result = await botClient
+            .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct)
+            .ConfigureAwait(false);
+        await botClient.PinChatMessage(result.Chat.Id, result.MessageId, cancellationToken: ct).ConfigureAwait(false);
     }
 }

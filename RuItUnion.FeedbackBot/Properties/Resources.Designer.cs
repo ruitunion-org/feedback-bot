@@ -158,5 +158,29 @@ namespace RuItUnion.FeedbackBot.Properties {
                 return ResourceManager.GetString("ThreadController_Delete_NotReply", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Информация о пользователе:
+        ///
+        ///Имя: {0};
+        ///Фамилия: {1};
+        ///Имя пользователя: {2};
+        ///ИД: {3:D};
+        ///Язык: {4}..
+        /// </summary>
+        public static string UserInfoMessage {
+            get {
+                return ResourceManager.GetString("UserInfoMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на —.
+        /// </summary>
+        public static string UserInfoMessage_NoData {
+            get {
+                return ResourceManager.GetString("UserInfoMessage_NoData", resourceCulture);
+            }
+        }
     }
 }
