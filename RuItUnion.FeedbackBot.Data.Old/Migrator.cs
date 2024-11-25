@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RuItUnion.FeedbackBot.Data.Models;
-using static RuItUnion.FeedbackBot.Data.Old.Repository;
+using RuItUnion.FeedbackBot.Data.Old.Models;
 
 namespace RuItUnion.FeedbackBot.Data.Old;
 
-public class Migrator(FeedbackBotContext newContext, DatabaseContext oldContext, ILogger<Migrator> logger)
+public class Migrator(FeedbackBotContext newContext, OldDatabaseContext oldContext, ILogger<Migrator> logger)
 {
     public virtual async Task Migrate(CancellationToken cancellationToken = default)
     {

@@ -11,7 +11,7 @@ using RuItUnion.FeedbackBot.Data.Old;
 
 namespace Bot.Migrations
 {
-    [DbContext(typeof(Repository.DatabaseContext))]
+    [DbContext(typeof(OldDatabaseContext))]
     [Migration("20240614122306_Initial")]
     partial class Initial
     {

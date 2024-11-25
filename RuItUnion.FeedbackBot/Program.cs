@@ -89,7 +89,7 @@ bool useMigrator = !string.Equals(builder.Configuration[@"Migrator:EnableMigrato
     StringComparison.OrdinalIgnoreCase);
 if (useMigrator)
 {
-    builder.Services.AddScoped<Repository.DatabaseContext>(_ => new(dbString));
+    builder.Services.AddDbContext<OldDatabaseContext>(optionsBuilder => optionsBuilder.UseNpgsql(dbString));
     builder.Services.AddScoped<Migrator>();
 }
 

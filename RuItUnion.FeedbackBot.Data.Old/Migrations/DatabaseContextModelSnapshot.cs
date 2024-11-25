@@ -10,7 +10,7 @@ using RuItUnion.FeedbackBot.Data.Old;
 
 namespace Bot.Migrations
 {
-    [DbContext(typeof(Repository.DatabaseContext))]
+    [DbContext(typeof(OldDatabaseContext))]
     partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
