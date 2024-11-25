@@ -26,7 +26,7 @@ public class MessageEditorMiddleware(
         {
             if (update.EditedMessage.Chat.Id == _chatId)
             {
-                DbReply? reply = await db.Replies.Include(x => x.Topic).FirstOrDefaultAsync(x =>
+                DbReply? reply = await db.Replies.AsNoTracking().Include(x => x.Topic).FirstOrDefaultAsync(x =>
                     x.ChatThreadId == update.EditedMessage.MessageThreadId
                     && x.ChatMessageId == update.EditedMessage.MessageId, ct).ConfigureAwait(false);
                 if (reply is null)
