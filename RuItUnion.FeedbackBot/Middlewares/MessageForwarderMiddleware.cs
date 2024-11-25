@@ -5,6 +5,7 @@ using RuItUnion.FeedbackBot.Data.Models;
 using RuItUnion.FeedbackBot.Options;
 using RuItUnion.FeedbackBot.Services;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using TgBotFrame.Commands.Authorization.Models;
 using TgBotFrame.Commands.Extensions;
@@ -75,8 +76,18 @@ public class MessageForwarderMiddleware(
             await Task.WhenAll(saveTask, editTask, reopenTask).ConfigureAwait(false);
         }
 
-        await botClient.ForwardMessage(_chatId, message.Chat.Id, message.MessageId,
-            dbTopic.ThreadId, false, false, ct).ConfigureAwait(false);
+        try
+        {
+            await botClient.ForwardMessage(_chatId, message.Chat.Id, message.MessageId,
+                dbTopic.ThreadId, false, false, ct).ConfigureAwait(false);
+        }
+        catch (ApiRequestException e) when (string.Equals(e.Message, @"Bad Request: message thread not found",
+                                                StringComparison.OrdinalIgnoreCase))
+        {
+            await db.Topics.Where(x => x.Id == dbTopic.Id).Take(1).ExecuteDeleteAsync(ct).ConfigureAwait(false);
+            await ProcessMessage(message, ct).ConfigureAwait(false);
+        }
+
         feedbackMetricsService.IncMessagesForwarded(dbTopic.ThreadId, message.From?.Id ?? 0L);
     }
 }
