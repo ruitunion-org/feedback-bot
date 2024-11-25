@@ -45,7 +45,7 @@ public class ThreadCommandFilterTests
             {
                 Id = 1,
                 Text = "123",
-                
+
             },
         }, new()
         {
