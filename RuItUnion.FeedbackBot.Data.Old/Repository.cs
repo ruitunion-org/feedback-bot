@@ -6,7 +6,7 @@ using RuItUnion.FeedbackBot.Data.Old.Models;
 namespace RuItUnion.FeedbackBot.Data.Old;
 
 
-public class OldDatabaseContext(DbContextOptions<FeedbackBotContext> options) : DbContext(options)
+public class OldDatabaseContext(DbContextOptions<OldDatabaseContext> options) : DbContext(options)
 {
     public DbSet<Topic> Topic { get; set; } = default!;
     public DbSet<User> Users { get; set; } = default!;
