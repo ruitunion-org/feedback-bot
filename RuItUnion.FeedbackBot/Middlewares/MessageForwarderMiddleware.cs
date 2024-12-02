@@ -56,6 +56,7 @@ public class MessageForwarderMiddleware(
                 .ConfigureAwait(false);
             db.Topics.Update(dbTopic).State = EntityState.Detached;
             dbTopic.ThreadId = topic.MessageThreadId;
+            await db.SaveChangesAsync(ct).ConfigureAwait(false);
             await CreateInfoMessage(context, dbTopic, user, ct).ConfigureAwait(false);
         }
         else if (!dbTopic.IsOpen)
