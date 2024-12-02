@@ -10,14 +10,12 @@ namespace RuItUnion.FeedbackBot.Tests;
 public class ThreadCommandFilterTests
 {
     public const int CHAT_ID = -100123;
-    public bool Passed { get; set; }
-    public FrameUpdateDelegate Delegate { get; set; }
 
-    private Task DelegateAction(Update update, FrameContext context, CancellationToken ct = default)
+    private readonly ThreadCommandFilterMiddleware _commandFilterMiddleware = new(new OptionsWrapper<AppOptions>(new()
     {
-        Passed = true;
-        return Task.CompletedTask;
-    }
+        FeedbackChatId = CHAT_ID,
+        Start = "",
+    }));
 
     public ThreadCommandFilterTests()
     {
@@ -30,11 +28,14 @@ public class ThreadCommandFilterTests
         Passed = false;
     }
 
-    private readonly ThreadCommandFilterMiddleware _commandFilterMiddleware = new(new OptionsWrapper<AppOptions>(new()
+    public bool Passed { get; set; }
+    public FrameUpdateDelegate Delegate { get; set; }
+
+    private Task DelegateAction(Update update, FrameContext context, CancellationToken ct = default)
     {
-        FeedbackChatId = CHAT_ID,
-        Start = "",
-    }));
+        Passed = true;
+        return Task.CompletedTask;
+    }
 
     [Fact]
     public async Task PassCommand()
@@ -45,15 +46,14 @@ public class ThreadCommandFilterTests
             {
                 Id = 1,
                 Text = "123",
-
             },
         }, new()
         {
             Properties =
             {
-                {"CommandName", "help"},
-                {"ChatId", (long?)CHAT_ID},
-                {"ThreadId", (int?)2},
+                { "CommandName", "help" },
+                { "ChatId", (long?)CHAT_ID },
+                { "ThreadId", (int?)2 },
             },
         }, CancellationToken.None);
 
@@ -69,15 +69,14 @@ public class ThreadCommandFilterTests
             {
                 Id = 1,
                 Text = "123",
-
             },
         }, new()
         {
             Properties =
             {
-                {"CommandName", "start"},
-                {"ChatId", 1},
-                {"ThreadId", null},
+                { "CommandName", "start" },
+                { "ChatId", 1 },
+                { "ThreadId", null },
             },
         }, CancellationToken.None);
 
@@ -93,15 +92,14 @@ public class ThreadCommandFilterTests
             {
                 Id = 1,
                 Text = "123",
-
             },
         }, new()
         {
             Properties =
             {
-                {"CommandName", null},
-                {"ChatId", 1},
-                {"ThreadId", null},
+                { "CommandName", null },
+                { "ChatId", 1 },
+                { "ThreadId", null },
             },
         }, CancellationToken.None);
 
@@ -117,15 +115,14 @@ public class ThreadCommandFilterTests
             {
                 Id = 1,
                 Text = "123",
-
             },
         }, new()
         {
             Properties =
             {
-                {"CommandName", "open"},
-                {"ChatId", (long?)1L},
-                {"ThreadId", null},
+                { "CommandName", "open" },
+                { "ChatId", (long?)1L },
+                { "ThreadId", null },
             },
         }, CancellationToken.None);
 
