@@ -10,13 +10,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
+		<PackageReference Include="Aspire.Npgsql" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
-		<PackageReference Include="AspNetCore.HealthChecks.Uris" />
 		<PackageReference Include="Npgsql.OpenTelemetry" />
 		<PackageReference Include="OpenTelemetry.Exporter.Console" />
 		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
-		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" />
 		<PackageReference Include="OpenTelemetry.Extensions.Hosting" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
@@ -31,6 +29,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\RuItUnion.FeedbackBot.Data.Old\RuItUnion.FeedbackBot.Data.Old.csproj" />
 		<ProjectReference Include="..\RuItUnion.FeedbackBot.Data\RuItUnion.FeedbackBot.Data.csproj" />
+		<ProjectReference Include="..\RuItUnion.FeedbackBot.ServiceDefaults\RuItUnion.FeedbackBot.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

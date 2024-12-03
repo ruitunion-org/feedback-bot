@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace RuItUnion.FeedbackBot.Data.Models;
+﻿namespace RuItUnion.FeedbackBot.Data.Models;
 
 public class DbReply : IEntityTypeConfiguration<DbReply>, IEquatable<DbReply>
 {

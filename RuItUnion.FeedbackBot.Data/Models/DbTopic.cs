@@ -1,7 +1,4 @@
 ﻿using System.Globalization;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TgBotFrame.Commands.Authorization.Models;
 
 namespace RuItUnion.FeedbackBot.Data.Models;
 

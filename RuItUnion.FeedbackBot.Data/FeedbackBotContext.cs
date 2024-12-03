@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RuItUnion.FeedbackBot.Data.Models;
+﻿using RuItUnion.FeedbackBot.Data.Models;
 using TgBotFrame.Commands.Authorization.Interfaces;
-using TgBotFrame.Commands.Authorization.Models;
 
 namespace RuItUnion.FeedbackBot.Data;
 

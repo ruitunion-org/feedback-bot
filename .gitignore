@@ -401,3 +401,7 @@ FodyWeavers.xsd
 
 # data folder
 [Dd]ata/
+
+# Aspir8 files
+aspirate-output
+aspirate-state.json

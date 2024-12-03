@@ -5,10 +5,11 @@
 		<ProjectVersion>2.1</ProjectVersion>
 		<DockerTargetOS>Linux</DockerTargetOS>
 		<DockerPublishLocally>False</DockerPublishLocally>
-		<ProjectGuid>667deb7b-2bf2-4064-bdb2-30ed515a1a59</ProjectGuid>
+		<ProjectGuid>13443994-44e4-41d8-8a4f-1849cee163f6</ProjectGuid>
 		<DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-		<DockerServiceUrl>{Scheme}://localhost:{ServicePort}/weatherforecast</DockerServiceUrl>
+		<DockerServiceUrl>{Scheme}://localhost:{ServicePort}/health</DockerServiceUrl>
 		<DockerServiceName>ruitunion.feedbackbot</DockerServiceName>
+		<DockerComposeProjectName>ruitunion-feedbackbot</DockerComposeProjectName>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Include="docker-compose.override.yml">
@@ -16,5 +17,6 @@
 		</None>
 		<None Include="docker-compose.yml" />
 		<None Include=".dockerignore" />
+		<None Include="feedback_bot.env" />
 	</ItemGroup>
 </Project>

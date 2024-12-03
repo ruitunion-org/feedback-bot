@@ -1,14 +1,9 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Npgsql;
 using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
-using RuItUnion.FeedbackBot.Data;
 using RuItUnion.FeedbackBot.Data.Old;
 using RuItUnion.FeedbackBot.Middlewares;
-using RuItUnion.FeedbackBot.Options;
-using RuItUnion.FeedbackBot.Services;
-using Telegram.Bot;
+using RuItUnion.FeedbackBot.ServiceDefaults;
 using TgBotFrame.Commands.Authorization.Extensions;
 using TgBotFrame.Commands.Authorization.Interfaces;
 using TgBotFrame.Commands.Help.Extensions;
@@ -24,51 +19,24 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(nameof(AppOptions)));
 builder.Services.AddSingleton<FeedbackMetricsService>();
 
+builder.AddServiceDefaults();
+
 builder.Services.AddOpenTelemetry().WithMetrics(providerBuilder =>
 {
     string[] metrics =
     [
-        @"System.Runtime",
-        @"System.Net.NameResolution",
-        @"System.Net.Http",
-        @"Microsoft.Extensions.Diagnostics.ResourceMonitoring",
-        @"Microsoft.Extensions.Diagnostics.HealthChecks",
-        @"Microsoft.AspNetCore.Hosting",
-        @"Microsoft.AspNetCore.Routing",
-        @"Microsoft.AspNetCore.Diagnostics",
-        @"Microsoft.AspNetCore.RateLimiting",
-        @"Microsoft.AspNetCore.HeaderParsing",
-        @"Microsoft.AspNetCore.Http.Connections",
-        @"Microsoft.AspNetCore.Server.Kestrel",
-        @"Microsoft.EntityFrameworkCore",
         @"Npgsql",
         @"TgBotFrame",
         @"TgBotFrame.Commands",
         @"FeedbackBot",
     ];
 
-    providerBuilder.AddRuntimeInstrumentation();
-    providerBuilder.AddHttpClientInstrumentation();
-    providerBuilder.AddAspNetCoreInstrumentation();
     providerBuilder.AddInstrumentation<FrameMetricsService>();
     providerBuilder.AddInstrumentation<FeedbackMetricsService>();
-
-    providerBuilder.AddPrometheusExporter();
-    providerBuilder.AddOtlpExporter();
+    providerBuilder.AddNpgsqlInstrumentation();
 
     providerBuilder.AddMeter(metrics);
-}).WithTracing(providerBuilder =>
-{
-    providerBuilder.AddHttpClientInstrumentation();
-    providerBuilder.AddAspNetCoreInstrumentation();
-    providerBuilder.AddNpgsql();
-
-    providerBuilder.AddOtlpExporter();
-    if (builder.Environment.IsDevelopment())
-    {
-        providerBuilder.AddConsoleExporter();
-    }
-});
+}).WithTracing(providerBuilder => { providerBuilder.AddNpgsql(); });
 
 string tgToken = builder.Configuration.GetConnectionString(@"Telegram")
                  ?? builder.Configuration[@$"{nameof(AppOptions)}:{nameof(AppOptions.FeedbackBotToken)}"]
@@ -80,16 +48,23 @@ builder.Services.AddSingleton<ITelegramBotClient, TelegramBotClient>(provider =>
     return new(tgToken, factory.CreateClient(nameof(ITelegramBotClient)));
 });
 
-string dbString = builder.Configuration.GetConnectionString(@"Postgres")
-                  ?? builder.Configuration[@$"{nameof(AppOptions)}:{nameof(AppOptions.DbConnectionString)}"]
-                  ?? throw new KeyNotFoundException();
-builder.Services.AddDbContext<FeedbackBotContext>(optionsBuilder => optionsBuilder.UseNpgsql(dbString));
+builder.AddNpgsqlDataSource(@"RuItUnion-FeedbackBot-Database", settings =>
+{
+    settings.DisableMetrics = true;
+    settings.DisableTracing = true;
+    settings.DisableHealthChecks = false;
+});
+
+builder.Services.AddDbContext<FeedbackBotContext>((provider, optionsBuilder) =>
+    optionsBuilder.UseNpgsql(provider.GetRequiredService<NpgsqlDataSource>()));
 builder.Services.AddScoped<IAuthorizationData, FeedbackBotContext>();
-bool useMigrator = !string.Equals(builder.Configuration[@"Migrator:EnableMigratorFormV01"], @"false",
+
+bool useMigrator = !string.Equals(builder.Configuration[@"Migrator:EnableMigratorFromV01"], @"false",
     StringComparison.OrdinalIgnoreCase);
 if (useMigrator)
 {
-    builder.Services.AddDbContext<OldDatabaseContext>(optionsBuilder => optionsBuilder.UseNpgsql(dbString));
+    builder.Services.AddDbContext<OldDatabaseContext>((provider, optionsBuilder) =>
+        optionsBuilder.UseNpgsql(provider.GetRequiredService<NpgsqlDataSource>()));
     builder.Services.AddScoped<Migrator>();
 }
 
@@ -113,14 +88,19 @@ builder.Services.AddTgBotFrameCommands(commandsBuilder =>
     commandsBuilder.TryAddControllers(Assembly.GetEntryAssembly()!);
 });
 
+Uri tgUrl = new(@"https://api.telegram.org/bot" + tgToken + @"/getMe");
 builder.Services.AddHealthChecks()
-    .AddUrlGroup(new Uri(@"https://api.telegram.org/"), HttpMethod.Head)
-    .AddNpgSql(dbString);
+    .AddCheck<TelegramHealthCheck>(@"telegram");
 
 WebApplication app = builder.Build();
 
-app.MapPrometheusScrapingEndpoint();
-app.UseHealthChecks(@"/health");
+app.MapDefaultEndpoints();
+
+IOptions<AppOptions> appOptions = app.Services.GetRequiredService<IOptions<AppOptions>>();
+if (appOptions.Value.FeedbackChatId == 0L)
+{
+    throw new InvalidOperationException(@"AppOptions:FeedbackChatId configuration value is 0");
+}
 
 if (useMigrator)
 {

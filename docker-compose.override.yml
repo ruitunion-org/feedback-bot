@@ -1,6 +1,13 @@
 services:
-  ruitunion_feedbackbot:
+  feedback_bot:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - 8080
+    - target: 8080
+      published: 10000
+    - target: 8443
+      published: 10001  
+  database:
+    ports:
+    - target: 5432
+      published: 5432

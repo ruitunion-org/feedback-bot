@@ -4,7 +4,7 @@
             "commandName": "DockerCompose",
             "commandVersion": "1.0",
             "serviceActions": {
-                "ruitunion.feedbackbot": "StartDebugging"
+                "feedback_bot": "StartDebugging"
             }
         }
     }

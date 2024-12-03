@@ -1,10 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using RuItUnion.FeedbackBot.Options;
-using Telegram.Bot.Types;
-using TgBotFrame.Commands.Extensions;
-using TgBotFrame.Middleware;
-
-namespace RuItUnion.FeedbackBot.Middlewares;
+﻿namespace RuItUnion.FeedbackBot.Middlewares;
 
 public class ThreadCommandFilterMiddleware(IOptions<AppOptions> options) : FrameMiddleware
 {

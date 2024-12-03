@@ -1,16 +1,7 @@
 ﻿using System.Collections.Frozen;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using RuItUnion.FeedbackBot.Data;
 using RuItUnion.FeedbackBot.Data.Models;
-using RuItUnion.FeedbackBot.Options;
-using RuItUnion.FeedbackBot.Services;
-using Telegram.Bot;
 using Telegram.Bot.Exceptions;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using TgBotFrame.Commands.Extensions;
-using TgBotFrame.Middleware;
 
 namespace RuItUnion.FeedbackBot.Middlewares;
 

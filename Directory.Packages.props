@@ -1,29 +1,33 @@
 <Project ToolsVersion="15.0">
-  <ItemGroup>
-    <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
-    <PackageVersion Include="Npgsql.OpenTelemetry" Version="9.0.1" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.10.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.10.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.10.0-beta.1" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.10.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
-    <PackageVersion Include="System.Text.Json" Version="9.0.0" />
-    <PackageVersion Include="TgBotFrame.Commands" Version="1.3.2" />
-    <PackageVersion Include="TgBotFrame.Commands.Authorization" Version="1.3.2" />
-    <PackageVersion Include="TgBotFrame.Commands.Help" Version="1.4.3" />
-    <PackageVersion Include="TgBotFrame.Commands.RateLimit" Version="1.2.2" />
-    <PackageVersion Include="TgBotFrame.Commands.Start" Version="1.2.2" />
-    <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageVersion Include="AspNetCore.HealthChecks.Uris" Version="8.0.1" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageVersion Include="xunit" Version="2.9.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.0.0" />
+		<PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
+		<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
+		<PackageVersion Include="Npgsql.OpenTelemetry" Version="9.0.1" />
+		<PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.9.0" />
+		<PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+		<PackageVersion Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.10.0-beta.1" />
+		<PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
+		<PackageVersion Include="System.Text.Json" Version="9.0.0" />
+		<PackageVersion Include="TgBotFrame.Commands" Version="1.3.3" />
+		<PackageVersion Include="TgBotFrame.Commands.Authorization" Version="1.3.3" />
+		<PackageVersion Include="TgBotFrame.Commands.Help" Version="1.4.4" />
+		<PackageVersion Include="TgBotFrame.Commands.RateLimit" Version="1.2.3" />
+		<PackageVersion Include="TgBotFrame.Commands.Start" Version="1.2.3" />
+		<PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+		<PackageVersion Include="coverlet.collector" Version="6.0.2" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+		<PackageVersion Include="xunit" Version="2.9.2" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+		<PackageVersion Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+		<PackageVersion Include="Aspire.Npgsql" Version="9.0.0" />
+		<PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
+		<PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.0.0" />
+	</ItemGroup>
 </Project>
