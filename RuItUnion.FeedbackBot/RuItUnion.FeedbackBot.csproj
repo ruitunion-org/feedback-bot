@@ -7,6 +7,18 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 		<InvariantGlobalization>false</InvariantGlobalization>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<NeutralLanguage>ru</NeutralLanguage>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<RepositoryUrl>https://github.com/ruitunion-org/feedback-bot</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/ruitunion-org/feedback-bot</PackageProjectUrl>
+		<Version>0.2.0</Version>
+		<Company>RuItUnion</Company>
+		<PackageTags>telegram;bot</PackageTags>
+		<PackageId>RuItUnion.FeedbackBot</PackageId>
 	</PropertyGroup>
 
 	<ItemGroup>
