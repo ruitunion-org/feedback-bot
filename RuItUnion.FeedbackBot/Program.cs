@@ -102,14 +102,6 @@ if (appOptions.Value.FeedbackChatId == 0L)
     throw new InvalidOperationException(@"AppOptions:FeedbackChatId configuration value is 0");
 }
 
-if (useMigrator)
-{
-    IServiceScopeFactory scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
-    await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
-    Migrator migrator = scope.ServiceProvider.GetRequiredService<Migrator>();
-    await migrator.Migrate(CancellationToken.None).ConfigureAwait(false);
-}
-
 if (string.Equals(builder.Configuration[@"Migrator:UpdateDatabase"], @"true",
         StringComparison.OrdinalIgnoreCase))
 {
@@ -118,5 +110,14 @@ if (string.Equals(builder.Configuration[@"Migrator:UpdateDatabase"], @"true",
     FeedbackBotContext db = scope.ServiceProvider.GetRequiredService<FeedbackBotContext>();
     await db.Database.MigrateAsync().ConfigureAwait(false);
 }
+if (useMigrator)
+{
+    IServiceScopeFactory scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+    await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
+    Migrator migrator = scope.ServiceProvider.GetRequiredService<Migrator>();
+    await migrator.Migrate(CancellationToken.None).ConfigureAwait(false);
+}
+
+
 
 await app.RunAsync().ConfigureAwait(false);
