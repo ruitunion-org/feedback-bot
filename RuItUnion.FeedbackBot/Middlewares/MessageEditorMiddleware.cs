@@ -22,12 +22,15 @@ public class MessageEditorMiddleware(
                     && x.ChatMessageId == update.EditedMessage.MessageId, ct).ConfigureAwait(false);
                 if (reply is null)
                 {
-                    logger.LogWarning(@"Reply not found");
+                    logger.LogWarning(@"Reply {messageId} in topic {topicId} not found in DB",
+                        update.EditedMessage.MessageId, update.EditedMessage.MessageThreadId);
                 }
                 else
                 {
                     await botClient.EditMessageText(reply.Topic.UserChatId, reply.UserMessageId,
                         update.EditedMessage.Text!, cancellationToken: ct).ConfigureAwait(false);
+                    logger.LogInformation(@"Edited message {messageId} in chat {chatId}", reply.UserMessageId,
+                        reply.Topic.UserChatId);
                     feedbackMetricsService.IncMessagesEdited(reply.ChatThreadId, update.EditedMessage.From?.Id ?? 0L);
                 }
             }
@@ -39,6 +42,12 @@ public class MessageEditorMiddleware(
                             context.GetCultureInfo())!,
                         messageThreadId: update.EditedMessage!.MessageThreadId, cancellationToken: ct)
                     .ConfigureAwait(false);
+                logger.LogInformation(
+                    @"User {username} with id = {userId} tried to edit message {messageId} in chat {chatId}",
+                    update.EditedMessage.From?.Username,
+                    update.EditedMessage.From?.Id ?? 0L,
+                    update.EditedMessage.Id,
+                    update.EditedMessage.Chat.Id);
             }
         }
 

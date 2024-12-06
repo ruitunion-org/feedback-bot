@@ -2,7 +2,11 @@
 
 namespace RuItUnion.FeedbackBot.Middlewares;
 
-public class AdminRoleSyncMiddleware(IOptions<AppOptions> options, ITelegramBotClient botClient, FeedbackBotContext db)
+public class AdminRoleSyncMiddleware(
+    IOptions<AppOptions> options,
+    ITelegramBotClient botClient,
+    FeedbackBotContext db,
+    ILogger<AdminRoleSyncMiddleware> logger)
     : FrameMiddleware
 {
     private readonly long _chatId = options.Value.FeedbackChatId;
@@ -15,6 +19,9 @@ public class AdminRoleSyncMiddleware(IOptions<AppOptions> options, ITelegramBotC
             {
                 await db.RoleMembers.Where(x => x.UserId == update.Message.LeftChatMember.Id).ExecuteDeleteAsync(ct)
                     .ConfigureAwait(false);
+                logger.LogInformation(@"Removed bot's admin rights for user {user} with telegram id = {id:D}",
+                    update.Message.LeftChatMember.Username,
+                    update.Message.LeftChatMember.Id);
             }
             else if (context.GetCommandName() is not null)
             {
@@ -33,6 +40,9 @@ public class AdminRoleSyncMiddleware(IOptions<AppOptions> options, ITelegramBotC
                     }, ct).ConfigureAwait(false);
                     await db.SaveChangesAsync(ct).ConfigureAwait(false);
                 }
+
+                logger.LogInformation(@"Granted bot's admin rights for user with telegram id = {id:D}",
+                    userId);
             }
         }
 

@@ -9,7 +9,8 @@ public class MessageCopierMiddleware(
     IOptions<AppOptions> options,
     ITelegramBotClient botClient,
     FeedbackBotContext db,
-    FeedbackMetricsService feedbackMetricsService) : FrameMiddleware
+    FeedbackMetricsService feedbackMetricsService,
+    ILogger<MessageCopierMiddleware> logger) : FrameMiddleware
 {
     private static readonly FrozenSet<ReactionTypeEmoji> _highVoltageEmoji =
         new[] { new ReactionTypeEmoji { Emoji = @"⚡" } }.ToFrozenSet();
@@ -51,6 +52,7 @@ public class MessageCopierMiddleware(
                         MessageId = update.Message.MessageId,
                         AllowSendingWithoutReply = true,
                     }, cancellationToken: ct).ConfigureAwait(false);
+                logger.LogInformation(@"Bot has been banned in chat with id = {chatId}", update.Message.Chat.Id);
                 return;
             }
 
@@ -63,6 +65,10 @@ public class MessageCopierMiddleware(
             await db.SaveChangesAsync(ct).ConfigureAwait(false);
             await botClient.SetMessageReaction(update.Message.Chat.Id, update.Message.MessageId, _highVoltageEmoji,
                 cancellationToken: ct).ConfigureAwait(false);
+            logger.LogInformation(@"Copied message {messageId} from topic {topicId} to chat with id = {userId}",
+                update.Message.MessageId,
+                update.Message.MessageThreadId,
+                topic.UserChatId);
             feedbackMetricsService.IncMessagesCopied(topic.ThreadId, topic.UserChatId);
         }
 

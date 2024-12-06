@@ -9,7 +9,8 @@ public class MessageForwarderMiddleware(
     IOptions<AppOptions> options,
     ITelegramBotClient botClient,
     FeedbackBotContext db,
-    FeedbackMetricsService feedbackMetricsService) : FrameMiddleware
+    FeedbackMetricsService feedbackMetricsService,
+    ILogger<MessageForwarderMiddleware> logger) : FrameMiddleware
 {
     private readonly long _chatId = options.Value.FeedbackChatId;
 
@@ -41,10 +42,13 @@ public class MessageForwarderMiddleware(
         {
             await botClient.ForwardMessage(_chatId, message.Chat.Id, message.MessageId,
                 dbTopic.ThreadId, false, false, ct).ConfigureAwait(false);
+            logger.LogInformation(@"Forwarded message {messageId} from chat {chatId} to topic {topicId}", message.Id,
+                message.Chat.Id, dbTopic.ThreadId);
         }
         catch (ApiRequestException e) when (string.Equals(e.Message, @"Bad Request: message thread not found",
                                                 StringComparison.OrdinalIgnoreCase))
         {
+            logger.LogWarning(@"Topic {topicId} not found in chat, creating new topic...", dbTopic.ThreadId);
             await db.Topics.Where(x => x.Id == dbTopic.Id).Take(1).ExecuteDeleteAsync(ct).ConfigureAwait(false);
             await ProcessMessage(message, context, ct).ConfigureAwait(false);
         }
@@ -70,6 +74,7 @@ public class MessageForwarderMiddleware(
             botClient.EditForumTopic(_chatId, threadId!.Value, dbTopic.ToString(), cancellationToken: ct);
         Task reopenTask = botClient.ReopenForumTopic(_chatId, threadId.Value, ct);
         await Task.WhenAll(saveTask, editTask, reopenTask).ConfigureAwait(false);
+        logger.LogInformation(@"Reopened topic {topicId}", threadId.Value);
     }
 
     protected virtual async Task<DbTopic> CreateTopic(Message message, FrameContext context,
@@ -89,6 +94,8 @@ public class MessageForwarderMiddleware(
         await db.SaveChangesAsync(ct).ConfigureAwait(false);
         ForumTopic topic = await botClient.CreateForumTopic(_chatId, dbTopic.ToString(), cancellationToken: ct)
             .ConfigureAwait(false);
+        logger.LogInformation(@"Created topic {topicId} for user {username} with id = {userId}", topic.MessageThreadId,
+            user.UserName, user.Id);
         await db.Topics.ExecuteUpdateAsync(x => x.SetProperty(y => y.ThreadId, topic.MessageThreadId), ct)
             .ConfigureAwait(false);
         db.Topics.Update(dbTopic).State = EntityState.Detached;
@@ -111,6 +118,7 @@ public class MessageForwarderMiddleware(
         Message result = await botClient
             .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct)
             .ConfigureAwait(false);
+        logger.LogInformation(@"Sent head message for topic {topicId}", result.MessageThreadId);
         await botClient.PinChatMessage(result.Chat.Id, result.MessageId, cancellationToken: ct).ConfigureAwait(false);
     }
 }
