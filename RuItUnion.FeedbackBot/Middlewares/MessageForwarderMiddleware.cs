@@ -1,4 +1,5 @@
-﻿using RuItUnion.FeedbackBot.Data.Models;
+﻿using System.Globalization;
+using RuItUnion.FeedbackBot.Data.Models;
 using Telegram.Bot.Exceptions;
 using TgBotFrame.Commands.Authorization.Models;
 
@@ -29,44 +30,11 @@ public class MessageForwarderMiddleware(
             .ConfigureAwait(false);
         if (dbTopic is null)
         {
-            DbUser user = await db.Users.AsTracking().FirstAsync(x => x.Id == message.From!.Id, ct)
-                .ConfigureAwait(false);
-
-            dbTopic = new()
-            {
-                ThreadId = Random.Shared.Next(int.MinValue, 0),
-                IsOpen = true,
-                UserChatId = message.Chat.Id,
-                User = user,
-            };
-            await db.Topics.AddAsync(dbTopic, ct).ConfigureAwait(false);
-            await db.SaveChangesAsync(ct).ConfigureAwait(false);
-            ForumTopic topic = await botClient.CreateForumTopic(_chatId, dbTopic.ToString(), cancellationToken: ct)
-                .ConfigureAwait(false);
-            await db.Topics.ExecuteUpdateAsync(x => x.SetProperty(y => y.ThreadId, topic.MessageThreadId), ct)
-                .ConfigureAwait(false);
-            db.Topics.Update(dbTopic).State = EntityState.Detached;
-            dbTopic.ThreadId = topic.MessageThreadId;
-            await db.SaveChangesAsync(ct).ConfigureAwait(false);
-            await CreateInfoMessage(context, dbTopic, user, ct).ConfigureAwait(false);
+            dbTopic = await CreateTopic(message, context, ct).ConfigureAwait(false);
         }
         else if (!dbTopic.IsOpen)
         {
-            db.Topics.Update(dbTopic).State = EntityState.Unchanged;
-            dbTopic.IsOpen = true;
-            int? threadId = dbTopic.ThreadId;
-            if (threadId is null or < 0)
-            {
-                db.Topics.Remove(dbTopic);
-                await db.SaveChangesAsync(ct).ConfigureAwait(false);
-                await ProcessMessage(message, context, ct).ConfigureAwait(false);
-            }
-
-            Task<int> saveTask = db.SaveChangesAsync(ct);
-            Task editTask =
-                botClient.EditForumTopic(_chatId, threadId!.Value, dbTopic.ToString(), cancellationToken: ct);
-            Task reopenTask = botClient.ReopenForumTopic(_chatId, threadId.Value, ct);
-            await Task.WhenAll(saveTask, editTask, reopenTask).ConfigureAwait(false);
+            await OpenTopic(message, context, dbTopic, ct).ConfigureAwait(false);
         }
 
         try
@@ -84,14 +52,61 @@ public class MessageForwarderMiddleware(
         feedbackMetricsService.IncMessagesForwarded(dbTopic.ThreadId, message.From?.Id ?? 0L);
     }
 
-    private async Task CreateInfoMessage(FrameContext context, DbTopic topic, DbUser user,
+    protected virtual async Task OpenTopic(Message message, FrameContext context, DbTopic dbTopic,
         CancellationToken ct = default)
     {
-        string noData = ResourceManager.GetString(nameof(UserInfoMessage_NoData), context.GetCultureInfo())!;
-        string message = ResourceManager.GetString(nameof(UserInfoMessage), context.GetCultureInfo())!;
+        db.Topics.Update(dbTopic).State = EntityState.Unchanged;
+        dbTopic.IsOpen = true;
+        int? threadId = dbTopic.ThreadId;
+        if (threadId is null or < 0)
+        {
+            db.Topics.Remove(dbTopic);
+            await db.SaveChangesAsync(ct).ConfigureAwait(false);
+            await ProcessMessage(message, context, ct).ConfigureAwait(false);
+        }
+
+        Task<int> saveTask = db.SaveChangesAsync(ct);
+        Task editTask =
+            botClient.EditForumTopic(_chatId, threadId!.Value, dbTopic.ToString(), cancellationToken: ct);
+        Task reopenTask = botClient.ReopenForumTopic(_chatId, threadId.Value, ct);
+        await Task.WhenAll(saveTask, editTask, reopenTask).ConfigureAwait(false);
+    }
+
+    protected virtual async Task<DbTopic> CreateTopic(Message message, FrameContext context,
+        CancellationToken ct = default)
+    {
+        DbUser user = await db.Users.AsTracking().FirstAsync(x => x.Id == message.From!.Id, ct)
+            .ConfigureAwait(false);
+
+        DbTopic dbTopic = new()
+        {
+            ThreadId = Random.Shared.Next(int.MinValue, 0),
+            IsOpen = true,
+            UserChatId = message.Chat.Id,
+            User = user,
+        };
+        await db.Topics.AddAsync(dbTopic, ct).ConfigureAwait(false);
+        await db.SaveChangesAsync(ct).ConfigureAwait(false);
+        ForumTopic topic = await botClient.CreateForumTopic(_chatId, dbTopic.ToString(), cancellationToken: ct)
+            .ConfigureAwait(false);
+        await db.Topics.ExecuteUpdateAsync(x => x.SetProperty(y => y.ThreadId, topic.MessageThreadId), ct)
+            .ConfigureAwait(false);
+        db.Topics.Update(dbTopic).State = EntityState.Detached;
+        dbTopic.ThreadId = topic.MessageThreadId;
+        await db.SaveChangesAsync(ct).ConfigureAwait(false);
+        await CreateInfoMessage(context, dbTopic, user, ct).ConfigureAwait(false);
+        return dbTopic;
+    }
+
+    protected virtual async Task CreateInfoMessage(FrameContext context, DbTopic topic, DbUser user,
+        CancellationToken ct = default)
+    {
+        CultureInfo culture = context.GetCultureInfo();
+        string noData = ResourceManager.GetString(nameof(UserInfoMessage_NoData), culture)!;
+        string message = ResourceManager.GetString(nameof(UserInfoMessage), culture)!;
         string username = user.UserName is not null ? @"@" + user.UserName : noData;
         message = string.Format(message, user.FirstName, user.LastName ?? noData, username, user.Id,
-            context.GetCultureInfo().NativeName);
+            culture.NativeName);
 
         Message result = await botClient
             .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct)
