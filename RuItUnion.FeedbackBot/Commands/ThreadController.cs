@@ -52,7 +52,7 @@ public class ThreadController(
         if (messageId is null)
         {
             await botClient.SendMessage(_chatId,
-                    ResourceManager.GetString(nameof(ThreadController_Delete_NotReply), Context.GetCultureInfo())!)
+                    ResourceManager.GetString(nameof(ThreadController_Delete_NotReply), Context.GetCultureInfo())!, messageThreadId: Update.Message?.MessageThreadId)
                 .ConfigureAwait(false);
             return;
         }
@@ -72,7 +72,7 @@ public class ThreadController(
         else
         {
             await botClient.SendMessage(_chatId,
-                    ResourceManager.GetString(nameof(ThreadController_Delete_NotFound), Context.GetCultureInfo())!)
+                    ResourceManager.GetString(nameof(ThreadController_Delete_NotFound), Context.GetCultureInfo())!, messageThreadId: Update.Message?.MessageThreadId)
                 .ConfigureAwait(false);
         }
     }
