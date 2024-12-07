@@ -81,7 +81,7 @@ public class ThreadController(
     [Restricted("admin")]
     public async Task Sync()
     {
-        DbTopic[] topics = await db.Topics.AsTracking().ToArrayAsync().ConfigureAwait(false);
+        DbTopic[] topics = await db.Topics.Include(x => x.User).AsTracking().ToArrayAsync().ConfigureAwait(false);
         long? chatId = Context.GetChatId();
         int? messageId = Context.GetMessageId();
         if (chatId is not null && messageId is not null)
