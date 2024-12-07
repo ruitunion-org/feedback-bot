@@ -29,6 +29,11 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+          cpus: 0.1
 
   database:
     container_name: "RuItUnion.FeedbackBot.Database"
@@ -48,6 +53,11 @@ services:
     volumes:
     - "postgres_data:/var/lib/postgresql/data"
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 32m
+          cpus: 0.1
 
   dashboard:
     container_name: "RuItUnion.FeedbackBot.Dashboard"
@@ -59,3 +69,8 @@ services:
     - target: 18888
       published: 18888
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 64m
+          cpus: 0.1
