@@ -70,7 +70,7 @@ public class MessageForwarderMiddleware(
             await ProcessMessage(message, context, ct).ConfigureAwait(false);
         }
 
-        Task<int> saveTask = db.SaveChangesAsync(ct);
+        Task saveTask = db.SaveChangesAsync(ct);
         Task editTask =
             botClient.EditForumTopic(_chatId, threadId!.Value, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct);
         Task reopenTask = botClient.ReopenForumTopic(_chatId, threadId.Value, ct);
