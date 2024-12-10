@@ -12,6 +12,7 @@ public class ThreadController(
     IOptions<AppOptions> options,
     ITelegramBotClient botClient,
     FeedbackBotContext db,
+    TopicTitleGenerator topicTitleGenerator,
     FeedbackMetricsService feedbackMetricsService)
     : CommandControllerBase
 {
@@ -127,7 +128,7 @@ public class ThreadController(
 
             try
             {
-                await botClient.EditForumTopic(_chatId, topic.ThreadId, topic.ToString()).ConfigureAwait(false);
+                await botClient.EditForumTopic(_chatId, topic.ThreadId, topicTitleGenerator.GetTopicTitle(topic)).ConfigureAwait(false);
             }
             catch (ApiRequestException e) when (e.Message == @"Bad Request: TOPIC_NOT_MODIFIED")
             {

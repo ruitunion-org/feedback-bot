@@ -10,6 +10,7 @@ public class MessageForwarderMiddleware(
     ITelegramBotClient botClient,
     FeedbackBotContext db,
     FeedbackMetricsService feedbackMetricsService,
+    TopicTitleGenerator topicTitleGenerator,
     ILogger<MessageForwarderMiddleware> logger) : FrameMiddleware
 {
     private readonly long _chatId = options.Value.FeedbackChatId;
@@ -71,7 +72,7 @@ public class MessageForwarderMiddleware(
 
         Task<int> saveTask = db.SaveChangesAsync(ct);
         Task editTask =
-            botClient.EditForumTopic(_chatId, threadId!.Value, dbTopic.ToString(), cancellationToken: ct);
+            botClient.EditForumTopic(_chatId, threadId!.Value, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct);
         Task reopenTask = botClient.ReopenForumTopic(_chatId, threadId.Value, ct);
         await Task.WhenAll(saveTask, editTask, reopenTask).ConfigureAwait(false);
         logger.LogInformation(@"Reopened topic {topicId}", threadId.Value);
@@ -92,7 +93,7 @@ public class MessageForwarderMiddleware(
         };
         await db.Topics.AddAsync(dbTopic, ct).ConfigureAwait(false);
         await db.SaveChangesAsync(ct).ConfigureAwait(false);
-        ForumTopic topic = await botClient.CreateForumTopic(_chatId, dbTopic.ToString(), cancellationToken: ct)
+        ForumTopic topic = await botClient.CreateForumTopic(_chatId, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct)
             .ConfigureAwait(false);
         logger.LogInformation(@"Created topic {topicId} for user {username} with id = {userId}", topic.MessageThreadId,
             user.UserName, user.Id);

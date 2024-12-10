@@ -55,6 +55,7 @@ builder.AddNpgsqlDataSource(@"RuItUnion-FeedbackBot-Database", settings =>
     settings.DisableHealthChecks = false;
 });
 
+builder.Services.AddSingleton<TopicTitleGenerator>();
 builder.Services.AddDbContext<FeedbackBotContext>((provider, optionsBuilder) =>
     optionsBuilder.UseNpgsql(provider.GetRequiredService<NpgsqlDataSource>()));
 builder.Services.AddScoped<IAuthorizationData, FeedbackBotContext>();
@@ -88,7 +89,6 @@ builder.Services.AddTgBotFrameCommands(commandsBuilder =>
     commandsBuilder.TryAddControllers(Assembly.GetEntryAssembly()!);
 });
 
-Uri tgUrl = new(@"https://api.telegram.org/bot" + tgToken + @"/getMe");
 builder.Services.AddHealthChecks()
     .AddCheck<TelegramHealthCheck>(@"telegram");
 
