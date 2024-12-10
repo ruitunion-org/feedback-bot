@@ -5,7 +5,7 @@ using RuItUnion.FeedbackBot.Data.Old.Models;
 
 namespace RuItUnion.FeedbackBot.Data.Old;
 
-public class Migrator(FeedbackBotContext newContext, OldDatabaseContext oldContext, ILogger<Migrator> logger)
+public class Migrator(IFeedbackBotContext newContext, OldDatabaseContext oldContext, ILogger<Migrator> logger)
 {
     public virtual async Task Migrate(CancellationToken cancellationToken = default)
     {

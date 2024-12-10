@@ -3,7 +3,7 @@ using TgBotFrame.Commands.Authorization.Interfaces;
 
 namespace RuItUnion.FeedbackBot.Data;
 
-public class FeedbackBotContext(DbContextOptions<FeedbackBotContext> options) : DbContext(options), IAuthorizationData
+public class FeedbackBotContext(DbContextOptions<FeedbackBotContext> options) : DbContext(options), IFeedbackBotContext
 {
     public DbSet<DbReply> Replies { get; init; } = null!;
     public DbSet<DbTopic> Topics { get; init; } = null!;

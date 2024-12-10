@@ -11,7 +11,7 @@ namespace RuItUnion.FeedbackBot.Commands;
 public class ThreadController(
     IOptions<AppOptions> options,
     ITelegramBotClient botClient,
-    FeedbackBotContext db,
+    IFeedbackBotContext db,
     TopicTitleGenerator topicTitleGenerator,
     FeedbackMetricsService feedbackMetricsService)
     : CommandControllerBase

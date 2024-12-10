@@ -5,7 +5,7 @@ namespace RuItUnion.FeedbackBot.Middlewares;
 public class AdminRoleSyncMiddleware(
     IOptions<AppOptions> options,
     ITelegramBotClient botClient,
-    FeedbackBotContext db,
+    IFeedbackBotContext db,
     ILogger<AdminRoleSyncMiddleware> logger)
     : FrameMiddleware
 {

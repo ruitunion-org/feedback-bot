@@ -58,6 +58,7 @@ builder.AddNpgsqlDataSource(@"RuItUnion-FeedbackBot-Database", settings =>
 builder.Services.AddSingleton<TopicTitleGenerator>();
 builder.Services.AddDbContext<FeedbackBotContext>((provider, optionsBuilder) =>
     optionsBuilder.UseNpgsql(provider.GetRequiredService<NpgsqlDataSource>()));
+builder.Services.AddScoped<IFeedbackBotContext, FeedbackBotContext>();
 builder.Services.AddScoped<IAuthorizationData, FeedbackBotContext>();
 
 bool useMigrator = !string.Equals(builder.Configuration[@"Migrator:EnableMigratorFromV01"], @"false",

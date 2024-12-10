@@ -8,7 +8,7 @@ namespace RuItUnion.FeedbackBot.Middlewares;
 public class MessageCopierMiddleware(
     IOptions<AppOptions> options,
     ITelegramBotClient botClient,
-    FeedbackBotContext db,
+    IFeedbackBotContext db,
     FeedbackMetricsService feedbackMetricsService,
     ILogger<MessageCopierMiddleware> logger) : FrameMiddleware
 {

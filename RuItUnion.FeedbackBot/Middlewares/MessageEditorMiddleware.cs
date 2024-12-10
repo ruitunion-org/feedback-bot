@@ -5,7 +5,7 @@ namespace RuItUnion.FeedbackBot.Middlewares;
 public class MessageEditorMiddleware(
     IOptions<AppOptions> options,
     ITelegramBotClient botClient,
-    FeedbackBotContext db,
+    IFeedbackBotContext db,
     ILogger<MessageEditorMiddleware> logger,
     FeedbackMetricsService feedbackMetricsService) : FrameMiddleware
 {

@@ -8,7 +8,7 @@ namespace RuItUnion.FeedbackBot.Middlewares;
 public class MessageForwarderMiddleware(
     IOptions<AppOptions> options,
     ITelegramBotClient botClient,
-    FeedbackBotContext db,
+    IFeedbackBotContext db,
     FeedbackMetricsService feedbackMetricsService,
     TopicTitleGenerator topicTitleGenerator,
     ILogger<MessageForwarderMiddleware> logger) : FrameMiddleware
