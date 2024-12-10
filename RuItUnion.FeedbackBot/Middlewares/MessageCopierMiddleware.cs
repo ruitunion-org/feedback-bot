@@ -65,13 +65,19 @@ public class MessageCopierMiddleware(
             await db.SaveChangesAsync(ct).ConfigureAwait(false);
             await botClient.SetMessageReaction(update.Message.Chat.Id, update.Message.MessageId, _highVoltageEmoji,
                 cancellationToken: ct).ConfigureAwait(false);
-            logger.LogInformation(@"Copied message {messageId} from topic {topicId} to chat with id = {userId}",
-                update.Message.MessageId,
-                update.Message.MessageThreadId,
-                topic.UserChatId);
-            feedbackMetricsService.IncMessagesCopied(topic.ThreadId, topic.UserChatId);
+            await OnSuccess(update.Message, topic).ConfigureAwait(false);
         }
 
         await Next(update, context, ct).ConfigureAwait(false);
+    }
+
+    protected virtual ValueTask OnSuccess(Message message, DbTopic topic)
+    {
+        logger.LogInformation(@"Copied message {messageId} from topic {topicId} to chat with id = {userId}",
+            message.MessageId,
+            message.MessageThreadId,
+            topic.UserChatId);
+        feedbackMetricsService.IncMessagesCopied(topic.ThreadId, topic.UserChatId);
+        return ValueTask.CompletedTask;
     }
 }

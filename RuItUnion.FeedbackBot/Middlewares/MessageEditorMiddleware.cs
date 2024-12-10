@@ -29,9 +29,7 @@ public class MessageEditorMiddleware(
                 {
                     await botClient.EditMessageText(reply.Topic.UserChatId, reply.UserMessageId,
                         update.EditedMessage.Text!, cancellationToken: ct).ConfigureAwait(false);
-                    logger.LogInformation(@"Edited message {messageId} in chat {chatId}", reply.UserMessageId,
-                        reply.Topic.UserChatId);
-                    feedbackMetricsService.IncMessagesEdited(reply.ChatThreadId, update.EditedMessage.From?.Id ?? 0L);
+                    OnSuccess(update.EditedMessage, reply);
                 }
             }
             else
@@ -52,5 +50,12 @@ public class MessageEditorMiddleware(
         }
 
         await Next(update, context, ct).ConfigureAwait(false);
+    }
+
+    protected virtual void OnSuccess(Message message, DbReply reply)
+    {
+        logger.LogInformation(@"Edited message {messageId} in chat {chatId}", reply.UserMessageId,
+            reply.Topic.UserChatId);
+        feedbackMetricsService.IncMessagesEdited(reply.ChatThreadId, message.From?.Id ?? 0L);
     }
 }
