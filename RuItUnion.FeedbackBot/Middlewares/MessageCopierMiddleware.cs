@@ -24,8 +24,7 @@ public class MessageCopierMiddleware(
             && update.Message.Chat.Id == _chatId
             && update.Message.ReplyToMessage is not null
             && update.Message.ReplyToMessage.Type == MessageType.Text
-            && update.Message.ReplyToMessage.From?.Username == context.GetBotUsername()
-            && await db.Replies.AnyAsync(x => x.ChatMessageId == update.Message.Id, ct).ConfigureAwait(false))
+            && update.Message.ReplyToMessage.From?.Username == context.GetBotUsername())
         {
             DbTopic? topic = await db.Topics.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ThreadId == update.Message.MessageThreadId, ct).ConfigureAwait(false);
