@@ -142,4 +142,7 @@
   <data name="UserInfoMessage_NoData" xml:space="preserve">
     <value>—</value>
   </data>
+  <data name="MessageForwarderMiddleware_Exception" xml:space="preserve">
+    <value>Произошла ошибка при пересылке, ваше сообщение не было доставлено</value>
+  </data>
 </root>

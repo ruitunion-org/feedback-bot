@@ -133,6 +133,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Произошла ошибка при пересылке, ваше сообщение не было доставлено.
+        /// </summary>
+        public static string MessageForwarderMiddleware_Exception {
+            get {
+                return ResourceManager.GetString("MessageForwarderMiddleware_Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Привет! Этот бот перенаправит все ваши сообщения в чат операторам, а их ответы - перенаправит вам..
         /// </summary>
         public static string StartMessage {
