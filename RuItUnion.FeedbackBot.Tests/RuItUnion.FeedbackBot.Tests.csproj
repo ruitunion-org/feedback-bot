@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RuItUnion.FeedbackBot.Data\RuItUnion.FeedbackBot.Data.csproj" />
     <ProjectReference Include="..\RuItUnion.FeedbackBot\RuItUnion.FeedbackBot.csproj" />
   </ItemGroup>
 
