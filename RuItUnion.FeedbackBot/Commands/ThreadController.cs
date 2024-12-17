@@ -53,7 +53,8 @@ public class ThreadController(
         if (messageId is null)
         {
             await botClient.SendMessage(_chatId,
-                    ResourceManager.GetString(nameof(ThreadController_Delete_NotReply), Context.GetCultureInfo())!, messageThreadId: Update.Message?.MessageThreadId)
+                    ResourceManager.GetString(nameof(ThreadController_Delete_NotReply), Context.GetCultureInfo())!,
+                    messageThreadId: Update.Message?.MessageThreadId)
                 .ConfigureAwait(false);
             return;
         }
@@ -73,7 +74,8 @@ public class ThreadController(
         else
         {
             await botClient.SendMessage(_chatId,
-                    ResourceManager.GetString(nameof(ThreadController_Delete_NotFound), Context.GetCultureInfo())!, messageThreadId: Update.Message?.MessageThreadId)
+                    ResourceManager.GetString(nameof(ThreadController_Delete_NotFound), Context.GetCultureInfo())!,
+                    messageThreadId: Update.Message?.MessageThreadId)
                 .ConfigureAwait(false);
         }
     }
@@ -128,7 +130,8 @@ public class ThreadController(
 
             try
             {
-                await botClient.EditForumTopic(_chatId, topic.ThreadId, topicTitleGenerator.GetTopicTitle(topic)).ConfigureAwait(false);
+                await botClient.EditForumTopic(_chatId, topic.ThreadId, topicTitleGenerator.GetTopicTitle(topic))
+                    .ConfigureAwait(false);
             }
             catch (ApiRequestException e) when (e.Message == @"Bad Request: TOPIC_NOT_MODIFIED")
             {
