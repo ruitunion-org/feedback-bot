@@ -20,7 +20,23 @@ public class MessageForwarderMiddleware(
         if (update.Message is not null && update.Message?.Chat.Id != _chatId
                                        && string.IsNullOrEmpty(context.GetCommandName()))
         {
-            await ProcessMessage(update.Message!, context, ct).ConfigureAwait(false);
+            try
+            {
+                await ProcessMessage(update.Message!, context, ct).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                await botClient.SendMessage(update.Message!.Chat.Id,
+                    ResourceManager.GetString(nameof(MessageForwarderMiddleware_Exception), context.GetCultureInfo())!,
+                    replyParameters:new()
+                    {
+                        AllowSendingWithoutReply = true,
+                        ChatId = update.Message!.Chat.Id,
+                        MessageId = update.Message!.Id,
+                    },
+                    cancellationToken: ct).ConfigureAwait(false);
+                logger.LogError(e, @"Exception during message forwarding");
+            }
         }
 
         await Next(update, context, ct).ConfigureAwait(false);
@@ -72,7 +88,8 @@ public class MessageForwarderMiddleware(
 
         Task saveTask = db.SaveChangesAsync(ct);
         Task editTask =
-            botClient.EditForumTopic(_chatId, threadId!.Value, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct);
+            botClient.EditForumTopic(_chatId, threadId!.Value, topicTitleGenerator.GetTopicTitle(dbTopic),
+                cancellationToken: ct);
         Task reopenTask = botClient.ReopenForumTopic(_chatId, threadId.Value, ct);
         await Task.WhenAll(saveTask, editTask, reopenTask).ConfigureAwait(false);
         logger.LogInformation(@"Reopened topic {topicId}", threadId.Value);
@@ -86,22 +103,19 @@ public class MessageForwarderMiddleware(
 
         DbTopic dbTopic = new()
         {
-            ThreadId = Random.Shared.Next(int.MinValue, 0),
+            ThreadId = default,
             IsOpen = true,
             UserChatId = message.Chat.Id,
             User = user,
         };
+        ForumTopic topic = await botClient
+            .CreateForumTopic(_chatId, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct)
+            .ConfigureAwait(false);
+        dbTopic.ThreadId = topic.MessageThreadId;
         await db.Topics.AddAsync(dbTopic, ct).ConfigureAwait(false);
         await db.SaveChangesAsync(ct).ConfigureAwait(false);
-        ForumTopic topic = await botClient.CreateForumTopic(_chatId, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct)
-            .ConfigureAwait(false);
         logger.LogInformation(@"Created topic {topicId} for user {username} with id = {userId}", topic.MessageThreadId,
             user.UserName, user.Id);
-        await db.Topics.ExecuteUpdateAsync(x => x.SetProperty(y => y.ThreadId, topic.MessageThreadId), ct)
-            .ConfigureAwait(false);
-        db.Topics.Update(dbTopic).State = EntityState.Detached;
-        dbTopic.ThreadId = topic.MessageThreadId;
-        await db.SaveChangesAsync(ct).ConfigureAwait(false);
         await CreateInfoMessage(context, dbTopic, user, ct).ConfigureAwait(false);
         return dbTopic;
     }
