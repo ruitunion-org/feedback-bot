@@ -6,6 +6,7 @@ using RuItUnion.FeedbackBot.Middlewares;
 using RuItUnion.FeedbackBot.ServiceDefaults;
 using TgBotFrame.Commands.Authorization.Extensions;
 using TgBotFrame.Commands.Authorization.Interfaces;
+using TgBotFrame.Commands.Authorization.Services;
 using TgBotFrame.Commands.Help.Extensions;
 using TgBotFrame.Commands.Injection;
 using TgBotFrame.Commands.RateLimit.Middleware;
@@ -55,6 +56,7 @@ builder.AddNpgsqlDataSource(@"RuItUnion-FeedbackBot-Database", settings =>
     settings.DisableHealthChecks = false;
 });
 
+builder.Services.AddScoped<ReplyUserIdResolver, ReplyUserIdAdvancedResolver>();
 builder.Services.AddSingleton<TopicTitleGenerator>();
 builder.Services.AddDbContext<FeedbackBotContext>((provider, optionsBuilder) =>
     optionsBuilder.UseNpgsql(provider.GetRequiredService<NpgsqlDataSource>()));
