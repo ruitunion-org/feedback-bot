@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 9.0.x
     - name: Check code style
-      run: dotnet format ./RuItUniuon.FeedbackBot.sln --no-restore --verify-no-changes --verbosity normal
+      run: dotnet format ./RuItUnion.FeedbackBot.sln --no-restore --verify-no-changes --verbosity normal
     - name: Build
-      run: dotnet build ./RuItUniuon.FeedbackBot.sln
+      run: dotnet build ./RuItUnion.FeedbackBot.sln
     - name: Test
-      run: dotnet test ./RuItUniuon.FeedbackBot.sln
+      run: dotnet test ./RuItUnion.FeedbackBot.sln
