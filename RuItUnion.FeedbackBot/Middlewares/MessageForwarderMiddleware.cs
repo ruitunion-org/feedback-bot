@@ -28,7 +28,7 @@ public class MessageForwarderMiddleware(
             {
                 await botClient.SendMessage(update.Message!.Chat.Id,
                     ResourceManager.GetString(nameof(MessageForwarderMiddleware_Exception), context.GetCultureInfo())!,
-                    replyParameters:new()
+                    replyParameters: new()
                     {
                         AllowSendingWithoutReply = true,
                         ChatId = update.Message!.Chat.Id,
