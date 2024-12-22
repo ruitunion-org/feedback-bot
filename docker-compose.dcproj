@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
+	<PropertyGroup Label="Globals">
+		<ProjectVersion>2.1</ProjectVersion>
+		<DockerTargetOS>Linux</DockerTargetOS>
+		<DockerPublishLocally>False</DockerPublishLocally>
+		<ProjectGuid>13443994-44e4-41d8-8a4f-1849cee163f6</ProjectGuid>
+		<DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
+		<DockerServiceUrl>{Scheme}://localhost:{ServicePort}/health</DockerServiceUrl>
+		<DockerServiceName>ruitunion.feedbackbot</DockerServiceName>
+		<DockerComposeProjectName>ruitunion-feedbackbot</DockerComposeProjectName>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="docker-compose.override.yml">
+			<DependentUpon>docker-compose.yml</DependentUpon>
+		</None>
+		<None Include="docker-compose.yml" />
+		<None Include=".dockerignore" />
+		<None Include="feedback_bot.env" />
+	</ItemGroup>
+</Project>

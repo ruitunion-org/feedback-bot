@@ -16,8 +16,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
+    - name: Check code style
+      run: dotnet format ./RuItUnion.FeedbackBot.sln --no-restore --verify-no-changes --verbosity normal
     - name: Build
-      run: dotnet build ./src/Bot.csproj
+      run: dotnet build ./RuItUnion.FeedbackBot.sln
     - name: Test
-      run: dotnet test ./tests/Bot.Tests.csproj
+      run: dotnet test ./RuItUnion.FeedbackBot.sln

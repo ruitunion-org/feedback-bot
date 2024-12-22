@@ -1,31 +1,73 @@
-version: "3.8"
-
 volumes:
   postgres_data:
     driver: local
 
 services:
   feedback_bot:
-    container_name: feedback_bot_app
-    image: feedback_bot
-    restart: always
+    container_name: "RuItUnion.FeedbackBot.App"
+    image: ghcr.io/ruitunion-org/feedback-bot:v0.2.0
+    build:
+      context: .
+      dockerfile: RuItUnion.FeedbackBot/Dockerfile
+    healthcheck:
+      test: curl -f http://localhost:8080/health || exit 1 
+      interval: 30s
+      timeout: 10s
+    env_file:
+      - path: feedback_bot.env
+        required: true
     environment:
-      - AppOptions__DbConnectionString=Host=db;Port=5432;Database=feedback_bot;Username=postgres;Password=123
-      - AppOptions__FeedbackBotToken=<bot_token>
-      - AppOptions__FeedbackBotId=<bot_id>
-      - AppOptions__FeedbackChatId=<chat_id>
-      - AppOptions__Start="Текст приветствия"
-      - AppOptions__Help="Текст справки"
+      ConnectionStrings__RuItUnion-FeedbackBot-Database: "Host=database;Port=5432;Username=postgres;Password=guX4Gk9xaYI3DJcdg4s05t"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES: "true"
+      OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
+      ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+      HTTP_PORTS: "8080"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
+      OTEL_SERVICE_NAME: "RuItUnion-FeedbackBot"
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256m
 
-  db:
-    container_name: feedback_bot_db
-    image: postgres:latest
-    restart: always
+  database:
+    container_name: "RuItUnion.FeedbackBot.Database"
+    image: "docker.io/library/postgres:17-alpine"
+    healthcheck:
+      test: pg_isready -h localhost -U $$POSTGRES_USER
+      interval: 10s
+      timeout: 10s
     environment:
-      POSTGRES_DB: feedback_bot
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-    ports:
-      - "5432:5432"
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256 --locale-provider=icu --icu-locale=ru_RU"
+      LANG: ru_RU.utf-8
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "guX4Gk9xaYI3DJcdg4s05t"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
+      OTEL_SERVICE_NAME: "RuItUnion-FeedbackBot-Database"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+    - "postgres_data:/var/lib/postgresql/data"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 32m
+
+  dashboard:
+    container_name: "RuItUnion.FeedbackBot.Dashboard"
+    image: "mcr.microsoft.com/dotnet/aspire-dashboard:9"
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "false"
+      Dashboard__ApplicationName: "RuItUnion.FeedbackBot"
+    ports:
+    - target: 18888
+      published: 18888
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 64m
