@@ -174,7 +174,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         ///Имя: {0};
         ///Фамилия: {1};
         ///Имя пользователя: {2};
-        ///ИД: {3:D};
+        ///ИД: &lt;a href=&quot;tg://openmessage?user_id={3:D}&quot;&gt;{3:D}&lt;/a&gt;;
         ///Язык: {4}..
         /// </summary>
         public static string UserInfoMessage {

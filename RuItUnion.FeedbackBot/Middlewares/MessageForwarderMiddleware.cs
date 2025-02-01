@@ -131,7 +131,7 @@ public class MessageForwarderMiddleware(
             culture.NativeName);
 
         Message result = await botClient
-            .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct)
+            .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html)
             .ConfigureAwait(false);
         logger.LogInformation(@"Sent head message for topic {topicId}", result.MessageThreadId);
         await botClient.PinChatMessage(result.Chat.Id, result.MessageId, cancellationToken: ct).ConfigureAwait(false);
