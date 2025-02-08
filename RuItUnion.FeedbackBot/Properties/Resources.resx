@@ -136,7 +136,7 @@
 Имя: {0};
 Фамилия: {1};
 Имя пользователя: {2};
-ИД: {3:D};
+ИД: &lt;a href="tg://openmessage?user_id={3:D}"&gt;{3:D}&lt;/a&gt;;
 Язык: {4}.</value>
   </data>
   <data name="UserInfoMessage_NoData" xml:space="preserve">
