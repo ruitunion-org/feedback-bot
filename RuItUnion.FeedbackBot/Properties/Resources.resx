@@ -110,7 +110,7 @@
     <value>Данное сообщение не было отправлено пользователю, его достаточно удалить стандартными средствами Telegram</value>
   </data>
   <data name="Category_Description_Thread" xml:space="preserve">
-    <value>Команды данной категории повзволяют управлять темами и сообщениями в ней</value>
+    <value>Команды данной категории позволяют управлять темами и сообщениями в ней</value>
   </data>
   <data name="Category_Name_Thread" xml:space="preserve">
     <value>Тема</value>
@@ -144,5 +144,8 @@
   </data>
   <data name="MessageForwarderMiddleware_Exception" xml:space="preserve">
     <value>Произошла ошибка при пересылке, ваше сообщение не было доставлено</value>
+  </data>
+  <data name="UserInfoGeneralMessage" xml:space="preserve">
+	  <value>Создана новая тема &lt;a href="https://t.me/c/{0:D}/{1:D}"&gt;{2}&lt;/a&gt; для пользователя &lt;a href="tg://openmessage?user_id={3:D}"&gt;{4}&lt;/a&gt;</value>
   </data>
 </root>

@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using RuItUnion.FeedbackBot.Data.Models;
 using Telegram.Bot.Exceptions;
+using Telegram.Bot.Types.Enums;
 using TgBotFrame.Commands.Authorization.Models;
 
 namespace RuItUnion.FeedbackBot.Middlewares;
@@ -103,24 +104,25 @@ public class MessageForwarderMiddleware(
 
         DbTopic dbTopic = new()
         {
-            ThreadId = default,
+            ThreadId = 0,
             IsOpen = true,
             UserChatId = message.Chat.Id,
             User = user,
         };
+        string topicName = topicTitleGenerator.GetTopicTitle(dbTopic);
         ForumTopic topic = await botClient
-            .CreateForumTopic(_chatId, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct)
+            .CreateForumTopic(_chatId, topicName, cancellationToken: ct)
             .ConfigureAwait(false);
         dbTopic.ThreadId = topic.MessageThreadId;
         await db.Topics.AddAsync(dbTopic, ct).ConfigureAwait(false);
         await db.SaveChangesAsync(ct).ConfigureAwait(false);
         logger.LogInformation(@"Created topic {topicId} for user {username} with id = {userId}", topic.MessageThreadId,
             user.UserName, user.Id);
-        await CreateInfoMessage(context, dbTopic, user, ct).ConfigureAwait(false);
+        await CreateInfoMessage(context, dbTopic, user, topicName, ct).ConfigureAwait(false);
         return dbTopic;
     }
 
-    protected virtual async Task CreateInfoMessage(FrameContext context, DbTopic topic, DbUser user,
+    protected virtual async Task CreateInfoMessage(FrameContext context, DbTopic topic, DbUser user, string topicTitle,
         CancellationToken ct = default)
     {
         CultureInfo culture = context.GetCultureInfo();
@@ -131,9 +133,22 @@ public class MessageForwarderMiddleware(
             culture.NativeName);
 
         Message result = await botClient
-            .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html)
+            .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct,
+                parseMode: ParseMode.Html)
             .ConfigureAwait(false);
         logger.LogInformation(@"Sent head message for topic {topicId}", result.MessageThreadId);
-        await botClient.PinChatMessage(result.Chat.Id, result.MessageId, cancellationToken: ct).ConfigureAwait(false);
+        await db.Replies.AddAsync(new()
+        {
+            ChatMessageId = result.Id,
+            ChatThreadId = topic.ThreadId,
+            UserMessageId = -1,
+        }, ct).ConfigureAwait(false);
+        await Task.WhenAll(db.SaveChangesAsync(ct),
+            botClient.PinChatMessage(result.Chat.Id, result.MessageId, cancellationToken: ct)).ConfigureAwait(false);
+
+        string generalText = string.Format(
+            ResourceManager.GetString(nameof(UserInfoGeneralMessage), culture)!,
+            -(_chatId + 1000000000000), result.Id, topicTitle, topic.User.Id, username);
+        await botClient.SendMessage(_chatId, generalText, ParseMode.Html, cancellationToken: ct).ConfigureAwait(false);
     }
 }

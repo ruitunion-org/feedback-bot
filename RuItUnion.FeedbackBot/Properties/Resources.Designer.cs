@@ -169,6 +169,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Создана новая тема &lt;a href=&quot;https://t.me/c/{0:D}/{1:D}&quot;&gt;{2}&lt;/a&gt; для пользователя &lt;a href=&quot;tg://openmessage?user_id={3:D}&quot;&gt;{4}&lt;/a&gt;.
+        /// </summary>
+        public static string UserInfoGeneralMessage {
+            get {
+                return ResourceManager.GetString("UserInfoGeneralMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Информация о пользователе:
         ///
         ///Имя: {0};

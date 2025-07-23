@@ -15,41 +15,51 @@ public class MessageEditorMiddleware(
     {
         if (update.EditedMessage is not null)
         {
-            if (update.EditedMessage.Chat.Id == _chatId)
-            {
-                DbReply? reply = await db.Replies.AsNoTracking().Include(x => x.Topic).FirstOrDefaultAsync(x =>
-                    x.ChatThreadId == update.EditedMessage.MessageThreadId
-                    && x.ChatMessageId == update.EditedMessage.MessageId, ct).ConfigureAwait(false);
-                if (reply is null)
-                {
-                    logger.LogWarning(@"Reply {messageId} in topic {topicId} not found in DB",
-                        update.EditedMessage.MessageId, update.EditedMessage.MessageThreadId);
-                }
-                else
-                {
-                    await botClient.EditMessageText(reply.Topic.UserChatId, reply.UserMessageId,
-                        update.EditedMessage.Text!, cancellationToken: ct).ConfigureAwait(false);
-                    OnSuccess(update.EditedMessage, reply);
-                }
-            }
-            else
-            {
-                await botClient.SendMessage(
-                        update.EditedMessage.Chat.Id,
-                        ResourceManager.GetString(nameof(MessageEditorMiddleware_NotSupported),
-                            context.GetCultureInfo())!,
-                        messageThreadId: update.EditedMessage!.MessageThreadId, cancellationToken: ct)
-                    .ConfigureAwait(false);
-                logger.LogInformation(
-                    @"User {username} with id = {userId} tried to edit message {messageId} in chat {chatId}",
-                    update.EditedMessage.From?.Username,
-                    update.EditedMessage.From?.Id ?? 0L,
-                    update.EditedMessage.Id,
-                    update.EditedMessage.Chat.Id);
-            }
+            await ProcessEditedMessage(update.EditedMessage, context, ct).ConfigureAwait(false);
         }
 
         await Next(update, context, ct).ConfigureAwait(false);
+    }
+
+    private async Task ProcessEditedMessage(Message editedMessage, FrameContext context, CancellationToken ct = default)
+    {
+        if (editedMessage.Chat.Id == _chatId)
+        {
+            DbReply? reply = await db.Replies.AsNoTracking().Include(x => x.Topic).FirstOrDefaultAsync(x =>
+                x.ChatThreadId == editedMessage.MessageThreadId
+                && x.ChatMessageId == editedMessage.MessageId, ct).ConfigureAwait(false);
+            if (reply is null)
+            {
+                logger.LogWarning(@"Reply {messageId} in topic {topicId} not found in DB",
+                    editedMessage.MessageId, editedMessage.MessageThreadId);
+            }
+            else
+            {
+                if (reply.UserMessageId < 0)
+                {
+                    return;
+                }
+
+                await botClient.EditMessageText(reply.Topic.UserChatId, reply.UserMessageId,
+                    editedMessage.Text!, cancellationToken: ct).ConfigureAwait(false);
+                OnSuccess(editedMessage, reply);
+            }
+        }
+        else
+        {
+            await botClient.SendMessage(
+                    editedMessage.Chat.Id,
+                    ResourceManager.GetString(nameof(MessageEditorMiddleware_NotSupported),
+                        context.GetCultureInfo())!,
+                    messageThreadId: editedMessage.MessageThreadId, cancellationToken: ct)
+                .ConfigureAwait(false);
+            logger.LogInformation(
+                @"User {username} with id = {userId} tried to edit message {messageId} in chat {chatId}",
+                editedMessage.From?.Username,
+                editedMessage.From?.Id ?? 0L,
+                editedMessage.Id,
+                editedMessage.Chat.Id);
+        }
     }
 
     protected virtual void OnSuccess(Message message, DbReply reply)
