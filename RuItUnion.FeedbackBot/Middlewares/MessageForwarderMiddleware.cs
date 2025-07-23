@@ -109,19 +109,20 @@ public class MessageForwarderMiddleware(
             UserChatId = message.Chat.Id,
             User = user,
         };
+        string topicName = topicTitleGenerator.GetTopicTitle(dbTopic);
         ForumTopic topic = await botClient
-            .CreateForumTopic(_chatId, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct)
+            .CreateForumTopic(_chatId, topicName, cancellationToken: ct)
             .ConfigureAwait(false);
         dbTopic.ThreadId = topic.MessageThreadId;
         await db.Topics.AddAsync(dbTopic, ct).ConfigureAwait(false);
         await db.SaveChangesAsync(ct).ConfigureAwait(false);
         logger.LogInformation(@"Created topic {topicId} for user {username} with id = {userId}", topic.MessageThreadId,
             user.UserName, user.Id);
-        await CreateInfoMessage(context, dbTopic, user, ct).ConfigureAwait(false);
+        await CreateInfoMessage(context, dbTopic, user, topicName, ct).ConfigureAwait(false);
         return dbTopic;
     }
 
-    protected virtual async Task CreateInfoMessage(FrameContext context, DbTopic topic, DbUser user,
+    protected virtual async Task CreateInfoMessage(FrameContext context, DbTopic topic, DbUser user, string topicTitle,
         CancellationToken ct = default)
     {
         CultureInfo culture = context.GetCultureInfo();
@@ -144,5 +145,10 @@ public class MessageForwarderMiddleware(
         }, ct).ConfigureAwait(false);
         await Task.WhenAll(db.SaveChangesAsync(ct),
             botClient.PinChatMessage(result.Chat.Id, result.MessageId, cancellationToken: ct)).ConfigureAwait(false);
+
+        string generalText = string.Format(
+            ResourceManager.GetString(nameof(UserInfoGeneralMessage), culture)!,
+            -(_chatId + 1000000000000), result.Id, topicTitle, topic.User.Id, username);
+        await botClient.SendMessage(_chatId, generalText, ParseMode.Html, cancellationToken: ct).ConfigureAwait(false);
     }
 }
