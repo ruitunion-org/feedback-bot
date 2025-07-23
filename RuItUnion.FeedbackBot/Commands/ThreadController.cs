@@ -62,7 +62,7 @@ public class ThreadController(
         DbReply? reply = await db.Replies.AsTracking().Include(x => x.Topic)
             .FirstOrDefaultAsync(x => x.ChatMessageId == messageId, CancellationToken)
             .ConfigureAwait(false);
-        if (reply is not null)
+        if (reply is not null && reply.UserMessageId >= 0)
         {
             await botClient.DeleteMessage(reply.Topic.UserChatId, reply.UserMessageId, CancellationToken)
                 .ConfigureAwait(false);

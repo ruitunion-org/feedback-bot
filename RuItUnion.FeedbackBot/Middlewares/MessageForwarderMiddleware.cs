@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using RuItUnion.FeedbackBot.Data.Models;
 using Telegram.Bot.Exceptions;
+using Telegram.Bot.Types.Enums;
 using TgBotFrame.Commands.Authorization.Models;
 
 namespace RuItUnion.FeedbackBot.Middlewares;
@@ -103,7 +104,7 @@ public class MessageForwarderMiddleware(
 
         DbTopic dbTopic = new()
         {
-            ThreadId = default,
+            ThreadId = 0,
             IsOpen = true,
             UserChatId = message.Chat.Id,
             User = user,
@@ -131,9 +132,17 @@ public class MessageForwarderMiddleware(
             culture.NativeName);
 
         Message result = await botClient
-            .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct, parseMode: Telegram.Bot.Types.Enums.ParseMode.Html)
+            .SendMessage(_chatId, message, messageThreadId: topic.ThreadId, cancellationToken: ct,
+                parseMode: ParseMode.Html)
             .ConfigureAwait(false);
         logger.LogInformation(@"Sent head message for topic {topicId}", result.MessageThreadId);
-        await botClient.PinChatMessage(result.Chat.Id, result.MessageId, cancellationToken: ct).ConfigureAwait(false);
+        await db.Replies.AddAsync(new()
+        {
+            ChatMessageId = result.Id,
+            ChatThreadId = topic.ThreadId,
+            UserMessageId = -1,
+        }, ct).ConfigureAwait(false);
+        await Task.WhenAll(db.SaveChangesAsync(ct),
+            botClient.PinChatMessage(result.Chat.Id, result.MessageId, cancellationToken: ct)).ConfigureAwait(false);
     }
 }
