@@ -59,7 +59,7 @@ public class MessageForwarderMiddleware(
         try
         {
             await botClient.ForwardMessage(_chatId, message.Chat.Id, message.MessageId,
-                dbTopic.ThreadId, false, false, null, ct).ConfigureAwait(false);
+                dbTopic.ThreadId, false, false, null, null, null, ct).ConfigureAwait(false);
             logger.LogInformation(@"Forwarded message {messageId} from chat {chatId} to topic {topicId}", message.Id,
                 message.Chat.Id, dbTopic.ThreadId);
         }
