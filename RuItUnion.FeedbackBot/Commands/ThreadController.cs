@@ -105,20 +105,6 @@ public class ThreadController(
     {
         topic ??= await db.Topics.AsTracking().Include(x => x.User)
             .FirstOrDefaultAsync(x => x.ThreadId == threadId).ConfigureAwait(false);
-        try
-        {
-            if (isOpen)
-            {
-                await botClient.ReopenForumTopic(_chatId, threadId, CancellationToken).ConfigureAwait(false);
-            }
-            else
-            {
-                await botClient.CloseForumTopic(_chatId, threadId, CancellationToken).ConfigureAwait(false);
-            }
-        }
-        catch (ApiRequestException e) when (e.Message == @"Bad Request: TOPIC_NOT_MODIFIED")
-        {
-        }
 
         if (topic is not null)
         {
