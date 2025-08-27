@@ -122,7 +122,7 @@
     <value>Закрывает тему</value>
   </data>
   <data name="Command_Description_Delete" xml:space="preserve">
-    <value>Удаляет сообщение в чате с пользователем</value>
+    <value>Удаляет сообщение в чате с пользователем. Команду необходимо использовать, отвечая ей на сообщение пользователя.</value>
   </data>
   <data name="MessageCopier_BotBanned" xml:space="preserve">
     <value>Пользователь заблокировал бота, пересылка сообщения невозможна</value>
