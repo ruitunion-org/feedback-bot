@@ -142,7 +142,7 @@
     <value>Closes a topic</value>
   </data>
   <data name="Command_Description_Delete" xml:space="preserve">
-    <value>Deletes a message in a user chat</value>
+    <value>Deletes a message in a user chat. The command must be used in response to a user's message.</value>
   </data>
   <data name="MessageCopier_BotBanned" xml:space="preserve">
     <value>The user has blocked the bot, forwarding the message is not possible</value>
