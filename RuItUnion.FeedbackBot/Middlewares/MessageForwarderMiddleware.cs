@@ -87,13 +87,26 @@ public class MessageForwarderMiddleware(
             await ProcessMessage(message, context, ct).ConfigureAwait(false);
         }
 
-        Task saveTask = db.SaveChangesAsync(ct);
-        Task editTask =
-            botClient.EditForumTopic(_chatId, threadId!.Value, topicTitleGenerator.GetTopicTitle(dbTopic),
-                cancellationToken: ct);
-        Task reopenTask = botClient.ReopenForumTopic(_chatId, threadId.Value, ct);
-        await Task.WhenAll(saveTask, editTask, reopenTask).ConfigureAwait(false);
-        logger.LogInformation(@"Reopened topic {topicId}", threadId.Value);
+        await db.SaveChangesAsync(ct).ConfigureAwait(false);
+
+        try
+        {
+            await botClient.ReopenForumTopic(_chatId, threadId!.Value, ct).ConfigureAwait(false);
+        }
+        catch (ApiRequestException e) when (e.Message == @"Bad Request: TOPIC_NOT_MODIFIED")
+        {
+        }
+
+        try
+        {
+            await botClient.EditForumTopic(_chatId, threadId!.Value, topicTitleGenerator.GetTopicTitle(dbTopic),
+                cancellationToken: ct).ConfigureAwait(false);
+        }
+        catch (ApiRequestException e) when (e.Message == @"Bad Request: TOPIC_NOT_MODIFIED")
+        {
+        }
+
+        logger.LogInformation(@"Reopened topic {topicId}", threadId!.Value);
     }
 
     protected virtual async Task<DbTopic> CreateTopic(Message message, FrameContext context,
