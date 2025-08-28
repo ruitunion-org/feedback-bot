@@ -16,17 +16,17 @@ public class ThreadController(
     FeedbackMetricsService feedbackMetricsService)
     : CommandControllerBase
 {
-    private static readonly FrozenSet<ReactionTypeEmoji> _eyesEmoji =
+    protected static readonly FrozenSet<ReactionTypeEmoji> EyesEmoji =
         new[] { new ReactionTypeEmoji { Emoji = @"👀" } }.ToFrozenSet();
 
-    private static readonly FrozenSet<ReactionTypeEmoji> _highVoltageEmoji =
+    protected static readonly FrozenSet<ReactionTypeEmoji> HighVoltageEmoji =
         new[] { new ReactionTypeEmoji { Emoji = @"⚡" } }.ToFrozenSet();
 
-    private readonly long _chatId = options.Value.FeedbackChatId;
+    protected readonly long ChatId = options.Value.FeedbackChatId;
 
     [Command(nameof(Open))]
     [Restricted("admin")]
-    public async Task Open()
+    public virtual async Task Open()
     {
         int? threadId = Context.GetThreadId();
         if (threadId is not null)
@@ -37,7 +37,7 @@ public class ThreadController(
 
     [Command(nameof(Close))]
     [Restricted("admin")]
-    public async Task Close()
+    public virtual async Task Close()
     {
         int? threadId = Context.GetThreadId();
         if (threadId is not null)
@@ -47,12 +47,12 @@ public class ThreadController(
     }
 
     [Command(nameof(Delete))]
-    public async Task Delete()
+    public virtual async Task Delete()
     {
         int? messageId = Update.Message?.ReplyToMessage?.MessageId;
         if (messageId is null)
         {
-            await botClient.SendMessage(_chatId,
+            await botClient.SendMessage(ChatId,
                     ResourceManager.GetString(nameof(ThreadController_Delete_NotReply), Context.GetCultureInfo())!,
                     messageThreadId: Update.Message?.MessageThreadId)
                 .ConfigureAwait(false);
@@ -66,14 +66,14 @@ public class ThreadController(
         {
             await botClient.DeleteMessage(reply.Topic.UserChatId, reply.UserMessageId, CancellationToken)
                 .ConfigureAwait(false);
-            await botClient.DeleteMessage(_chatId, messageId.Value, CancellationToken).ConfigureAwait(false);
+            await botClient.DeleteMessage(ChatId, messageId.Value, CancellationToken).ConfigureAwait(false);
             db.Replies.Remove(reply);
             await db.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
             feedbackMetricsService.IncMessagesDeleted(reply.ChatThreadId, Context.GetUserId() ?? 0L);
         }
         else
         {
-            await botClient.SendMessage(_chatId,
+            await botClient.SendMessage(ChatId,
                     ResourceManager.GetString(nameof(ThreadController_Delete_NotFound), Context.GetCultureInfo())!,
                     messageThreadId: Update.Message?.MessageThreadId)
                 .ConfigureAwait(false);
@@ -81,15 +81,15 @@ public class ThreadController(
     }
 
     [Command(nameof(Sync))]
-    [Restricted("admin")]
-    public async Task Sync()
+    [Restricted("service_admin")]
+    public virtual async Task Sync()
     {
         DbTopic[] topics = await db.Topics.Include(x => x.User).AsTracking().ToArrayAsync().ConfigureAwait(false);
         long? chatId = Context.GetChatId();
         int? messageId = Context.GetMessageId();
         if (chatId is not null && messageId is not null)
         {
-            await botClient.SetMessageReaction(chatId, messageId.Value, _eyesEmoji).ConfigureAwait(false);
+            await botClient.SetMessageReaction(chatId, messageId.Value, EyesEmoji).ConfigureAwait(false);
         }
 
         await Task.WhenAll(topics.Select(x => UpdateTopicStatus(x.ThreadId, x.IsOpen, x))).ConfigureAwait(false);
@@ -97,11 +97,11 @@ public class ThreadController(
 
         if (chatId is not null && messageId is not null)
         {
-            await botClient.SetMessageReaction(chatId, messageId.Value, _highVoltageEmoji).ConfigureAwait(false);
+            await botClient.SetMessageReaction(chatId, messageId.Value, HighVoltageEmoji).ConfigureAwait(false);
         }
     }
 
-    private async Task UpdateTopicStatus(int threadId, bool isOpen, DbTopic? topic = null)
+    protected virtual async Task UpdateTopicStatus(int threadId, bool isOpen, DbTopic? topic = null)
     {
         topic ??= await db.Topics.AsTracking().Include(x => x.User)
             .FirstOrDefaultAsync(x => x.ThreadId == threadId).ConfigureAwait(false);
@@ -116,7 +116,7 @@ public class ThreadController(
 
             try
             {
-                await botClient.EditForumTopic(_chatId, topic.ThreadId, topicTitleGenerator.GetTopicTitle(topic))
+                await botClient.EditForumTopic(ChatId, topic.ThreadId, topicTitleGenerator.GetTopicTitle(topic))
                     .ConfigureAwait(false);
             }
             catch (ApiRequestException e) when (e.Message == @"Bad Request: TOPIC_NOT_MODIFIED")

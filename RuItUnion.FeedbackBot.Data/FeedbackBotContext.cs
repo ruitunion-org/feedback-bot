@@ -22,6 +22,15 @@ public class FeedbackBotContext(DbContextOptions<FeedbackBotContext> options) : 
 
         modelBuilder.HasDefaultSchema("FeedbackBot");
 
+        modelBuilder.Entity<DbRole>().HasData([
+            new()
+            {
+                Name = "service_admin",
+                Id = -50,
+                MentionEnabled = false,
+            },
+        ]);
+
         IAuthorizationData.OnModelCreating(modelBuilder);
         modelBuilder.Entity<DbRole>(builder => { builder.Property<uint>("Version").IsRowVersion(); });
         modelBuilder.Entity<DbRoleMember>(builder => { builder.Property<uint>("Version").IsRowVersion(); });
