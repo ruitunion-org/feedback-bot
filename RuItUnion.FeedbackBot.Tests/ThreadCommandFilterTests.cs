@@ -53,11 +53,36 @@ public class ThreadCommandFilterTests
             {
                 { "CommandName", "help" },
                 { "ChatId", (long?)CHAT_ID },
+                { "UserId", (long?)CHAT_ID },
                 { "ThreadId", (int?)2 },
             },
         }, CancellationToken.None);
 
         Assert.True(Passed);
+    }
+
+    [Fact]
+    public async Task PassCommandNotInDm()
+    {
+        await _commandFilterMiddleware.InvokeAsync(new()
+        {
+            Message = new()
+            {
+                Id = 1,
+                Text = "123",
+            },
+        }, new()
+        {
+            Properties =
+            {
+                { "CommandName", "help" },
+                { "ChatId", (long?)CHAT_ID },
+                { "UserId", (long?)CHAT_ID+1 },
+                { "ThreadId", (int?)2 },
+            },
+        }, CancellationToken.None);
+
+        Assert.False(Passed);
     }
 
     [Fact]
