@@ -23,7 +23,6 @@ public class MessageCopierMiddleware(
             && update.Message?.MessageThreadId is not null
             && update.Message.Chat.Id == _chatId
             && update.Message.ReplyToMessage is not null
-            && update.Message.ReplyToMessage.Type == MessageType.Text
             && update.Message.ReplyToMessage.From?.Username == context.GetBotUsername())
         {
             DbTopic? topic = await db.Topics.AsNoTracking()

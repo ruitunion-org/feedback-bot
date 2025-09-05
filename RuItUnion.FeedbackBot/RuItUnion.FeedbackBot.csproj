@@ -16,7 +16,7 @@
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<RepositoryUrl>https://github.com/ruitunion-org/feedback-bot</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/ruitunion-org/feedback-bot</PackageProjectUrl>
-		<Version>1.1.0</Version>
+		<Version>1.1.1</Version>
 		<Company>RuItUnion</Company>
 		<PackageTags>telegram;bot</PackageTags>
 		<PackageId>RuItUnion.FeedbackBot</PackageId>
