@@ -168,4 +168,7 @@ Language: {4}.</value>
   <data name="UserInfoGeneralMessage" xml:space="preserve">
     <value>New topic &lt;a href="https://t.me/c/{0:D}/{1:D}"&gt;{2}&lt;/a&gt; created for user &lt;a href="tg://openmessage?user_id={3:D}"&gt;{4}&lt;/a&gt;</value>
   </data>
+  <data name="MessageCopierMiddleware_CopyWithUserNotAllowed" xml:space="preserve">
+    <value>&gt; *Forwarding messages mentioning other users is not available*</value>
+  </data>
 </root>

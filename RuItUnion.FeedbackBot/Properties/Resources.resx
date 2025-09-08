@@ -148,4 +148,7 @@
   <data name="UserInfoGeneralMessage" xml:space="preserve">
 	  <value>Создана новая тема &lt;a href="https://t.me/c/{0:D}/{1:D}"&gt;{2}&lt;/a&gt; для пользователя &lt;a href="tg://openmessage?user_id={3:D}"&gt;{4}&lt;/a&gt;</value>
   </data>
+  <data name="MessageCopierMiddleware_CopyWithUserNotAllowed" xml:space="preserve">
+    <value>&gt; *Пересылка сообщения с упоминанием других пользователей недоступна*</value>
+  </data>
 </root>

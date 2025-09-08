@@ -124,6 +124,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на &gt; *Пересылка сообщения с упоминанием других пользователей недоступна*.
+        /// </summary>
+        public static string MessageCopierMiddleware_CopyWithUserNotAllowed {
+            get {
+                return ResourceManager.GetString("MessageCopierMiddleware_CopyWithUserNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Изменение сообщений не передается, в случае, если вам необходимо изменить текст сообщения — отправьте новое сообщение.
         /// </summary>
         public static string MessageEditorMiddleware_NotSupported {

@@ -32,6 +32,20 @@ public class MessageCopierMiddleware(
                 return;
             }
 
+            if (update.Message.Entities?.Any(x => x.Type is MessageEntityType.Mention or MessageEntityType.TextMention) ?? false)
+            {
+                await botClient.SendMessage(_chatId,
+                    ResourceManager.GetString(nameof(MessageCopierMiddleware_CopyWithUserNotAllowed), context.GetCultureInfo())!,
+                    ParseMode.MarkdownV2,
+                    messageThreadId: update.Message.MessageThreadId, replyParameters: new()
+                    {
+                        ChatId = _chatId,
+                        MessageId = update.Message.MessageId,
+                        AllowSendingWithoutReply = true,
+                    }, cancellationToken: ct).ConfigureAwait(false);
+                return;
+            }
+
             MessageId result;
             try
             {
