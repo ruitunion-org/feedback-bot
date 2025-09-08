@@ -1,6 +1,6 @@
 <Project ToolsVersion="15.0">
   <ItemGroup>
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.4.1" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.4.2" />
     <PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8" />
@@ -15,19 +15,19 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0" />
     <PackageVersion Include="System.Text.Json" Version="9.0.8" />
-    <PackageVersion Include="TgBotFrame.Commands" Version="2.1.0" />
-    <PackageVersion Include="TgBotFrame.Commands.Authorization" Version="2.1.0" />
-    <PackageVersion Include="TgBotFrame.Commands.Help" Version="2.1.0" />
-    <PackageVersion Include="TgBotFrame.Commands.RateLimit" Version="2.1.0" />
-    <PackageVersion Include="TgBotFrame.Commands.Start" Version="2.1.0" />
+    <PackageVersion Include="TgBotFrame.Commands" Version="2.2.0" />
+    <PackageVersion Include="TgBotFrame.Commands.Authorization" Version="2.2.0" />
+    <PackageVersion Include="TgBotFrame.Commands.Help" Version="2.2.0" />
+    <PackageVersion Include="TgBotFrame.Commands.RateLimit" Version="2.2.0" />
+    <PackageVersion Include="TgBotFrame.Commands.Start" Version="2.2.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.4.1" />
-    <PackageVersion Include="Aspire.Npgsql" Version="9.4.1" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.4.2" />
+    <PackageVersion Include="Aspire.Npgsql" Version="9.4.2" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.8.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.1" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.4.2" />
   </ItemGroup>
 </Project>

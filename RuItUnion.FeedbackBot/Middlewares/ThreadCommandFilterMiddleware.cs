@@ -12,7 +12,6 @@ public class ThreadCommandFilterMiddleware(IOptions<AppOptions> options, IFeedba
             || (_chatId == context.GetChatId() && context.GetThreadId() is not null)
             || await db.RoleMembers.AnyAsync(x => x.RoleId == -1 && x.UserId == context.GetUserId(), ct).ConfigureAwait(false))
         {
-            if (string.Equals(commandName, @"help", StringComparison.OrdinalIgnoreCase) && context.GetChatId() != context.GetUserId()) return;
             await Next(update, context, ct).ConfigureAwait(false);
         }
     }
