@@ -22,20 +22,24 @@ public class MessageCopierMiddleware(
         if (string.IsNullOrEmpty(context.GetCommandName())
             && update.Message?.MessageThreadId is not null
             && update.Message.Chat.Id == _chatId
-            && update.Message.ReplyToMessage?.Type is < MessageType.ForumTopicCreated or > MessageType.GeneralForumTopicUnhidden
+            && update.Message.ReplyToMessage?.Type is < MessageType.ForumTopicCreated
+                or > MessageType.GeneralForumTopicUnhidden
             && update.Message.ReplyToMessage.From?.Username == context.GetBotUsername())
         {
             DbTopic? topic = await db.Topics.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ThreadId == update.Message.MessageThreadId, ct).ConfigureAwait(false);
-            if (topic?.ThreadId is null)
+            if (topic?.ThreadId is null
+                || update.Message.ReplyToMessage.ForwardOrigin?.Type != MessageOriginType.HiddenUser)
             {
                 return;
             }
 
-            if (update.Message.Entities?.Any(x => x.Type is MessageEntityType.Mention or MessageEntityType.TextMention) ?? false)
+            if (update.Message.Entities?.Any(x => x.Type is MessageEntityType.Mention or MessageEntityType.TextMention)
+                ?? false)
             {
                 await botClient.SendMessage(_chatId,
-                    ResourceManager.GetString(nameof(MessageCopierMiddleware_CopyWithUserNotAllowed), context.GetCultureInfo())!,
+                    ResourceManager.GetString(nameof(MessageCopierMiddleware_CopyWithUserNotAllowed),
+                        context.GetCultureInfo())!,
                     ParseMode.MarkdownV2,
                     messageThreadId: update.Message.MessageThreadId, replyParameters: new()
                     {
