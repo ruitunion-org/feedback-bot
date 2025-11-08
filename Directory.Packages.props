@@ -15,11 +15,11 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.13.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.13.0" />
     <PackageVersion Include="System.Text.Json" Version="9.0.10" />
-    <PackageVersion Include="TgBotFrame.Commands" Version="2.2.1" />
-    <PackageVersion Include="TgBotFrame.Commands.Authorization" Version="2.2.1" />
-    <PackageVersion Include="TgBotFrame.Commands.Help" Version="2.2.1" />
-    <PackageVersion Include="TgBotFrame.Commands.RateLimit" Version="2.2.1" />
-    <PackageVersion Include="TgBotFrame.Commands.Start" Version="2.2.1" />
+    <PackageVersion Include="TgBotFrame.Commands" Version="2.3.0" />
+    <PackageVersion Include="TgBotFrame.Commands.Authorization" Version="2.3.0" />
+    <PackageVersion Include="TgBotFrame.Commands.Help" Version="2.3.0" />
+    <PackageVersion Include="TgBotFrame.Commands.RateLimit" Version="2.3.0" />
+    <PackageVersion Include="TgBotFrame.Commands.Start" Version="2.3.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
