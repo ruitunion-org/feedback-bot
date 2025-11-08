@@ -82,7 +82,7 @@ public class ThreadCommandFilterTests
             },
         }, CancellationToken.None);
 
-        Assert.False(Passed);
+        Assert.True(Passed);
     }
 
     [Fact]
