@@ -5,7 +5,7 @@
 services:
   feedback_bot:
     container_name: "RuItUnion.FeedbackBot.App"
-    image: ghcr.io/ruitunion-org/feedback-bot:v1.3.1
+    image: ghcr.io/ruitunion-org/feedback-bot:v1.4.0
     build:
       context: .
       dockerfile: RuItUnion.FeedbackBot/Dockerfile
