@@ -1,4 +1,4 @@
-using Projects;
+﻿using Projects;
 
 IDistributedApplicationBuilder builder = DistributedApplication.CreateBuilder(args);
 

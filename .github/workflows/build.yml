@@ -1,4 +1,4 @@
-name: build-and-test
+﻿name: build-and-test
 
 on:
   push:
@@ -16,10 +16,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
     - name: Check code style
-      run: dotnet format ./RuItUnion.FeedbackBot.sln --no-restore --verify-no-changes --verbosity normal
+      run: dotnet format ./RuItUnion.FeedbackBot.slnx --no-restore --verify-no-changes --verbosity normal
     - name: Build
-      run: dotnet build ./RuItUnion.FeedbackBot.sln
+      run: dotnet build ./RuItUnion.FeedbackBot.slnx
     - name: Test
-      run: dotnet test ./RuItUnion.FeedbackBot.sln
+      run: dotnet test ./RuItUnion.FeedbackBot.slnx

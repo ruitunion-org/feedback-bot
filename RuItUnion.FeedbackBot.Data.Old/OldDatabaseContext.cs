@@ -1,13 +1,13 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RuItUnion.FeedbackBot.Data.Old.Models;
 
 namespace RuItUnion.FeedbackBot.Data.Old;
 
 public class OldDatabaseContext(DbContextOptions<OldDatabaseContext> options) : DbContext(options)
 {
-    public DbSet<Topic> Topic { get; set; } = default!;
-    public DbSet<User> Users { get; set; } = default!;
-    public DbSet<Reply> Replies { get; set; } = default!;
+    public DbSet<Topic> Topic { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Reply> Replies { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

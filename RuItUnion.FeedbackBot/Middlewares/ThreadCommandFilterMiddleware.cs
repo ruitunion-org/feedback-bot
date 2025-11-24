@@ -10,7 +10,8 @@ public class ThreadCommandFilterMiddleware(IOptions<AppOptions> options, IFeedba
         if (string.IsNullOrEmpty(commandName)
             || string.Equals(commandName, @"start", StringComparison.OrdinalIgnoreCase)
             || (_chatId == context.GetChatId() && context.GetThreadId() is not null)
-            || await db.RoleMembers.AnyAsync(x => x.RoleId == -1 && x.UserId == context.GetUserId(), ct).ConfigureAwait(false))
+            || await db.RoleMembers.AnyAsync(x => x.RoleId == -1 && x.UserId == context.GetUserId(), ct)
+                .ConfigureAwait(false))
         {
             await Next(update, context, ct).ConfigureAwait(false);
         }

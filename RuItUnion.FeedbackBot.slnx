@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Элементы решения/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+  <Project Path="RuItUnion.FeedbackBot.AppHost/RuItUnion.FeedbackBot.AppHost.csproj" />
+  <Project Path="RuItUnion.FeedbackBot.Data.Old/RuItUnion.FeedbackBot.Data.Old.csproj" />
+  <Project Path="RuItUnion.FeedbackBot.Data/RuItUnion.FeedbackBot.Data.csproj" />
+  <Project Path="RuItUnion.FeedbackBot.ServiceDefaults/RuItUnion.FeedbackBot.ServiceDefaults.csproj" />
+  <Project Path="RuItUnion.FeedbackBot.Tests/RuItUnion.FeedbackBot.Tests.csproj" />
+  <Project Path="RuItUnion.FeedbackBot/RuItUnion.FeedbackBot.csproj" />
+</Solution>

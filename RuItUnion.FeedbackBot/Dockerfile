@@ -1,16 +1,26 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-RUN apt-get -y update && apt-get -y install curl
-USER app
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
+ENV \
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0 \
+    LC_ALL=ru_RU.UTF-8 \
+    LANG=ru_RU.UTF-8
+RUN apk add --no-cache \
+    icu-data-full \
+    icu-libs \
+    curl
+USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["Directory.Build.targets", "."]
 COPY ["RuItUnion.FeedbackBot/RuItUnion.FeedbackBot.csproj", "RuItUnion.FeedbackBot/"]
+COPY ["RuItUnion.FeedbackBot.Data.Old/RuItUnion.FeedbackBot.Data.Old.csproj", "RuItUnion.FeedbackBot.Data.Old/"]
+COPY ["RuItUnion.FeedbackBot.Data/RuItUnion.FeedbackBot.Data.csproj", "RuItUnion.FeedbackBot.Data/"]
+COPY ["RuItUnion.FeedbackBot.ServiceDefaults/RuItUnion.FeedbackBot.ServiceDefaults.csproj", "RuItUnion.FeedbackBot.ServiceDefaults/"]
 RUN dotnet restore "./RuItUnion.FeedbackBot/RuItUnion.FeedbackBot.csproj"
 COPY . .
 WORKDIR "/src/RuItUnion.FeedbackBot"

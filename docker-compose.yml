@@ -1,11 +1,11 @@
-volumes:
+﻿volumes:
   postgres_data:
     driver: local
 
 services:
   feedback_bot:
     container_name: "RuItUnion.FeedbackBot.App"
-    image: ghcr.io/ruitunion-org/feedback-bot:v0.2.0
+    image: ghcr.io/ruitunion-org/feedback-bot:v1.3.1
     build:
       context: .
       dockerfile: RuItUnion.FeedbackBot/Dockerfile
@@ -36,26 +36,27 @@ services:
 
   database:
     container_name: "RuItUnion.FeedbackBot.Database"
-    image: "docker.io/library/postgres:17-alpine"
+    image: "docker.io/library/postgres:18"
     healthcheck:
       test: pg_isready -h localhost -U $$POSTGRES_USER
       interval: 10s
       timeout: 10s
+      retries: 5
     environment:
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
-      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256 --locale-provider=icu --icu-locale=ru_RU"
-      LANG: ru_RU.utf-8
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256 --locale-provider=icu --icu-locale=ru-RU --encoding=UTF8"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "guX4Gk9xaYI3DJcdg4s05t"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
       OTEL_SERVICE_NAME: "RuItUnion-FeedbackBot-Database"
     volumes:
-    - "postgres_data:/var/lib/postgresql/data"
-    restart: always
+     - "postgres_data:/var/lib/postgresql"
+    restart: unless-stopped
+    shm_size: 128mb
     deploy:
       resources:
         limits:
-          memory: 32m
+          memory: 128m
 
   dashboard:
     container_name: "RuItUnion.FeedbackBot.Dashboard"
@@ -66,7 +67,7 @@ services:
     ports:
     - target: 18888
       published: 18888
-    restart: always
+    restart: unless-stopped
     deploy:
       resources:
         limits:
