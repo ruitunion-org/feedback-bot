@@ -29,7 +29,9 @@ public class MessageCopierMiddleware(
             DbTopic? topic = await db.Topics.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ThreadId == update.Message.MessageThreadId, ct).ConfigureAwait(false);
             if (topic?.ThreadId is null
-                || update.Message.ReplyToMessage.ForwardOrigin?.Type != MessageOriginType.HiddenUser)
+                || update.Message.ReplyToMessage.ForwardOrigin?.Type 
+                    is not MessageOriginType.HiddenUser
+                    and not MessageOriginType.User)
             {
                 return;
             }
