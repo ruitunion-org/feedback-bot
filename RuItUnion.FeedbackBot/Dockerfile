@@ -1,12 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS base
-ENV \
-    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=0 \
-    LC_ALL=ru_RU.UTF-8 \
-    LANG=ru_RU.UTF-8
-RUN apk add --no-cache \
-    icu-data-full \
-    icu-libs \
-    curl
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine-extra AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
