@@ -80,6 +80,8 @@ builder.Services.AddTgBotFrameCommands(commandsBuilder =>
 {
     commandsBuilder.TryAddCommandMiddleware<RateLimitMiddleware>();
 
+    commandsBuilder.TryAddCommandMiddleware<CultureForceSetterMiddleware>();
+
     commandsBuilder.TryAddCommandMiddleware<AdminRoleSyncMiddleware>();
     commandsBuilder.AddAuthorization();
 
