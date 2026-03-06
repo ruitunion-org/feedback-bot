@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Npgsql;
 using OpenTelemetry.Metrics;
 using RuItUnion.FeedbackBot.Data.Old;
@@ -14,6 +14,8 @@ using TgBotFrame.Commands.RateLimit.Options;
 using TgBotFrame.Commands.Start;
 using TgBotFrame.Injection;
 using TgBotFrame.Services;
+
+GC.RefreshMemoryLimit();
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -77,6 +79,8 @@ builder.Services.Configure<RateLimitOptions>(builder.Configuration.GetSection(@"
 builder.Services.AddTgBotFrameCommands(commandsBuilder =>
 {
     commandsBuilder.TryAddCommandMiddleware<RateLimitMiddleware>();
+
+    commandsBuilder.TryAddCommandMiddleware<CultureForceSetterMiddleware>();
 
     commandsBuilder.TryAddCommandMiddleware<AdminRoleSyncMiddleware>();
     commandsBuilder.AddAuthorization();

@@ -18,4 +18,6 @@ public record AppOptions
     public required string Start { get; init; }
     public string? DbConnectionString { get; init; }
     public string? FeedbackBotToken { get; init; }
+    public bool OverrideCultureEnabled { get; init; } = false;
+    public string OverrideCultureTag { get; set; } = string.Empty;
 }
