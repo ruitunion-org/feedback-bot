@@ -27,7 +27,7 @@ public class AdminRoleSyncMiddleware(
             {
                 long? chatId = context.GetChatId()!;
                 long? userId = context.GetUserId()!;
-                ChatMember[] admins = await botClient.GetChatAdministrators(chatId, ct).ConfigureAwait(false);
+                ChatMember[] admins = await botClient.GetChatAdministrators(chatId, false, ct).ConfigureAwait(false);
                 bool isChatAdmin = admins.Any(x =>
                     x.User.Id == userId && x.Status is ChatMemberStatus.Creator or ChatMemberStatus.Administrator);
                 if (isChatAdmin && !await db.RoleMembers.AnyAsync(x => x.UserId == userId && x.RoleId == -1, ct)
