@@ -1,5 +1,6 @@
-﻿using System.Globalization;
-using RuItUnion.FeedbackBot.Data.Models;
+﻿using RuItUnion.FeedbackBot.Data.Models;
+using System.Globalization;
+using System.Net;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types.Enums;
 using TgBotFrame.Commands.Authorization.Models;
@@ -141,7 +142,7 @@ public class MessageForwarderMiddleware(
         CultureInfo culture = context.GetCultureInfo();
         string noData = ResourceManager.GetString(nameof(UserInfoMessage_NoData), culture)!;
         string message = ResourceManager.GetString(nameof(UserInfoMessage), culture)!;
-        string username = user.UserName is not null ? @"@" + user.UserName : noData;
+        string username = user.UserName is not null ? @"@" + WebUtility.HtmlEncode(user.UserName) : noData;
         message = string.Format(message, user.FirstName, user.LastName ?? noData, username, user.Id,
             culture.NativeName);
 
