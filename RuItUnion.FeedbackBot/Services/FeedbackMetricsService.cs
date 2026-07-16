@@ -8,6 +8,7 @@ public sealed class FeedbackMetricsService : IDisposable
     private readonly Counter<int> _messagesDeleted;
     private readonly Counter<int> _messagesEdited;
     private readonly Counter<int> _messagesForwarded;
+    private readonly UpDownCounter<int> _openedTopics;
     private readonly Meter _meter;
 
     public FeedbackMetricsService(IMeterFactory meterFactory)
@@ -18,6 +19,7 @@ public sealed class FeedbackMetricsService : IDisposable
         _messagesForwarded = _meter.CreateCounter<int>(@"messages_forwarded");
         _messagesEdited = _meter.CreateCounter<int>(@"messages_edited");
         _messagesDeleted = _meter.CreateCounter<int>(@"messages_deleted");
+        _openedTopics = _meter.CreateUpDownCounter<int>(@"opened_topics");
     }
 
     public void Dispose() => _meter.Dispose();
@@ -45,4 +47,9 @@ public sealed class FeedbackMetricsService : IDisposable
             1,
             new(@"thread_id", threadId),
             new(@"author_id", authorId));
+
+    public void IncOpenedTopics(in int threadId) =>
+        _openedTopics.Add(+1, (KeyValuePair<string, object?>)new(@"thread_id", threadId));
+    public void DecOpenedTopics(in int threadId) =>
+        _openedTopics.Add(-1, (KeyValuePair<string, object?>)new(@"thread_id", threadId));
 }

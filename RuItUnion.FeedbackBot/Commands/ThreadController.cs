@@ -32,6 +32,7 @@ public class ThreadController(
         if (threadId is not null)
         {
             await UpdateTopicStatus(threadId.Value, true).ConfigureAwait(false);
+            feedbackMetricsService.IncOpenedTopics(threadId.Value);
         }
     }
 
@@ -43,6 +44,7 @@ public class ThreadController(
         if (threadId is not null)
         {
             await UpdateTopicStatus(threadId.Value, false).ConfigureAwait(false);
+            feedbackMetricsService.DecOpenedTopics(threadId.Value);
         }
     }
 

@@ -93,6 +93,7 @@ public class MessageForwarderMiddleware(
         try
         {
             await botClient.ReopenForumTopic(_chatId, threadId!.Value, ct).ConfigureAwait(false);
+            feedbackMetricsService.IncOpenedTopics(threadId!.Value);
         }
         catch (ApiRequestException e) when (e.Message == @"Bad Request: TOPIC_NOT_MODIFIED")
         {
@@ -133,6 +134,7 @@ public class MessageForwarderMiddleware(
         logger.LogInformation(@"Created topic {topicId} for user {username} with id = {userId}", topic.MessageThreadId,
             user.UserName, user.Id);
         await CreateInfoMessage(context, dbTopic, user, topicName, ct).ConfigureAwait(false);
+        feedbackMetricsService.IncOpenedTopics(dbTopic.ThreadId);
         return dbTopic;
     }
 
