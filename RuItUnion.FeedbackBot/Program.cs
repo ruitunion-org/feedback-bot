@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.FeatureManagement;
 using Npgsql;
 using OpenTelemetry.Metrics;
 using RuItUnion.FeedbackBot.Data.Old;
@@ -23,6 +24,7 @@ builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(nameof(A
 builder.Services.AddSingleton<FeedbackMetricsService>();
 
 builder.AddServiceDefaults();
+builder.Services.AddFeatureManagement();
 
 builder.Services.AddOpenTelemetry().WithMetrics(providerBuilder =>
 {
@@ -65,7 +67,7 @@ builder.Services.AddScoped<IFeedbackBotContext, FeedbackBotContext>();
 builder.Services.AddScoped<IAuthorizationData, FeedbackBotContext>();
 builder.Services.AddScoped<ReplyUserIdResolver, ReplyUserIdAdvancedResolver>();
 
-bool useMigrator = !string.Equals(builder.Configuration[@"Migrator:EnableMigratorFromV01"], @"false",
+bool useMigrator = !string.Equals(builder.Configuration[@"feature_management:feature_flags:EnableMigratorFromV01:enabled"], @"false",
     StringComparison.OrdinalIgnoreCase);
 if (useMigrator)
 {
