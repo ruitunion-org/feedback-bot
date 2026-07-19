@@ -23,16 +23,16 @@ jobs:
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
 
       - name: Restore dependencies
-        run: dotnet restore RuItUnion.FeedbackBot.slnx
+        run: dotnet restore ./src/RuItUnion.FeedbackBot/RuItUnion.FeedbackBot.csproj
 
       - name: Build
-        run: dotnet build RuItUnion.FeedbackBot.slnx --no-restore --configuration Release -p:Version=${{ env.VERSION }}
+        run: dotnet build ./src/RuItUnion.FeedbackBot/RuItUnion.FeedbackBot.csproj --no-restore --configuration Release -p:Version=${{ env.VERSION }}
 
       - name: Test
-        run: dotnet test RuItUnion.FeedbackBot.slnx --no-build --configuration Release -p:Version=${{ env.VERSION }} --verbosity normal
+        run: dotnet test ./src/RuItUnion.FeedbackBot/RuItUnion.FeedbackBot.csproj --no-build --configuration Release -p:Version=${{ env.VERSION }} --verbosity normal
 
       - name: Pack
-        run: dotnet pack RuItUnion.FeedbackBot.slnx --no-build --configuration Release -p:Version=${{ env.VERSION }} -o packages
+        run: dotnet pack ./src/RuItUnion.FeedbackBot/RuItUnion.FeedbackBot.csproj --no-build --configuration Release -p:Version=${{ env.VERSION }} -o packages
 
       - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1
