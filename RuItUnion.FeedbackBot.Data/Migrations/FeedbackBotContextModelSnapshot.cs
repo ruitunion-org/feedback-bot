@@ -81,8 +81,24 @@ namespace RuItUnion.FeedbackBot.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Header")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .IsUnicode(true)
+                        .HasColumnType("character varying(256)");
+
                     b.Property<bool>("IsOpen")
                         .HasColumnType("boolean");
+
+                    b.Property<JsonDocument>("TagsRaw")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("Tags")
+                        .HasDefaultValueSql("'{}'::jsonb");
 
                     b.Property<int>("ThreadId")
                         .HasColumnType("integer");
@@ -97,6 +113,10 @@ namespace RuItUnion.FeedbackBot.Data.Migrations
                         .HasColumnName("xmin");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TagsRaw");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("TagsRaw"), "GIN");
 
                     b.HasIndex("ThreadId")
                         .IsUnique();

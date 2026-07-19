@@ -7,7 +7,6 @@ public class FeedbackBotContext(DbContextOptions<FeedbackBotContext> options) : 
 {
     public DbSet<DbReply> Replies { get; init; } = null!;
     public DbSet<DbTopic> Topics { get; init; } = null!;
-
     public DbSet<DbSpamMessage> SpamMessages { get; init; } = null!;
 
     Task IAuthorizationData.SaveChangesAsync(CancellationToken cancellationToken) =>
@@ -30,7 +29,7 @@ public class FeedbackBotContext(DbContextOptions<FeedbackBotContext> options) : 
                 Name = "service_admin",
                 Id = -50,
                 MentionEnabled = false,
-            },
+            }
         ]);
 
         IAuthorizationData.OnModelCreating(modelBuilder);
