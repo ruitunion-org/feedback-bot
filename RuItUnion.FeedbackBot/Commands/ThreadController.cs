@@ -90,17 +90,13 @@ public class ThreadController(
         long? chatId = Context.GetChatId();
         int? messageId = Context.GetMessageId();
         if (chatId is not null && messageId is not null)
-        {
             await botClient.SetMessageReaction(chatId, messageId.Value, EyesEmoji).ConfigureAwait(false);
-        }
 
         await Task.WhenAll(topics.Select(x => UpdateTopicStatus(x.ThreadId, x.IsOpen, x))).ConfigureAwait(false);
 
 
         if (chatId is not null && messageId is not null)
-        {
             await botClient.SetMessageReaction(chatId, messageId.Value, HighVoltageEmoji).ConfigureAwait(false);
-        }
     }
 
     protected virtual async Task UpdateTopicStatus(int threadId, bool isOpen, DbTopic? topic = null)

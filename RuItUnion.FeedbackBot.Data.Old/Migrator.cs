@@ -27,18 +27,15 @@ public class Migrator(IFeedbackBotContext newContext, OldDatabaseContext oldCont
                 UserName = null,
             }, cancellationToken).ConfigureAwait(false);
             if (oldUser.Banned)
-            {
                 await newContext.Bans.AddAsync(new()
                 {
                     UserId = oldUser.Id,
                     Until = DateTime.MaxValue,
                     Description = string.Empty,
                 }, cancellationToken).ConfigureAwait(false);
-            }
         }
 
         foreach (Topic topic in oldContext.Topic.AsNoTracking().Include(x => x.User).Include(x => x.Replies))
-        {
             await newContext.Topics.AddAsync(new()
             {
                 ThreadId = (int)topic.Id,
@@ -51,7 +48,6 @@ public class Migrator(IFeedbackBotContext newContext, OldDatabaseContext oldCont
                     ChatMessageId = (int)x.Id,
                 }).ToList(),
             }, cancellationToken).ConfigureAwait(false);
-        }
 
         await newContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
@@ -59,9 +55,6 @@ public class Migrator(IFeedbackBotContext newContext, OldDatabaseContext oldCont
         deleted += await oldContext.Topic.ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         deleted += await oldContext.Users.ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
 
-        if (deleted > 0)
-        {
-            logger.LogWarning("Use /sync command in group chat for update topic headers");
-        }
+        if (deleted > 0) logger.LogWarning("Use /sync command in group chat for update topic headers");
     }
 }

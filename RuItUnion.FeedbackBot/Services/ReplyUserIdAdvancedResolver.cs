@@ -8,9 +8,7 @@ public class ReplyUserIdAdvancedResolver(IFeedbackBotContext db) : ReplyUserIdRe
     public override async ValueTask<long?> GetReplyUserId(Update update, CancellationToken ct = default)
     {
         if (update.Message?.ReplyToMessage?.From?.IsBot != true || update.Message.MessageThreadId is null)
-        {
             return update.Message?.ReplyToMessage?.From?.Id;
-        }
 
         long userId = 0;
         switch (update.Message?.ReplyToMessage?.ForwardOrigin?.Type)
@@ -30,12 +28,10 @@ public class ReplyUserIdAdvancedResolver(IFeedbackBotContext db) : ReplyUserIdRe
                         or > MessageType.GeneralForumTopicUnhidden
                     && update.Message?.ReplyToMessage?.From?.IsBot == true
                     && update.Message.ReplyToMessage.ForwardOrigin is not null)
-                {
                     userId = await db.Topics
                         .Where(x => x.ThreadId == update.Message.MessageThreadId)
                         .Select(x => x.UserChatId)
                         .FirstOrDefaultAsync(ct).ConfigureAwait(false);
-                }
 
                 break;
             case null:

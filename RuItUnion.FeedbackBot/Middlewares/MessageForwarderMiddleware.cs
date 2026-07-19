@@ -1,6 +1,6 @@
-﻿using RuItUnion.FeedbackBot.Data.Models;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
+using RuItUnion.FeedbackBot.Data.Models;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types.Enums;
 using TgBotFrame.Commands.Authorization.Models;
@@ -21,7 +21,6 @@ public class MessageForwarderMiddleware(
     {
         if (update.Message is not null && update.Message?.Chat.Id != _chatId
                                        && string.IsNullOrEmpty(context.GetCommandName()))
-        {
             try
             {
                 await ProcessMessage(update.Message!, context, ct).ConfigureAwait(false);
@@ -39,7 +38,6 @@ public class MessageForwarderMiddleware(
                     cancellationToken: ct).ConfigureAwait(false);
                 logger.LogError(e, @"Exception during message forwarding");
             }
-        }
 
         await Next(update, context, ct).ConfigureAwait(false);
     }
@@ -49,13 +47,8 @@ public class MessageForwarderMiddleware(
         DbTopic? dbTopic = await db.Topics.AsNoTracking().FirstOrDefaultAsync(x => x.UserChatId == message.Chat.Id, ct)
             .ConfigureAwait(false);
         if (dbTopic is null)
-        {
             dbTopic = await CreateTopic(message, context, ct).ConfigureAwait(false);
-        }
-        else if (!dbTopic.IsOpen)
-        {
-            await OpenTopic(message, context, dbTopic, ct).ConfigureAwait(false);
-        }
+        else if (!dbTopic.IsOpen) await OpenTopic(message, context, dbTopic, ct).ConfigureAwait(false);
 
         try
         {

@@ -8,8 +8,9 @@ public sealed class FeedbackMetricsService : IDisposable
     private readonly Counter<int> _messagesDeleted;
     private readonly Counter<int> _messagesEdited;
     private readonly Counter<int> _messagesForwarded;
-    private readonly UpDownCounter<int> _openedTopics;
     private readonly Meter _meter;
+    private readonly UpDownCounter<int> _openedTopics;
+    private readonly Counter<int> _spamDetected;
 
     public FeedbackMetricsService(IMeterFactory meterFactory)
     {
@@ -20,6 +21,7 @@ public sealed class FeedbackMetricsService : IDisposable
         _messagesEdited = _meter.CreateCounter<int>(@"messages_edited");
         _messagesDeleted = _meter.CreateCounter<int>(@"messages_deleted");
         _openedTopics = _meter.CreateUpDownCounter<int>(@"opened_topics");
+        _spamDetected = _meter.CreateCounter<int>(@"spam_detected");
     }
 
     public void Dispose() => _meter.Dispose();
@@ -48,8 +50,12 @@ public sealed class FeedbackMetricsService : IDisposable
             new(@"thread_id", threadId),
             new(@"author_id", authorId));
 
+    public void IncSpamDetected(in long authorId) =>
+        _spamDetected.Add(1, (KeyValuePair<string, object?>)new(@"author_id", authorId));
+
     public void IncOpenedTopics(in int threadId) =>
         _openedTopics.Add(+1, (KeyValuePair<string, object?>)new(@"thread_id", threadId));
+
     public void DecOpenedTopics(in int threadId) =>
         _openedTopics.Add(-1, (KeyValuePair<string, object?>)new(@"thread_id", threadId));
 }

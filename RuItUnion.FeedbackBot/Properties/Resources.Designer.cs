@@ -19,7 +19,7 @@ namespace RuItUnion.FeedbackBot.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -61,11 +61,38 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Получено нежелательное сообщение. Администратор может узнать подробности с помощью команды `/SpamInfo {0}`.
+        /// </summary>
+        public static string AntiSpamMiddleware_Message {
+            get {
+                return ResourceManager.GetString("AntiSpamMiddleware_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Команды для просмотра и восстановления нежелательных сообщений.
+        /// </summary>
+        public static string Category_Description_Spam {
+            get {
+                return ResourceManager.GetString("Category_Description_Spam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Команды данной категории позволяют управлять темами и сообщениями в ней.
         /// </summary>
         public static string Category_Description_Thread {
             get {
                 return ResourceManager.GetString("Category_Description_Thread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Спам.
+        /// </summary>
+        public static string Category_Name_Spam {
+            get {
+                return ResourceManager.GetString("Category_Name_Spam", resourceCulture);
             }
         }
         
@@ -102,6 +129,33 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string Command_Description_Open {
             get {
                 return ResourceManager.GetString("Command_Description_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Присылает полную информацию о нежелательном сообщении в формате JSON.
+        /// </summary>
+        public static string Command_Description_SpamDownload {
+            get {
+                return ResourceManager.GetString("Command_Description_SpamDownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Присылает информацию о пользователе и текст нежелательного сообщения.
+        /// </summary>
+        public static string Command_Description_SpamInfo {
+            get {
+                return ResourceManager.GetString("Command_Description_SpamInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстанавливает нежелательное сообщение и создает тему.
+        /// </summary>
+        public static string Command_Description_SpanRestore {
+            get {
+                return ResourceManager.GetString("Command_Description_SpanRestore", resourceCulture);
             }
         }
         
@@ -147,6 +201,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string MessageForwarderMiddleware_Exception {
             get {
                 return ResourceManager.GetString("MessageForwarderMiddleware_Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сообщение не найдено.
+        /// </summary>
+        public static string SpamController_NotFound {
+            get {
+                return ResourceManager.GetString("SpamController_NotFound", resourceCulture);
             }
         }
         
