@@ -26,10 +26,10 @@ jobs:
         run: dotnet restore RuItUnion.FeedbackBot.slnx
 
       - name: Build
-        run: dotnet build RuItUnion.FeedbackBot.slnx --no-restore --configuration Release
+        run: dotnet build RuItUnion.FeedbackBot.slnx --no-restore --configuration Release -p:Version=${{ env.VERSION }}
 
       - name: Test
-        run: dotnet test RuItUnion.FeedbackBot.slnx --no-build --configuration Release --verbosity normal
+        run: dotnet test RuItUnion.FeedbackBot.slnx --no-build --configuration Release -p:Version=${{ env.VERSION }} --verbosity normal
 
       - name: Pack
         run: dotnet pack RuItUnion.FeedbackBot.slnx --no-build --configuration Release -p:Version=${{ env.VERSION }} -o packages
