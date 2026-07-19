@@ -8,9 +8,9 @@ public sealed class FeedbackMetricsService : IDisposable
     private readonly Counter<int> _messagesDeleted;
     private readonly Counter<int> _messagesEdited;
     private readonly Counter<int> _messagesForwarded;
-    private readonly Counter<int> _spamDetected;
     private readonly Meter _meter;
     private readonly UpDownCounter<int> _openedTopics;
+    private readonly Counter<int> _spamDetected;
 
     public FeedbackMetricsService(IMeterFactory meterFactory)
     {
@@ -52,6 +52,7 @@ public sealed class FeedbackMetricsService : IDisposable
 
     public void IncSpamDetected(in long authorId) =>
         _spamDetected.Add(1, (KeyValuePair<string, object?>)new(@"author_id", authorId));
+
     public void IncOpenedTopics(in int threadId) =>
         _openedTopics.Add(+1, (KeyValuePair<string, object?>)new(@"thread_id", threadId));
 

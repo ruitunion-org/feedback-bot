@@ -14,9 +14,7 @@ public class MessageEditorMiddleware(
     public override async Task InvokeAsync(Update update, FrameContext context, CancellationToken ct = default)
     {
         if (update.EditedMessage is not null)
-        {
             await ProcessEditedMessage(update.EditedMessage, context, ct).ConfigureAwait(false);
-        }
 
         await Next(update, context, ct).ConfigureAwait(false);
     }
@@ -35,10 +33,7 @@ public class MessageEditorMiddleware(
             }
             else
             {
-                if (reply.UserMessageId < 0)
-                {
-                    return;
-                }
+                if (reply.UserMessageId < 0) return;
 
                 await botClient.EditMessageText(reply.Topic.UserChatId, reply.UserMessageId,
                     editedMessage.Text!, cancellationToken: ct).ConfigureAwait(false);

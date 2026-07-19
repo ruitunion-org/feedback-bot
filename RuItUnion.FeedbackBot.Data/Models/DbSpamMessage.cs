@@ -9,6 +9,7 @@ public class DbSpamMessage : IEntityTypeConfiguration<DbSpamMessage>, IEquatable
     public string Reason { get; init; } = string.Empty;
     public required JsonDocument Update { get; init; }
     public uint Version { get; init; }
+
     public void Configure(EntityTypeBuilder<DbSpamMessage> entity)
     {
         entity.HasKey(x => x.Id);

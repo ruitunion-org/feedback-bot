@@ -1,12 +1,12 @@
-﻿using Microsoft.FeatureManagement.Mvc;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace RuItUnion.FeedbackBot.SpamFilters;
 
 [FeatureGate("UaPropagandaFilter")]
 public partial class UaPropagandaFilter : ISpamFilter
 {
-    private const int _minCount = 2;
+    private const int MIN_COUNT = 2;
 
     private static readonly Regex[] _allRegexes =
     [
@@ -81,5 +81,5 @@ public partial class UaPropagandaFilter : ISpamFilter
         RegexOptions.IgnoreCase, "ru-UA")]
     private static partial Regex BodyReturnRegex { get; }
 
-    public bool IsSpam(string? text) => !string.IsNullOrEmpty(text) && _allRegexes.Sum(x => x.Count(text)) >= _minCount;
+    public bool IsSpam(string? text) => !string.IsNullOrEmpty(text) && _allRegexes.Sum(x => x.Count(text)) >= MIN_COUNT;
 }

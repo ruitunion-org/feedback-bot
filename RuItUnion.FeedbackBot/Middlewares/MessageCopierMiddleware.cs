@@ -32,9 +32,7 @@ public class MessageCopierMiddleware(
                 || update.Message.ReplyToMessage.ForwardOrigin?.Type
                     is not MessageOriginType.HiddenUser
                     and not MessageOriginType.User)
-            {
                 return;
-            }
 
             if (update.Message.Entities?.Any(x => x.Type is MessageEntityType.Mention or MessageEntityType.TextMention)
                 ?? false)

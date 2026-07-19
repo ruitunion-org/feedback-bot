@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.FeatureManagement;
 using Npgsql;
 using OpenTelemetry.Metrics;
@@ -6,7 +7,6 @@ using RuItUnion.FeedbackBot.Data.Old;
 using RuItUnion.FeedbackBot.Middlewares;
 using RuItUnion.FeedbackBot.ServiceDefaults;
 using RuItUnion.FeedbackBot.SpamFilters;
-using System.Reflection;
 using TgBotFrame.Commands.Authorization.Extensions;
 using TgBotFrame.Commands.Authorization.Interfaces;
 using TgBotFrame.Commands.Authorization.Services;
