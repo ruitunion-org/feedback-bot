@@ -171,4 +171,25 @@ Language: {4}.</value>
   <data name="MessageCopierMiddleware_CopyWithUserNotAllowed" xml:space="preserve">
     <value>&gt; *Forwarding messages mentioning other users is not available*</value>
   </data>
+  <data name="AntiSpamMiddleware_Message" xml:space="preserve">
+    <value>An spam message was received. The administrator can get details using the command `/SpamInfo {0}`</value>
+  </data>
+  <data name="SpamController_NotFound" xml:space="preserve">
+    <value>Message not found</value>
+  </data>
+  <data name="Category_Name_Spam" xml:space="preserve">
+    <value>Spam</value>
+  </data>
+  <data name="Category_Description_Spam" xml:space="preserve">
+    <value>Commands for viewing and recovering unwanted messages</value>
+  </data>
+  <data name="Command_Description_SpamInfo" xml:space="preserve">
+    <value>Sends user information and the text of the unwanted message</value>
+  </data>
+  <data name="Command_Description_SpamDownload" xml:space="preserve">
+    <value>Sends full details of the spam message in JSON format</value>
+  </data>
+  <data name="Command_Description_SpanRestore" xml:space="preserve">
+    <value>Recovers the unwanted message and creates a topic</value>
+  </data>
 </root>

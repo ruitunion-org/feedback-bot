@@ -151,4 +151,25 @@
   <data name="MessageCopierMiddleware_CopyWithUserNotAllowed" xml:space="preserve">
     <value>&gt; *Пересылка сообщения с упоминанием других пользователей недоступна*</value>
   </data>
+  <data name="AntiSpamMiddleware_Message" xml:space="preserve">
+    <value>Получено нежелательное сообщение. Администратор может узнать подробности с помощью команды `/SpamInfo {0}`</value>
+  </data>
+  <data name="SpamController_NotFound" xml:space="preserve">
+    <value>Сообщение не найдено</value>
+  </data>
+  <data name="Category_Name_Spam" xml:space="preserve">
+    <value>Спам</value>
+  </data>
+  <data name="Category_Description_Spam" xml:space="preserve">
+    <value>Команды для просмотра и восстановления нежелательных сообщений</value>
+  </data>
+  <data name="Command_Description_SpamInfo" xml:space="preserve">
+    <value>Присылает информацию о пользователе и текст нежелательного сообщения</value>
+  </data>
+  <data name="Command_Description_SpamDownload" xml:space="preserve">
+    <value>Присылает полную информацию о нежелательном сообщении в формате JSON</value>
+  </data>
+  <data name="Command_Description_SpanRestore" xml:space="preserve">
+    <value>Восстанавливает нежелательное сообщение и создает тему</value>
+  </data>
 </root>

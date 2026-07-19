@@ -3,6 +3,7 @@ using System;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RuItUnion.FeedbackBot.Data;
@@ -12,9 +13,11 @@ using RuItUnion.FeedbackBot.Data;
 namespace RuItUnion.FeedbackBot.Data.Migrations
 {
     [DbContext(typeof(FeedbackBotContext))]
-    partial class FeedbackBotContextModelSnapshot : ModelSnapshot
+    [Migration("20260719073255_Spam")]
+    partial class Spam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

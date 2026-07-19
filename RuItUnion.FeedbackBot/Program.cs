@@ -1,10 +1,12 @@
-﻿using System.Reflection;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.FeatureManagement;
 using Npgsql;
 using OpenTelemetry.Metrics;
 using RuItUnion.FeedbackBot.Data.Old;
 using RuItUnion.FeedbackBot.Middlewares;
 using RuItUnion.FeedbackBot.ServiceDefaults;
+using RuItUnion.FeedbackBot.SpamFilters;
+using System.Reflection;
 using TgBotFrame.Commands.Authorization.Extensions;
 using TgBotFrame.Commands.Authorization.Interfaces;
 using TgBotFrame.Commands.Authorization.Services;
@@ -67,7 +69,8 @@ builder.Services.AddScoped<IFeedbackBotContext, FeedbackBotContext>();
 builder.Services.AddScoped<IAuthorizationData, FeedbackBotContext>();
 builder.Services.AddScoped<ReplyUserIdResolver, ReplyUserIdAdvancedResolver>();
 
-bool useMigrator = !string.Equals(builder.Configuration[@"feature_management:feature_flags:EnableMigratorFromV01:enabled"], @"false",
+bool useMigrator = !string.Equals(
+    builder.Configuration[@"feature_management:feature_flags:EnableMigratorFromV01:enabled"], @"false",
     StringComparison.OrdinalIgnoreCase);
 if (useMigrator)
 {
@@ -78,6 +81,9 @@ if (useMigrator)
 
 builder.Services.Configure<RateLimitOptions>(builder.Configuration.GetSection(@"RateLimit"));
 
+builder.Services.TryAddSingleton<ISpamFilter, ChinaSpamFilter>();
+builder.Services.TryAddSingleton<ISpamFilter, UaPropagandaFilter>();
+
 builder.Services.AddTgBotFrameCommands(commandsBuilder =>
 {
     commandsBuilder.TryAddCommandMiddleware<RateLimitMiddleware>();
@@ -87,6 +93,7 @@ builder.Services.AddTgBotFrameCommands(commandsBuilder =>
     commandsBuilder.TryAddCommandMiddleware<AdminRoleSyncMiddleware>();
     commandsBuilder.AddAuthorization();
 
+    commandsBuilder.TryAddCommandMiddleware<AntiSpamMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<ThreadCommandFilterMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageCopierMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageForwarderMiddleware>();
@@ -107,9 +114,7 @@ app.MapDefaultEndpoints();
 
 IOptions<AppOptions> appOptions = app.Services.GetRequiredService<IOptions<AppOptions>>();
 if (appOptions.Value.FeedbackChatId == 0L)
-{
     throw new InvalidOperationException(@"AppOptions:FeedbackChatId configuration value is 0");
-}
 
 if (string.Equals(builder.Configuration[@"Migrator:UpdateDatabase"], @"true",
         StringComparison.OrdinalIgnoreCase))

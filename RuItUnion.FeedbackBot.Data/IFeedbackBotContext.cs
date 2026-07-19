@@ -7,4 +7,5 @@ public interface IFeedbackBotContext : IAuthorizationData
 {
     DbSet<DbReply> Replies { get; init; }
     DbSet<DbTopic> Topics { get; init; }
+    DbSet<DbSpamMessage> SpamMessages { get; init; }
 }
