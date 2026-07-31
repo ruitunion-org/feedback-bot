@@ -15,7 +15,7 @@ public class TagController(
     TopicTitleGenerator topicTitleGenerator,
     FeedbackMetricsService metricsService) : CommandControllerBase
 {
-    private static readonly FrozenSet<ReactionTypeEmoji> _highVoltageEmoji =
+    private static readonly FrozenSet<ReactionTypeEmoji> _eyeEmoji =
         new[] { new ReactionTypeEmoji { Emoji = @"👀" } }.ToFrozenSet();
 
     private readonly long _chatId = options.Value.FeedbackChatId;
@@ -156,7 +156,7 @@ public class TagController(
         await dataContext.SaveChangesAsync().ConfigureAwait(false);
 
         await botClient
-            .SetMessageReaction(chatId!, messageId!.Value, _highVoltageEmoji,
+            .SetMessageReaction(chatId!, messageId!.Value, _eyeEmoji,
                 cancellationToken: CancellationToken)
             .ConfigureAwait(false);
     }
@@ -175,7 +175,7 @@ public class TagController(
             }
 
             await botClient
-                .SetMessageReaction(chatId, messageId.Value, _highVoltageEmoji,
+                .SetMessageReaction(chatId, messageId.Value, _eyeEmoji,
                     cancellationToken: CancellationToken)
                 .ConfigureAwait(false);
             await botClient.SendMessage(chatId,
@@ -243,7 +243,7 @@ public class TagController(
         if (chatId is not null && messageId is not null)
         {
             await botClient
-                .SetMessageReaction(chatId, messageId.Value, _highVoltageEmoji, cancellationToken: CancellationToken)
+                .SetMessageReaction(chatId, messageId.Value, _eyeEmoji, cancellationToken: CancellationToken)
                 .ConfigureAwait(false);
         }
     }
