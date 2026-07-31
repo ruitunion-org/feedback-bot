@@ -1,4 +1,7 @@
-﻿using System.Globalization;
+﻿using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Text.Json;
 
 namespace RuItUnion.FeedbackBot.Data.Models;
 
@@ -8,8 +11,20 @@ public class DbTopic : IEntityTypeConfiguration<DbTopic>, IEquatable<DbTopic>
     public required int ThreadId { get; set; }
     public required long UserChatId { get; init; }
     public bool IsOpen { get; set; } = true;
-    public uint Version { get; init; }
+    public DateTime Created { get; init; } = DateTime.UtcNow;
 
+    [MaxLength(128)]
+    public string Header { get; set; } = string.Empty;
+
+    public ImmutableDictionary<string, object?> Tags
+    {
+        get => TagsRaw.Deserialize<ImmutableDictionary<string, object?>>()
+               ?? ImmutableDictionary<string, object?>.Empty;
+        set => TagsRaw = JsonSerializer.SerializeToDocument(value);
+    }
+
+    public JsonDocument TagsRaw { get; set; } = JsonDocument.Parse("{}");
+    public uint Version { get; init; }
     public DbUser User { get; init; } = null!;
     public IList<DbReply> Replies { get; init; } = null!;
 
@@ -24,6 +39,14 @@ public class DbTopic : IEntityTypeConfiguration<DbTopic>, IEquatable<DbTopic>
 
         entity.HasIndex(x => x.UserChatId).IsUnique();
         entity.HasIndex(x => x.ThreadId).IsUnique();
+
+        entity.Property(x => x.Header).IsRequired().HasMaxLength(256).IsUnicode();
+
+        entity.Ignore(x => x.Tags);
+
+        entity.Property(x => x.TagsRaw).HasColumnName(nameof(Tags)).HasColumnType("jsonb")
+            .HasDefaultValueSql("'{}'::jsonb");
+        entity.HasIndex(x => x.TagsRaw).HasMethod("GIN");
 
         entity.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserChatId).IsRequired()
             .OnDelete(DeleteBehavior.Cascade);

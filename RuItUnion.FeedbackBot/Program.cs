@@ -62,7 +62,7 @@ builder.AddNpgsqlDataSource(@"RuItUnion-FeedbackBot-Database", settings =>
     settings.DisableHealthChecks = false;
 });
 
-builder.Services.AddSingleton<TopicTitleGenerator>();
+builder.Services.AddScoped<TopicTitleGenerator>();
 builder.Services.AddDbContext<FeedbackBotContext>((provider, optionsBuilder) =>
     optionsBuilder.UseNpgsql(provider.GetRequiredService<NpgsqlDataSource>()));
 builder.Services.AddScoped<IFeedbackBotContext, FeedbackBotContext>();
@@ -81,6 +81,8 @@ if (useMigrator)
 
 builder.Services.Configure<RateLimitOptions>(builder.Configuration.GetSection(@"RateLimit"));
 
+builder.Services.AddSingleton<FrameMiddleware, HashMiddleware>();
+
 builder.Services.TryAddSingleton<ISpamFilter, ChinaSpamFilter>();
 builder.Services.TryAddSingleton<ISpamFilter, UaPropagandaFilter>();
 
@@ -94,6 +96,7 @@ builder.Services.AddTgBotFrameCommands(commandsBuilder =>
     commandsBuilder.AddAuthorization();
 
     commandsBuilder.TryAddCommandMiddleware<AntiSpamMiddleware>();
+    commandsBuilder.TryAddCommandMiddleware<HashMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<ThreadCommandFilterMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageCopierMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageForwarderMiddleware>();

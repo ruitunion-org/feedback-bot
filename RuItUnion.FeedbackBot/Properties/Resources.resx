@@ -119,7 +119,9 @@
     <value>Открывает тему</value>
   </data>
   <data name="Command_Description_Close" xml:space="preserve">
-    <value>Закрывает тему</value>
+    <value>Закрывает тему.
+
+Команда, если не описано иное, должна применятся в самой теме, вариант без аргументов не закрывает тему без предварительно установленного заголовка через команду "#header значение". Вызов команды во варианте "/close true" закроет тему, несмотря на отсутствие заголовка. Команда, вызванная с текстовым аргументом перед закрытием темы присвоит указанный в аргументе заголовок, а вызов с числовым аргументом позволяет закрыть любую тему по ее номеру.</value>
   </data>
   <data name="Command_Description_Delete" xml:space="preserve">
     <value>Удаляет сообщение в чате с пользователем. Команду необходимо использовать, отвечая ей на сообщение пользователя.</value>
@@ -171,5 +173,78 @@
   </data>
   <data name="Command_Description_SpanRestore" xml:space="preserve">
     <value>Восстанавливает нежелательное сообщение и создает тему</value>
+  </data>
+  <data name="Category_Description_Legacy" xml:space="preserve">
+    <value>Команды-псевдонимы, повторяющие команды из старых версий бота</value>
+  </data>
+  <data name="Category_Description_List" xml:space="preserve">
+    <value>Данные команды предоставляют различые списки сущностей, таких как темы, пользователи и т. п.</value>
+  </data>
+  <data name="Category_Description_ThreadInternal" xml:space="preserve">
+    <value>Данные команды предоставляюи расширенную функциональность для тем, в которых ведется переписка с пользователями</value>
+  </data>
+  <data name="Category_Name_Legacy" xml:space="preserve">
+    <value>Унаследованные</value>
+  </data>
+  <data name="Category_Name_List" xml:space="preserve">
+    <value>Списки</value>
+  </data>
+  <data name="Category_Name_ThreadInternal" xml:space="preserve">
+    <value>Тема (расширенные)</value>
+  </data>
+  <data name="Command_Description_CloseTask" xml:space="preserve">
+    <value>см. "/close"</value>
+  </data>
+  <data name="Command_Description_Link" xml:space="preserve">
+    <value>Отвечает ссылкой на последнее сообщение указанной в аргументе теме</value>
+  </data>
+  <data name="Command_Description_SetTaskName" xml:space="preserve">
+    <value>см. "/tag header "значение""</value>
+  </data>
+  <data name="Command_Description_Tag" xml:space="preserve">
+    <value>Выполнив команду без агрументов в теме отвечает списком установленых для данной темы тегов. Указав первым аргументом название тега, а вторым — его значение бот установит для темы, в которой вызыванна команда, новый тег или перезапишет существующий. Вариант команды с тремя аргументами явно принимает первым аргументом номер темы, вторым — название, третьим — значение тега. Используя ключ тега "header" бот установит описание темы.
+Для данной команды доступен сокращенный синтаксис через решетку "#название_тега зачение тега". В синтаксисе через решетку недопустимы пробелы в названии тега, но при этом нет необходимости заносить значение тега в кавычки, если в нем присутствуют пробелы.</value>
+  </data>
+  <data name="Command_Description_TagRemove" xml:space="preserve">
+    <value>Удаляет указанный в строковом аргументе тег. Вариант с одним аргументом необходимо применять в теме с пользователем, вариант с числовым аргументом позволяет явно указать номер темы.</value>
+  </data>
+  <data name="Command_Description_TopicCsv" xml:space="preserve">
+    <value>Формирует CSV файл с информацией по всем заявкам. Используя аргументы возможно ограничить выборку файла определенными датами: первый аргумент — минимальная дата, а вторая — максимальная</value>
+  </data>
+  <data name="Command_Description_TopicList" xml:space="preserve">
+    <value>Отвечает списком ссылок на открытые темы</value>
+  </data>
+  <data name="InternalMessageForwarderMiddleware_GeneralNotification" xml:space="preserve">
+    <value>Создана новая тема &lt;a href="https://t.me/c/{0}/{1}"&gt;{2}&lt;/a&gt;</value>
+  </data>
+  <data name="InternalThreadController_Close_NoHeader" xml:space="preserve">
+    <value>Невозможно закрыть тему без присвоенного заголовка</value>
+  </data>
+  <data name="InternalThreadController_Close_TopicNotFound" xml:space="preserve">
+    <value>Тема не найдена</value>
+  </data>
+  <data name="LegacyController_AddAdmin_NotReply" xml:space="preserve">
+    <value>Команду необходимо использовать в ответ на сообщение того, кому необходимо выдать роль «admin»</value>
+  </data>
+  <data name="TagController_Tag_InvalidValue" xml:space="preserve">
+    <value>Недопустимое значение тега</value>
+  </data>
+  <data name="TagController_Tag_NoFound" xml:space="preserve">
+    <value>Для данной темы теги отсутствуют</value>
+  </data>
+  <data name="TagController_Tag_NotUserTopic" xml:space="preserve">
+    <value>Данная тема не является темой переписки с пользователем</value>
+  </data>
+  <data name="TagController_Tag_OnlyTopics" xml:space="preserve">
+    <value>Данный функционал поддерживается только в темах</value>
+  </data>
+  <data name="TopicListEmpty" xml:space="preserve">
+    <value>Сейчас нет открытых тем</value>
+  </data>
+  <data name="TopicListTitle" xml:space="preserve">
+    <value>Открытые темы:</value>
+  </data>
+  <data name="TagController_Tag_EmptyTagName" xml:space="preserve">
+    <value>Название тега не может быть пустым</value>
   </data>
 </root>

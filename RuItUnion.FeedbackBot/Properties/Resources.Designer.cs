@@ -70,6 +70,24 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Команды-псевдонимы, повторяющие команды из старых версий бота.
+        /// </summary>
+        public static string Category_Description_Legacy {
+            get {
+                return ResourceManager.GetString("Category_Description_Legacy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Данные команды предоставляют различые списки сущностей, таких как темы, пользователи и т. п..
+        /// </summary>
+        public static string Category_Description_List {
+            get {
+                return ResourceManager.GetString("Category_Description_List", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Команды для просмотра и восстановления нежелательных сообщений.
         /// </summary>
         public static string Category_Description_Spam {
@@ -84,6 +102,33 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string Category_Description_Thread {
             get {
                 return ResourceManager.GetString("Category_Description_Thread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Данные команды предоставляюи расширенную функциональность для тем, в которых ведется переписка с пользователями.
+        /// </summary>
+        public static string Category_Description_ThreadInternal {
+            get {
+                return ResourceManager.GetString("Category_Description_ThreadInternal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Унаследованные.
+        /// </summary>
+        public static string Category_Name_Legacy {
+            get {
+                return ResourceManager.GetString("Category_Name_Legacy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Списки.
+        /// </summary>
+        public static string Category_Name_List {
+            get {
+                return ResourceManager.GetString("Category_Name_List", resourceCulture);
             }
         }
         
@@ -106,11 +151,31 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Тема (расширенные).
+        /// </summary>
+        public static string Category_Name_ThreadInternal {
+            get {
+                return ResourceManager.GetString("Category_Name_ThreadInternal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Закрывает тему.
+        ///
+        ///Команда, если не описано иное, должна применятся в самой теме, вариант без аргументов не закрывает тему без предварительно установленного заголовка через команду &quot;#header значение&quot;. Вызов команды во варианте &quot;/close true&quot; закроет тему, несмотря на отсутствие заголовка. Команда, вызванная с текстовым аргументом перед закрытием темы присвоит указанный в аргументе заголовок, а вызов с числовым аргументом позволяет закрыть любую тему по ее номеру..
         /// </summary>
         public static string Command_Description_Close {
             get {
                 return ResourceManager.GetString("Command_Description_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на см. &quot;/close&quot;.
+        /// </summary>
+        public static string Command_Description_CloseTask {
+            get {
+                return ResourceManager.GetString("Command_Description_CloseTask", resourceCulture);
             }
         }
         
@@ -124,11 +189,29 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Отвечает ссылкой на последнее сообщение указанной в аргументе теме.
+        /// </summary>
+        public static string Command_Description_Link {
+            get {
+                return ResourceManager.GetString("Command_Description_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Открывает тему.
         /// </summary>
         public static string Command_Description_Open {
             get {
                 return ResourceManager.GetString("Command_Description_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на см. &quot;/tag header &quot;значение&quot;&quot;.
+        /// </summary>
+        public static string Command_Description_SetTaskName {
+            get {
+                return ResourceManager.GetString("Command_Description_SetTaskName", resourceCulture);
             }
         }
         
@@ -165,6 +248,79 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string Command_Description_Sync {
             get {
                 return ResourceManager.GetString("Command_Description_Sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выполнив команду без агрументов в теме отвечает списком установленых для данной темы тегов. Указав первым аргументом название тега, а вторым — его значение бот установит для темы, в которой вызыванна команда, новый тег или перезапишет существующий. Вариант команды с тремя аргументами явно принимает первым аргументом номер темы, вторым — название, третьим — значение тега. Используя ключ тега &quot;header&quot; бот установит описание темы.
+        ///Для данной команды доступен сокращенный синтаксис через решетку &quot;#название_тега [остаток строки не уместился]&quot;;.
+        /// </summary>
+        public static string Command_Description_Tag {
+            get {
+                return ResourceManager.GetString("Command_Description_Tag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удаляет указанный в строковом аргументе тег. Вариант с одним аргументом необходимо применять в теме с пользователем, вариант с числовым аргументом позволяет явно указать номер темы..
+        /// </summary>
+        public static string Command_Description_TagRemove {
+            get {
+                return ResourceManager.GetString("Command_Description_TagRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Формирует CSV файл с информацией по всем заявкам. Используя аргументы возможно ограничить выборку файла определенными датами: первый аргумент — минимальная дата, а вторая — максимальная.
+        /// </summary>
+        public static string Command_Description_TopicCsv {
+            get {
+                return ResourceManager.GetString("Command_Description_TopicCsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отвечает списком ссылок на открытые темы.
+        /// </summary>
+        public static string Command_Description_TopicList {
+            get {
+                return ResourceManager.GetString("Command_Description_TopicList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Создана новая тема &lt;a href=&quot;https://t.me/c/{0}/{1}&quot;&gt;{2}&lt;/a&gt;.
+        /// </summary>
+        public static string InternalMessageForwarderMiddleware_GeneralNotification {
+            get {
+                return ResourceManager.GetString("InternalMessageForwarderMiddleware_GeneralNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Невозможно закрыть тему без присвоенного заголовка.
+        /// </summary>
+        public static string InternalThreadController_Close_NoHeader {
+            get {
+                return ResourceManager.GetString("InternalThreadController_Close_NoHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тема не найдена.
+        /// </summary>
+        public static string InternalThreadController_Close_TopicNotFound {
+            get {
+                return ResourceManager.GetString("InternalThreadController_Close_TopicNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Команду необходимо использовать в ответ на сообщение того, кому необходимо выдать роль «admin».
+        /// </summary>
+        public static string LegacyController_AddAdmin_NotReply {
+            get {
+                return ResourceManager.GetString("LegacyController_AddAdmin_NotReply", resourceCulture);
             }
         }
         
@@ -223,6 +379,51 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Название тега не может быть пустым.
+        /// </summary>
+        public static string TagController_Tag_EmptyTagName {
+            get {
+                return ResourceManager.GetString("TagController_Tag_EmptyTagName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Недопустимое значение тега.
+        /// </summary>
+        public static string TagController_Tag_InvalidValue {
+            get {
+                return ResourceManager.GetString("TagController_Tag_InvalidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Для данной темы теги отсутствуют.
+        /// </summary>
+        public static string TagController_Tag_NoFound {
+            get {
+                return ResourceManager.GetString("TagController_Tag_NoFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Данная тема не является темой переписки с пользователем.
+        /// </summary>
+        public static string TagController_Tag_NotUserTopic {
+            get {
+                return ResourceManager.GetString("TagController_Tag_NotUserTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Данный функционал поддерживается только в темах.
+        /// </summary>
+        public static string TagController_Tag_OnlyTopics {
+            get {
+                return ResourceManager.GetString("TagController_Tag_OnlyTopics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Данное сообщение не было отправлено пользователю, его достаточно удалить стандартными средствами Telegram.
         /// </summary>
         public static string ThreadController_Delete_NotFound {
@@ -237,6 +438,24 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string ThreadController_Delete_NotReply {
             get {
                 return ResourceManager.GetString("ThreadController_Delete_NotReply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сейчас нет открытых тем.
+        /// </summary>
+        public static string TopicListEmpty {
+            get {
+                return ResourceManager.GetString("TopicListEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Открытые темы:.
+        /// </summary>
+        public static string TopicListTitle {
+            get {
+                return ResourceManager.GetString("TopicListTitle", resourceCulture);
             }
         }
         

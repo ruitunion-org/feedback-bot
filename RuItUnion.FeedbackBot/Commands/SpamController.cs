@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.Json;
+using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.Mvc;
 using RuItUnion.FeedbackBot.Data.Models;
 using Telegram.Bot.Types.Enums;
 using TgBotFrame.Commands;
@@ -11,6 +13,7 @@ namespace RuItUnion.FeedbackBot.Commands;
 
 [CommandController("Spam")]
 [Restricted("admin")]
+[FeatureGate(RequirementType.Any, "ChinaSpamFilter", "UaPropagandaFilter")]
 public class SpamController(
     IOptions<AppOptions> options,
     BotService botService,
