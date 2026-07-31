@@ -94,6 +94,7 @@ builder.Services.AddTgBotFrameCommands(commandsBuilder =>
     commandsBuilder.AddAuthorization();
 
     commandsBuilder.TryAddCommandMiddleware<AntiSpamMiddleware>();
+    commandsBuilder.TryAddCommandMiddleware<HashMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<ThreadCommandFilterMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageCopierMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageForwarderMiddleware>();
