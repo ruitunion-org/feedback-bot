@@ -218,6 +218,20 @@ public class TagController(
                 await botClient.EditForumTopic(_chatId, topic.ThreadId, topicTitleGenerator.GetTopicTitle(topic),
                     cancellationToken: CancellationToken).ConfigureAwait(false);
                 break;
+            case "":
+                if (chatId is not null && messageId is not null)
+                {
+                    await botClient.SendMessage(chatId,
+                        ResourceManager.GetString(nameof(TagController_Tag_EmptyTagName), Context.GetCultureInfo())!,
+                        messageThreadId: threadId,
+                        replyParameters: new()
+                        {
+                            ChatId = chatId,
+                            MessageId = messageId.Value,
+                            AllowSendingWithoutReply = true,
+                        }).ConfigureAwait(false);
+                }
+                return;
             default:
                 topic.Tags = topic.Tags.SetItem(key, value);
                 break;

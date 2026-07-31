@@ -379,6 +379,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Название тега не может быть пустым.
+        /// </summary>
+        public static string TagController_Tag_EmptyTagName {
+            get {
+                return ResourceManager.GetString("TagController_Tag_EmptyTagName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Недопустимое значение тега.
         /// </summary>
         public static string TagController_Tag_InvalidValue {

@@ -244,4 +244,7 @@
   <data name="TopicListTitle" xml:space="preserve">
     <value>Открытые темы:</value>
   </data>
+  <data name="TagController_Tag_EmptyTagName" xml:space="preserve">
+    <value>Название тега не может быть пустым</value>
+  </data>
 </root>
