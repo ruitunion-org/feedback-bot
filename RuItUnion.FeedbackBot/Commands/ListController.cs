@@ -21,10 +21,7 @@ public class ListController(
     public async Task TopicList()
     {
         long? chatId = Context.GetChatId();
-        if (chatId is null)
-        {
-            return;
-        }
+        if (chatId is null) return;
 
         StringBuilder text = new();
         foreach (DbTopic topic in dataContext.Topics
@@ -69,10 +66,7 @@ public class ListController(
     public async Task TagList()
     {
         long? chatId = Context.GetChatId();
-        if (chatId is null)
-        {
-            return;
-        }
+        if (chatId is null) return;
 
         DbTopic[] topics = await dataContext.Topics.AsNoTracking().ToArrayAsync().ConfigureAwait(false);
         (string Name, int Count)[] tagNames = topics

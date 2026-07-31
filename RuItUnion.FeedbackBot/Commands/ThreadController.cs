@@ -32,15 +32,14 @@ public class ThreadController(
     public virtual async Task Open()
     {
         int? threadId = Context.GetThreadId();
-        if (threadId is not null)
-        {
-            await UpdateTopicStatus(threadId.Value, true).ConfigureAwait(false);
-        }
+        if (threadId is not null) await UpdateTopicStatus(threadId.Value, true).ConfigureAwait(false);
     }
 
     [Command(nameof(Close))]
     [Restricted("admin")]
-    public async Task Close() => await Close(!await featureManager.IsEnabledAsync(@"DoNotAllowEmptyHeader").ConfigureAwait(false)).ConfigureAwait(false);
+    public async Task Close() =>
+        await Close(!await featureManager.IsEnabledAsync(@"DoNotAllowEmptyHeader").ConfigureAwait(false))
+            .ConfigureAwait(false);
 
     [Command(nameof(Close))]
     [Restricted("admin")]
@@ -50,13 +49,9 @@ public class ThreadController(
         int? threadId = Context.GetThreadId();
         DbTopic? topic = await db.Topics.AsTracking().Include(x => x.User)
             .FirstOrDefaultAsync(x => x.ThreadId == threadId).ConfigureAwait(false);
-        if (topic is null)
-        {
-            return;
-        }
+        if (topic is null) return;
 
         if (!force && string.IsNullOrWhiteSpace(topic.Header))
-        {
             await botClient.SendMessage(_chatId,
                 ResourceManager.GetString(nameof(InternalThreadController_Close_NoHeader), Context.GetCultureInfo())!,
                 messageThreadId: Update.Message?.MessageThreadId, replyParameters: new()
@@ -65,11 +60,8 @@ public class ThreadController(
                     ChatId = Context.GetChatId(),
                     MessageId = Context.GetMessageId() ?? 0,
                 }).ConfigureAwait(false);
-        }
         else
-        {
             await UpdateTopicStatus(threadId!.Value, false, topic).ConfigureAwait(false);
-        }
     }
 
 
@@ -212,10 +204,8 @@ public class ThreadController(
             long? chatId = Context.GetChatId()!;
             long? messageId = Context.GetMessageId()!;
             if (chatId is not null && messageId is not null)
-            {
                 await botClient.SetMessageReaction(chatId.Value, (int)messageId.Value, _highVoltageEmoji)
                     .ConfigureAwait(false);
-            }
         }
         else
         {
@@ -243,13 +233,9 @@ public class ThreadController(
                 topic.IsOpen = isOpen;
                 await db.SaveChangesAsync().ConfigureAwait(false);
                 if (topic.IsOpen)
-                {
                     feedbackMetricsService.IncOpenedTopics(topic.ThreadId);
-                }
                 else
-                {
                     feedbackMetricsService.DecOpenedTopics(topic.ThreadId);
-                }
             }
 
             try

@@ -29,7 +29,7 @@ public class FeedbackBotContext(DbContextOptions<FeedbackBotContext> options) : 
                 Name = "service_admin",
                 Id = -50,
                 MentionEnabled = false,
-            }
+            },
         ]);
 
         IAuthorizationData.OnModelCreating(modelBuilder);

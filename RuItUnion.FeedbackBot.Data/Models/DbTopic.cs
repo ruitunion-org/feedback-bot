@@ -12,8 +12,10 @@ public class DbTopic : IEntityTypeConfiguration<DbTopic>, IEquatable<DbTopic>
     public required long UserChatId { get; init; }
     public bool IsOpen { get; set; } = true;
     public DateTime Created { get; init; } = DateTime.UtcNow;
+
     [MaxLength(128)]
     public string Header { get; set; } = string.Empty;
+
     public ImmutableDictionary<string, object?> Tags
     {
         get => TagsRaw.Deserialize<ImmutableDictionary<string, object?>>()
@@ -42,7 +44,8 @@ public class DbTopic : IEntityTypeConfiguration<DbTopic>, IEquatable<DbTopic>
 
         entity.Ignore(x => x.Tags);
 
-        entity.Property(x => x.TagsRaw).HasColumnName(nameof(Tags)).HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb");
+        entity.Property(x => x.TagsRaw).HasColumnName(nameof(Tags)).HasColumnType("jsonb")
+            .HasDefaultValueSql("'{}'::jsonb");
         entity.HasIndex(x => x.TagsRaw).HasMethod("GIN");
 
         entity.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserChatId).IsRequired()

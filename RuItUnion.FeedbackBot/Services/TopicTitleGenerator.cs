@@ -1,5 +1,5 @@
-﻿using RuItUnion.FeedbackBot.Data.Models;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using RuItUnion.FeedbackBot.Data.Models;
 
 namespace RuItUnion.FeedbackBot.Services;
 

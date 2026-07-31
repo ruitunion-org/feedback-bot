@@ -135,10 +135,7 @@ public class TagController(
 
         if (topic is null)
         {
-            if (chatId is null || messageId is null)
-            {
-                return;
-            }
+            if (chatId is null || messageId is null) return;
 
             await botClient.SendMessage(chatId,
                 ResourceManager.GetString(nameof(TagController_Tag_NotUserTopic), Context.GetCultureInfo())!,
@@ -169,10 +166,7 @@ public class TagController(
 
         if (topic is null)
         {
-            if (chatId is null || messageId is null)
-            {
-                return;
-            }
+            if (chatId is null || messageId is null) return;
 
             await botClient
                 .SetMessageReaction(chatId, messageId.Value, _eyeEmoji,
@@ -220,7 +214,6 @@ public class TagController(
                 break;
             case "":
                 if (chatId is not null && messageId is not null)
-                {
                     await botClient.SendMessage(chatId,
                         ResourceManager.GetString(nameof(TagController_Tag_EmptyTagName), Context.GetCultureInfo())!,
                         messageThreadId: threadId,
@@ -230,7 +223,6 @@ public class TagController(
                             MessageId = messageId.Value,
                             AllowSendingWithoutReply = true,
                         }).ConfigureAwait(false);
-                }
                 return;
             default:
                 topic.Tags = topic.Tags.SetItem(key, value);
@@ -241,10 +233,8 @@ public class TagController(
         metricsService.IncTagsSet(Context.GetUserId() ?? 0, Context.GetThreadId() ?? 0, key, value);
 
         if (chatId is not null && messageId is not null)
-        {
             await botClient
                 .SetMessageReaction(chatId, messageId.Value, _eyeEmoji, cancellationToken: CancellationToken)
                 .ConfigureAwait(false);
-        }
     }
 }

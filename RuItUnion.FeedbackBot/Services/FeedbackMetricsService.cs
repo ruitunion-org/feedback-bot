@@ -8,10 +8,10 @@ public sealed class FeedbackMetricsService : IDisposable
     private readonly Counter<int> _messagesDeleted;
     private readonly Counter<int> _messagesEdited;
     private readonly Counter<int> _messagesForwarded;
-    private readonly Counter<int> _tagsSet;
     private readonly Meter _meter;
     private readonly UpDownCounter<int> _openedTopics;
     private readonly Counter<int> _spamDetected;
+    private readonly Counter<int> _tagsSet;
 
     public FeedbackMetricsService(IMeterFactory meterFactory)
     {
