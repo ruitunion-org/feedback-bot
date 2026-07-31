@@ -81,6 +81,8 @@ if (useMigrator)
 
 builder.Services.Configure<RateLimitOptions>(builder.Configuration.GetSection(@"RateLimit"));
 
+builder.Services.AddSingleton<FrameMiddleware, HashMiddleware>();
+
 builder.Services.TryAddSingleton<ISpamFilter, ChinaSpamFilter>();
 builder.Services.TryAddSingleton<ISpamFilter, UaPropagandaFilter>();
 
