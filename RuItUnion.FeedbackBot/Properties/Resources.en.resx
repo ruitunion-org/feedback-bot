@@ -192,4 +192,77 @@ Language: {4}.</value>
   <data name="Command_Description_SpanRestore" xml:space="preserve">
     <value>Recovers the unwanted message and creates a topic</value>
   </data>
+  <data name="Category_Description_Legacy" xml:space="preserve">
+    <value>Alias ​​commands that repeat commands from older versions of the bot</value>
+  </data>
+  <data name="Category_Description_List" xml:space="preserve">
+    <value>These commands provide various lists of entities such as topics, users, etc.</value>
+  </data>
+  <data name="Category_Description_ThreadInternal" xml:space="preserve">
+    <value>These commands provide extended functionality for threads where you communicate with users</value>
+  </data>
+  <data name="Category_Name_Legacy" xml:space="preserve">
+    <value>Legacy</value>
+  </data>
+  <data name="Category_Name_List" xml:space="preserve">
+    <value>Lists</value>
+  </data>
+  <data name="Category_Name_ThreadInternal" xml:space="preserve">
+    <value>Thread (advanced)</value>
+  </data>
+  <data name="Command_Description_CloseTask" xml:space="preserve">
+    <value>see "/close"</value>
+  </data>
+  <data name="Command_Description_Link" xml:space="preserve">
+    <value>Replies with a link to the last message in the topic specified in the argument</value>
+  </data>
+  <data name="Command_Description_SetTaskName" xml:space="preserve">
+    <value>see "/tag header "value""</value>
+  </data>
+  <data name="Command_Description_Tag" xml:space="preserve">
+    <value>When executed without arguments, the command responds with a list of tags set for the topic. By specifying the tag name as the first argument and its value as the second, the bot will set a new tag or overwrite an existing one for the topic in which the command is invoked. The three-argument version of the command explicitly accepts the topic number as the first argument, the tag name as the second, and the tag value as the third. Using the "header" tag key, the bot will set the topic description.
+This command has a shortened hash syntax: "#tag_name tag_value." The hash syntax doesn't allow spaces in the tag name, but it doesn't require quotation marks around the tag value if it contains spaces.</value>
+  </data>
+  <data name="Command_Description_TagRemove" xml:space="preserve">
+    <value>Removes the tag specified by the string argument. The single-argument option must be used in a user-specific topic; the numeric argument option allows you to explicitly specify the topic number.</value>
+  </data>
+  <data name="Command_Description_TopicCsv" xml:space="preserve">
+    <value>Generates a CSV file with information on all requests. Using arguments, you can limit the file selection to specific dates: the first argument is the minimum date, and the second is the maximum.</value>
+  </data>
+  <data name="Command_Description_TopicList" xml:space="preserve">
+    <value>Replies with a list of links to open topics</value>
+  </data>
+  <data name="InternalMessageForwarderMiddleware_GeneralNotification" xml:space="preserve">
+    <value>A new topic has been created &lt;a href="https://t.me/c/{0}/{1}"&gt;{2}&lt;/a&gt;</value>
+  </data>
+  <data name="InternalThreadController_Close_NoHeader" xml:space="preserve">
+    <value>Cannot close a topic without an assigned title</value>
+  </data>
+  <data name="InternalThreadController_Close_TopicNotFound" xml:space="preserve">
+    <value>Topic not found</value>
+  </data>
+  <data name="LegacyController_AddAdmin_NotReply" xml:space="preserve">
+    <value>The command must be used in response to a message from the person who needs to be granted the "admin" role</value>
+  </data>
+  <data name="TagController_Tag_InvalidValue" xml:space="preserve">
+    <value>Invalid tag value</value>
+  </data>
+  <data name="TagController_Tag_NoFound" xml:space="preserve">
+    <value>There are no tags for this topic</value>
+  </data>
+  <data name="TagController_Tag_NotUserTopic" xml:space="preserve">
+    <value>This topic is not a topic of correspondence with the user</value>
+  </data>
+  <data name="TagController_Tag_OnlyTopics" xml:space="preserve">
+    <value>This functionality is supported only in topics</value>
+  </data>
+  <data name="TopicListEmpty" xml:space="preserve">
+    <value>There are no open topics</value>
+  </data>
+  <data name="TopicListTitle" xml:space="preserve">
+    <value>Opened topics:</value>
+  </data>
+  <data name="TagController_Tag_EmptyTagName" xml:space="preserve">
+    <value>The tag name cannot be empty</value>
+  </data>
 </root>
