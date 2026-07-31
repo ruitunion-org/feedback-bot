@@ -35,7 +35,6 @@ public class ThreadController(
         if (threadId is not null)
         {
             await UpdateTopicStatus(threadId.Value, true).ConfigureAwait(false);
-            feedbackMetricsService.IncOpenedTopics(threadId.Value);
         }
     }
 
@@ -243,6 +242,14 @@ public class ThreadController(
             {
                 topic.IsOpen = isOpen;
                 await db.SaveChangesAsync().ConfigureAwait(false);
+                if (topic.IsOpen)
+                {
+                    feedbackMetricsService.IncOpenedTopics(topic.ThreadId);
+                }
+                else
+                {
+                    feedbackMetricsService.DecOpenedTopics(topic.ThreadId);
+                }
             }
 
             try
