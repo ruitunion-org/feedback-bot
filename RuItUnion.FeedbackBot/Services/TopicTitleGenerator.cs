@@ -11,7 +11,7 @@ public sealed class TopicTitleGenerator(FeedbackBotContext dataContext)
         int topicId = topic.Id;
         long userId = topic.UserChatId;
         string result = (topic.IsOpen ? "\uD83D\uDFE9" : @"❌")
-                        + "\t" + topicId.ToString("D") + ":"
+                        + "\t" + (topicId == 0 ? string.Empty : (topicId.ToString("D") + ":"))
                         + (string.IsNullOrWhiteSpace(topic.Header) ? string.Empty : "\t") + topic.Header + "\t"
                         + (topic.User?.ToString()
                            ?? dataContext.Users.FirstOrDefault(x => x.Id == userId)?.ToString());
