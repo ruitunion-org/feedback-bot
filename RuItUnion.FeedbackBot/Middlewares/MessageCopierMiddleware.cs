@@ -96,7 +96,7 @@ public class MessageCopierMiddleware(
             message.MessageId,
             message.MessageThreadId,
             topic.UserChatId);
-        feedbackMetricsService.IncMessagesCopied(topic.ThreadId, topic.UserChatId);
+        feedbackMetricsService.IncMessagesCopied(topic.ThreadId, message.From?.Id ?? 0L);
         return ValueTask.CompletedTask;
     }
 }
