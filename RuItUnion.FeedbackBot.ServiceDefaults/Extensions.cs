@@ -25,15 +25,15 @@ public static class Extensions
         healthChecks.CacheOutput("HealthChecks").WithRequestTimeout("HealthChecks");
 
         // All health checks must pass for app to be considered ready to accept traffic after starting
-        app.MapHealthChecks("/health");
+        app.MapHealthChecks("/health").ShortCircuit();
 
         // Only health checks tagged with the "live" tag must pass for app to be considered alive
         app.MapHealthChecks("/alive", new()
         {
             Predicate = r => r.Tags.Contains("live"),
-        });
+        }).ShortCircuit();
 
-        app.MapPrometheusScrapingEndpoint();
+        app.MapPrometheusScrapingEndpoint().ShortCircuit();
 
         return app;
     }
