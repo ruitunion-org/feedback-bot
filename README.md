@@ -111,6 +111,7 @@ Feature flags are configured in `appsettings.json` under `feature_management`:
 | `ForceCultureSet` | `false` | Forces a specific locale via `AppOptions__OverrideCultureTag` |
 | `LegacyCommands` | `false` | Enables legacy command aliases (`/addadmin`, `/closetask`, `/settaskname`) |
 | `DoNotAllowEmptyHeader` | `false` | Rejects topics with empty header |
+| `ForbidMentionsOnAnswer` | `false` | Forbid user mentions on answers to user messages |
 | `EnableMigratorFromV01` | `false` | Enables data migration from v0.1 schema |
 
 ## 🌟 Features

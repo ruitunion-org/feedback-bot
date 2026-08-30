@@ -1,4 +1,5 @@
 ﻿using System.Collections.Frozen;
+using Microsoft.FeatureManagement;
 using RuItUnion.FeedbackBot.Data.Models;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types.Enums;
@@ -10,6 +11,7 @@ public class MessageCopierMiddleware(
     ITelegramBotClient botClient,
     IFeedbackBotContext db,
     FeedbackMetricsService feedbackMetricsService,
+    IVariantFeatureManager featureManager,
     ILogger<MessageCopierMiddleware> logger) : FrameMiddleware
 {
     private static readonly FrozenSet<ReactionTypeEmoji> _highVoltageEmoji =
@@ -34,8 +36,8 @@ public class MessageCopierMiddleware(
                     and not MessageOriginType.User)
                 return;
 
-            if (update.Message.Entities?.Any(x => x.Type is MessageEntityType.Mention or MessageEntityType.TextMention)
-                ?? false)
+            if (await featureManager.IsEnabledAsync(@"ForbidMentionsOnAnswer", ct).ConfigureAwait(false) 
+                && (update.Message.Entities?.Any(x => x.Type is MessageEntityType.Mention or MessageEntityType.TextMention) ?? false))
             {
                 await botClient.SendMessage(_chatId,
                     ResourceManager.GetString(nameof(MessageCopierMiddleware_CopyWithUserNotAllowed),
