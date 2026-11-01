@@ -22,8 +22,9 @@ public class AntiSpamMiddleware(
         if (spamFilters is not null && userId != 0L && update.Message?.Chat.Id != _chatId
             && string.IsNullOrEmpty(context.GetCommandName()))
         {
-            bool hasTopic = await db.Topics.AnyAsync(x => x.UserChatId == update.Message!.Chat.Id, ct)
-                                .ConfigureAwait(false)
+            bool hasTopic = (await db.Topics.AnyAsync(x => x.UserChatId == update.Message!.Chat.Id, ct)
+                                .ConfigureAwait(false) 
+                             && await db.Replies.Include(x => x.Topic).AnyAsync(x => x.Topic.UserChatId == userId, cancellationToken: ct).ConfigureAwait(false))
                             || await db.SpamMessages.AnyAsync(x => x.Id == userId, ct).ConfigureAwait(false);
             if (!hasTopic)
                 foreach (ISpamFilter filter in spamFilters)
