@@ -154,7 +154,7 @@
     <value>&gt; *Пересылка сообщения с упоминанием других пользователей недоступна*</value>
   </data>
   <data name="AntiSpamMiddleware_Message" xml:space="preserve">
-    <value>Получено нежелательное сообщение. Администратор может узнать подробности с помощью команды `/SpamInfo {0}`</value>
+    <value>Получено нежелательное сообщение\. Администратор может узнать подробности с помощью команды `/SpamInfo {0}`</value>
   </data>
   <data name="SpamController_NotFound" xml:space="preserve">
     <value>Сообщение не найдено</value>

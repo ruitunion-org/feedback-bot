@@ -172,7 +172,7 @@ Language: {4}.</value>
     <value>&gt; *Forwarding messages mentioning other users is not available*</value>
   </data>
   <data name="AntiSpamMiddleware_Message" xml:space="preserve">
-    <value>An spam message was received. The administrator can get details using the command `/SpamInfo {0}`</value>
+    <value>An spam message was received\. The administrator can get details using the command `/SpamInfo {0}`</value>
   </data>
   <data name="SpamController_NotFound" xml:space="preserve">
     <value>Message not found</value>
