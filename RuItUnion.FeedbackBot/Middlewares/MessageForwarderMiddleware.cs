@@ -128,11 +128,13 @@ public class MessageForwarderMiddleware(
             user.UserName, user.Id);
         try
         {
-            await botClient.EditForumTopic(_chatId, dbTopic.ThreadId, topicTitleGenerator.GetTopicTitle(dbTopic), cancellationToken: ct).ConfigureAwait(false);
+            await botClient.EditForumTopic(_chatId, dbTopic.ThreadId, topicTitleGenerator.GetTopicTitle(dbTopic),
+                cancellationToken: ct).ConfigureAwait(false);
         }
         catch (ApiRequestException e) when (e.Message == @"Bad Request: TOPIC_NOT_MODIFIED")
         {
         }
+
         await CreateInfoMessage(context, dbTopic, user, topicName, ct).ConfigureAwait(false);
         feedbackMetricsService.IncOpenedTopics(dbTopic.ThreadId);
         return dbTopic;

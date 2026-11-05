@@ -36,8 +36,9 @@ public class MessageCopierMiddleware(
                     and not MessageOriginType.User)
                 return;
 
-            if (await featureManager.IsEnabledAsync(@"ForbidMentionsOnAnswer", ct).ConfigureAwait(false) 
-                && (update.Message.Entities?.Any(x => x.Type is MessageEntityType.Mention or MessageEntityType.TextMention) ?? false))
+            if (await featureManager.IsEnabledAsync(@"ForbidMentionsOnAnswer", ct).ConfigureAwait(false)
+                && (update.Message.Entities?.Any(x =>
+                    x.Type is MessageEntityType.Mention or MessageEntityType.TextMention) ?? false))
             {
                 await botClient.SendMessage(_chatId,
                     ResourceManager.GetString(nameof(MessageCopierMiddleware_CopyWithUserNotAllowed),
