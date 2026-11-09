@@ -199,7 +199,15 @@ public class ThreadController(
 
         if (topic is not null)
         {
-            await botClient.SendMessage(topic.UserChatId, message).ConfigureAwait(false);
+            Message result = await botClient.SendMessage(topic.UserChatId, message, cancellationToken: CancellationToken).ConfigureAwait(false);
+
+            await db.Replies.AddAsync(new()
+            {
+                ChatThreadId = topic.ThreadId,
+                ChatMessageId = Update.Message!.Id,
+                UserMessageId = result.Id,
+            }, CancellationToken).ConfigureAwait(false);
+            await db.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
 
             long? chatId = Context.GetChatId()!;
             long? messageId = Context.GetMessageId()!;
