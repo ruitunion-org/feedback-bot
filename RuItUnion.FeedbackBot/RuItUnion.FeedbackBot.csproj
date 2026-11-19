@@ -41,6 +41,7 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" />
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
+		<PackageReference Include="Telegram.Bot.Extensions.Markup" />
 		<PackageReference Include="TgBotFrame.Commands" />
 		<PackageReference Include="TgBotFrame.Commands.Help" />
 		<PackageReference Include="TgBotFrame.Commands.RateLimit" />
