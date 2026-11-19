@@ -1,10 +1,12 @@
-﻿using System.Collections.Concurrent;
+﻿using Microsoft.FeatureManagement.Mvc;
 using RuItUnion.FeedbackBot.Data.Models;
+using System.Collections.Concurrent;
 using Telegram.Bot.Extensions.Markup;
 using Telegram.Bot.Types.Enums;
 
 namespace RuItUnion.FeedbackBot.Middlewares;
 
+[FeatureGate("Queue")]
 public class InterceptReactionsMiddleware(
     IFeedbackBotContext db,
     IOptions<AppOptions> options,
