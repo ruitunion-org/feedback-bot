@@ -8,4 +8,6 @@ public interface IFeedbackBotContext : IAuthorizationData
     DbSet<DbReply> Replies { get; init; }
     DbSet<DbTopic> Topics { get; init; }
     DbSet<DbSpamMessage> SpamMessages { get; init; }
+    DbSet<DbMentor> Mentors { get; init; }
+    DbSet<DbQueue> Queue { get; init; }
 }

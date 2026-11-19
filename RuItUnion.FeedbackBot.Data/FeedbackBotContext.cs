@@ -8,6 +8,8 @@ public class FeedbackBotContext(DbContextOptions<FeedbackBotContext> options) : 
     public DbSet<DbReply> Replies { get; init; } = null!;
     public DbSet<DbTopic> Topics { get; init; } = null!;
     public DbSet<DbSpamMessage> SpamMessages { get; init; } = null!;
+    public DbSet<DbMentor> Mentors { get; init; } = null!;
+    public DbSet<DbQueue> Queue { get; init; } = null!;
 
     Task IAuthorizationData.SaveChangesAsync(CancellationToken cancellationToken) =>
         base.SaveChangesAsync(cancellationToken);
