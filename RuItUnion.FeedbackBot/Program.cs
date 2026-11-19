@@ -22,6 +22,8 @@ GC.RefreshMemoryLimit();
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton(TimeProvider.System);
+
 builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(nameof(AppOptions)));
 builder.Services.AddSingleton<FeedbackMetricsService>();
 
@@ -86,6 +88,8 @@ builder.Services.AddSingleton<FrameMiddleware, HashMiddleware>();
 builder.Services.TryAddSingleton<ISpamFilter, ChinaSpamFilter>();
 builder.Services.TryAddSingleton<ISpamFilter, UaPropagandaFilter>();
 
+builder.Services.AddScoped<QueueService>();
+
 builder.Services.AddTgBotFrameCommands(commandsBuilder =>
 {
     commandsBuilder.TryAddCommandMiddleware<RateLimitMiddleware>();
@@ -98,6 +102,7 @@ builder.Services.AddTgBotFrameCommands(commandsBuilder =>
     commandsBuilder.TryAddCommandMiddleware<AntiSpamMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<HashMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<ThreadCommandFilterMiddleware>();
+    commandsBuilder.TryAddCommandMiddleware<InterceptReactionsMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageCopierMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageForwarderMiddleware>();
     commandsBuilder.TryAddCommandMiddleware<MessageEditorMiddleware>();

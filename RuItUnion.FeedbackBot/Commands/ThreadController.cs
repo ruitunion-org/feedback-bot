@@ -199,7 +199,8 @@ public class ThreadController(
 
         if (topic is not null)
         {
-            Message result = await botClient.SendMessage(topic.UserChatId, message, cancellationToken: CancellationToken).ConfigureAwait(false);
+            Message result = await botClient
+                .SendMessage(topic.UserChatId, message, cancellationToken: CancellationToken).ConfigureAwait(false);
 
             await db.Replies.AddAsync(new()
             {
