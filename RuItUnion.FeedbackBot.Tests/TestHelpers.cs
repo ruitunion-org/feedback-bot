@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
@@ -9,7 +10,6 @@ using Microsoft.FeatureManagement.FeatureFilters;
 using Moq;
 using RuItUnion.FeedbackBot.Data;
 using RuItUnion.FeedbackBot.Data.Models;
-using RuItUnion.FeedbackBot.Middlewares;
 using RuItUnion.FeedbackBot.Options;
 using RuItUnion.FeedbackBot.Services;
 using Telegram.Bot;
@@ -51,7 +51,7 @@ public sealed class TestFeatureManager(HashSet<string>? enabledFeatures = null) 
         IsEnabledAsync(feature, cancellationToken);
 
     public async IAsyncEnumerable<string> GetFeatureNamesAsync(
-        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         foreach (string feature in EnabledFeatures)
         {
@@ -80,14 +80,14 @@ public sealed class FeedbackBotDatabaseCollection : ICollectionFixture<TestDatab
 /// </summary>
 public sealed class TestDatabase : IAsyncDisposable
 {
-    public const string DatabaseName = "feedback_bot_tests";
+    public const string DATABASE_NAME = "feedback_bot_tests";
 
     private readonly PostgreSqlContainer _container;
 
     public TestDatabase()
     {
         _container = new PostgreSqlBuilder("docker.io/library/postgres:18")
-            .WithDatabase(DatabaseName)
+            .WithDatabase(DATABASE_NAME)
             .WithUsername("postgres")
             .WithPassword("postgres")
             .Build();
@@ -96,19 +96,19 @@ public sealed class TestDatabase : IAsyncDisposable
 
     public string ConnectionString => _container.GetConnectionString();
 
+    public async ValueTask DisposeAsync()
+    {
+        await _container.DisposeAsync().ConfigureAwait(false);
+    }
+
     public FeedbackBotContext CreateContext()
     {
-        var options = new DbContextOptionsBuilder<FeedbackBotContext>()
+        DbContextOptions<FeedbackBotContext> options = new DbContextOptionsBuilder<FeedbackBotContext>()
             .UseNpgsql(ConnectionString).Options;
         FeedbackBotContext context = new(options);
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
         return context;
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await _container.DisposeAsync().ConfigureAwait(false);
     }
 }
 
@@ -209,14 +209,14 @@ public static class TestBotClient
     public static void WithEditForumTopic(Mock<ITelegramBotClient> mock)
     {
         mock
-            .Setup(c => c.SendRequest<bool>(It.IsAny<IRequest<bool>>(), It.IsAny<CancellationToken>()))
+            .Setup(c => c.SendRequest(It.IsAny<IRequest<bool>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
     }
 
     public static void WithEditForumTopicNotModified(Mock<ITelegramBotClient> mock)
     {
         mock
-            .Setup(c => c.SendRequest<bool>(It.IsAny<IRequest<bool>>(), It.IsAny<CancellationToken>()))
+            .Setup(c => c.SendRequest(It.IsAny<IRequest<bool>>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new ApiRequestException("Bad Request: TOPIC_NOT_MODIFIED"));
     }
 
@@ -253,7 +253,7 @@ public static class TestReflection
         long? chatId = null, long? userId = null, int? threadId = null, int? messageId = null,
         string culture = "ru-RU")
     {
-        var frameContext = new FrameContext();
+        FrameContext frameContext = new();
         frameContext.Properties["ChatId"] = chatId;
         frameContext.Properties["UserId"] = userId;
         frameContext.Properties["ThreadId"] = threadId;
@@ -265,8 +265,8 @@ public static class TestReflection
     private static void SetPrivate(object target, string name, object? value)
     {
         PropertyInfo property = target.GetType().GetProperty(
-            name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                       ?? throw new MissingMemberException(target.GetType().Name, name);
+                                    name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                                ?? throw new MissingMemberException(target.GetType().Name, name);
         property.SetValue(target, value);
     }
 }
@@ -280,7 +280,6 @@ public static class TestResources
         _manager.GetString(name, culture) ?? throw new MissingManifestResourceException(name);
 }
 
-
 public class TestMeterFactory : IMeterFactory
 {
     public void Dispose()
@@ -288,7 +287,7 @@ public class TestMeterFactory : IMeterFactory
         throw new NotImplementedException();
     }
 
-    public Meter Create(MeterOptions options) => new Meter(options);
+    public Meter Create(MeterOptions options) => new(options);
 }
 
 /// <summary>
@@ -296,7 +295,7 @@ public class TestMeterFactory : IMeterFactory
 /// </summary>
 public static class QueueServiceFactory
 {
-    public const long FeedbackChatId = -100_424_242;
+    public const long FEEDBACK_CHAT_ID = -100_424_242;
     public static readonly DateTime DefaultNow = new(2026, 1, 15, 12, 0, 0, DateTimeKind.Utc);
 
     public static QueueService Create(
@@ -304,19 +303,19 @@ public static class QueueServiceFactory
         bool featureEnabled = true, TimeProvider? clock = null,
         TimeSpan? cooldownDuration = null)
     {
-        var options = new OptionsWrapper<AppOptions>(new()
+        OptionsWrapper<AppOptions> options = new(new()
         {
-            FeedbackChatId = FeedbackChatId,
+            FeedbackChatId = FEEDBACK_CHAT_ID,
             Start = string.Empty,
             CooldownDuration = cooldownDuration ?? TimeSpan.FromHours(6),
         });
-        return new QueueService(
+        return new(
             options,
             db,
-            new FeedbackMetricsService(new TestMeterFactory()),
+            new(new TestMeterFactory()),
             new TestFeatureManager(featureEnabled ? ["Queue"] : []),
             botClient,
-            new TopicTitleGenerator(db),
+            new(db),
             clock ?? new TestTimeProvider(DefaultNow));
     }
 }

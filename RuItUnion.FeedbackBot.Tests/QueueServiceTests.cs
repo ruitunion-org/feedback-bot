@@ -19,8 +19,8 @@ namespace RuItUnion.FeedbackBot.Tests;
 [Collection(nameof(FeedbackBotDatabaseCollection))]
 public class QueueServiceTests(TestDatabase db)
 {
-    private static readonly DateTime Base = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-    private static readonly TimeSpan Cooldown = TimeSpan.FromHours(6);
+    private static readonly DateTime _base = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly TimeSpan _cooldown = TimeSpan.FromHours(6);
 
     private FeedbackBotContext NewContext() => db.CreateContext();
 
@@ -35,7 +35,7 @@ public class QueueServiceTests(TestDatabase db)
     private static QueueService NewService(
         FeedbackBotContext ctx, ITelegramBotClient client,
         bool featureEnabled = true, TimeProvider? clock = null, TimeSpan? cooldown = null) =>
-        QueueServiceFactory.Create(ctx, client, featureEnabled, clock, cooldown ?? Cooldown);
+        QueueServiceFactory.Create(ctx, client, featureEnabled, clock, cooldown ?? _cooldown);
 
     // ================= GetQueue: порядок =================
 
@@ -70,10 +70,10 @@ public class QueueServiceTests(TestDatabase db)
         TestDb.User(ctx, 150);
         TestDb.User(ctx, 200);
         // e3 (150): Base + 1h  — минимальная сумма, идёт первым
-        TestDb.QueueElement(ctx, 150, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.FromHours(1));
+        TestDb.QueueElement(ctx, 150, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.FromHours(1));
         // e1 (100) и e2 (200): Base + 2h — равенство, решается UserId по убыванию → 200 перед 100
-        TestDb.QueueElement(ctx, 100, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.FromHours(2));
-        TestDb.QueueElement(ctx, 200, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.FromHours(2));
+        TestDb.QueueElement(ctx, 100, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.FromHours(2));
+        TestDb.QueueElement(ctx, 200, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.FromHours(2));
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         QueueService service = NewService(ctx, TestBotClient.Create().Object);
@@ -93,7 +93,7 @@ public class QueueServiceTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
         TestDb.User(ctx, 2);
-        TestDb.QueueElement(ctx, 1, true);
+        TestDb.QueueElement(ctx, 1);
         TestDb.QueueElement(ctx, 2, false);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -150,7 +150,7 @@ public class QueueServiceTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.QueueElement(ctx, 1, true);
+        TestDb.QueueElement(ctx, 1);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         QueueService service = NewService(ctx, TestBotClient.Create().Object);
@@ -187,7 +187,7 @@ public class QueueServiceTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.QueueElement(ctx, 1, true);
+        TestDb.QueueElement(ctx, 1);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         QueueService service = NewService(ctx, TestBotClient.Create().Object);
@@ -223,7 +223,7 @@ public class QueueServiceTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2, "assignee");
-        DbTopic topic = TestDb.Topic(ctx, 1, 1000, Base, true);
+        DbTopic topic = TestDb.Topic(ctx, 1, 1000, _base, true);
         TestDb.QueueElement(ctx, 2);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -244,7 +244,7 @@ public class QueueServiceTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2, "assignee");
-        TestDb.Topic(ctx, 1, 1000, Base, false);
+        TestDb.Topic(ctx, 1, 1000, _base);
         TestDb.QueueElement(ctx, 2);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -262,7 +262,7 @@ public class QueueServiceTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2);
-        DbTopic topic = TestDb.Topic(ctx, 1, 1000, Base, true);
+        DbTopic topic = TestDb.Topic(ctx, 1, 1000, _base, true);
         TestDb.QueueElement(ctx, 2, false);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -284,7 +284,7 @@ public class QueueServiceTests(TestDatabase db)
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2, "ivan");
         DbTopic topic = TestDb.Topic(
-            ctx, 1, 1000, Base, true,
+            ctx, 1, 1000, _base, true,
             interceptCandidateId: 1, interceptMessageId: 77);
         TestDb.QueueElement(ctx, 2);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -307,11 +307,11 @@ public class QueueServiceTests(TestDatabase db)
             .SingleAsync(x => x.UserId == 2, TestContext.Current.CancellationToken);
         Assert.Equal(QueueServiceFactory.DefaultNow, q.LastAssignmentTime);
         // штраф был 0, остаток < 0 → обнулён → новый = cooldown
-        Assert.Equal(Cooldown, q.AssignmentPenalty);
+        Assert.Equal(_cooldown, q.AssignmentPenalty);
 
         SendMessageRequest msg =
             TestBotClient.LastSendMessage(mock) ?? throw new("SendMessage not called");
-        Assert.Equal(QueueServiceFactory.FeedbackChatId, msg.ChatId);
+        Assert.Equal(QueueServiceFactory.FEEDBACK_CHAT_ID, msg.ChatId);
         Assert.Equal(1000, msg.MessageThreadId);
         Assert.Equal(ParseMode.Html, msg.ParseMode);
         string expected = string.Format(
@@ -320,7 +320,7 @@ public class QueueServiceTests(TestDatabase db)
 
         EditForumTopicRequest edit =
             TestBotClient.LastEditForumTopic(mock) ?? throw new("EditForumTopic not called");
-        Assert.Equal(QueueServiceFactory.FeedbackChatId, edit.ChatId);
+        Assert.Equal(QueueServiceFactory.FEEDBACK_CHAT_ID, edit.ChatId);
         Assert.Equal(1000, edit.MessageThreadId);
     }
 
@@ -330,7 +330,7 @@ public class QueueServiceTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2, "ivan");
-        TestDb.Topic(ctx, 1, 1000, Base, true);
+        TestDb.Topic(ctx, 1, 1000, _base, true);
         // прошло 4h, штраф 8h → остаток 4h → новый = 4h/2 + cooldown = 2h + 6h = 8h
         TestDb.QueueElement(
             ctx, 2,
@@ -354,7 +354,7 @@ public class QueueServiceTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2, "ivan");
-        TestDb.Topic(ctx, 1, 1000, Base, true);
+        TestDb.Topic(ctx, 1, 1000, _base, true);
         // прошло 10h, штраф 2h → остаток -8h → 0 → новый = 0 + cooldown = 6h
         TestDb.QueueElement(
             ctx, 2,
@@ -369,7 +369,7 @@ public class QueueServiceTests(TestDatabase db)
 
         DbQueue q = await ctx.Queue.IgnoreQueryFilters()
             .SingleAsync(x => x.UserId == 2, TestContext.Current.CancellationToken);
-        Assert.Equal(Cooldown, q.AssignmentPenalty);
+        Assert.Equal(_cooldown, q.AssignmentPenalty);
     }
 
     [Fact]
@@ -381,9 +381,9 @@ public class QueueServiceTests(TestDatabase db)
         TestDb.User(ctx, 20, "other");
         // последним тему покинул пользователь 10; он же стоит первым в очереди
         DbTopic topic = TestDb.Topic(
-            ctx, 1, 1000, Base, true, lastLeavedUserId: 10);
-        TestDb.QueueElement(ctx, 10, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.Zero);
-        TestDb.QueueElement(ctx, 20, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.FromHours(10));
+            ctx, 1, 1000, _base, true, lastLeavedUserId: 10);
+        TestDb.QueueElement(ctx, 10, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
+        TestDb.QueueElement(ctx, 20, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.FromHours(10));
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         (Mock<ITelegramBotClient> _, ITelegramBotClient client) = NewBot();
@@ -403,8 +403,8 @@ public class QueueServiceTests(TestDatabase db)
         TestDb.User(ctx, 10, "left");
         // единственный элемент очереди — тот же, кто последним покидал тему
         DbTopic topic = TestDb.Topic(
-            ctx, 1, 1000, Base, true, lastLeavedUserId: 10);
-        TestDb.QueueElement(ctx, 10, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.Zero);
+            ctx, 1, 1000, _base, true, lastLeavedUserId: 10);
+        TestDb.QueueElement(ctx, 10, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         (Mock<ITelegramBotClient> mock, ITelegramBotClient client) = NewBot();
@@ -419,7 +419,7 @@ public class QueueServiceTests(TestDatabase db)
         DbQueue q = await ctx.Queue.IgnoreQueryFilters()
             .SingleAsync(x => x.UserId == 10, TestContext.Current.CancellationToken);
         // штраф/LastAssignmentTime не тронуты: до записи дело не дошло
-        Assert.Equal(Base, q.LastAssignmentTime);
+        Assert.Equal(_base, q.LastAssignmentTime);
         Assert.Equal(TimeSpan.Zero, q.AssignmentPenalty);
 
         // ничего не отправлено и не отредактировано
@@ -434,10 +434,10 @@ public class QueueServiceTests(TestDatabase db)
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 10, "a");
         TestDb.User(ctx, 20, "b");
-        TestDb.Topic(ctx, 10, 1000, Base, true);
-        TestDb.Topic(ctx, 20, 2000, Base.AddHours(1), true);
-        TestDb.QueueElement(ctx, 10, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.Zero);
-        TestDb.QueueElement(ctx, 20, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.Zero);
+        TestDb.Topic(ctx, 10, 1000, _base, true);
+        TestDb.Topic(ctx, 20, 2000, _base.AddHours(1), true);
+        TestDb.QueueElement(ctx, 10, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
+        TestDb.QueueElement(ctx, 20, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         (Mock<ITelegramBotClient> mock, ITelegramBotClient client) = NewBot();
@@ -458,7 +458,7 @@ public class QueueServiceTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2, "ivan");
-        DbTopic topic = TestDb.Topic(ctx, 1, 1000, Base, true);
+        DbTopic topic = TestDb.Topic(ctx, 1, 1000, _base, true);
         TestDb.QueueElement(ctx, 2);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -480,7 +480,7 @@ public class QueueServiceTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2); // UserName отсутствует
-        DbTopic topic = TestDb.Topic(ctx, 1, 1000, Base, true);
+        DbTopic topic = TestDb.Topic(ctx, 1, 1000, _base, true);
         TestDb.QueueElement(ctx, 2);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -494,7 +494,7 @@ public class QueueServiceTests(TestDatabase db)
         await service.AssignQueue(TestContext.Current.CancellationToken);
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock) ?? throw new("SendMessage not called");
-        Assert.Equal(QueueServiceFactory.FeedbackChatId, msg.ChatId);
+        Assert.Equal(QueueServiceFactory.FEEDBACK_CHAT_ID, msg.ChatId);
         Assert.Equal(1000, msg.MessageThreadId);
         Assert.Equal(ParseMode.Html, msg.ParseMode);
         // сработала ветка Tools.MentionHtml, а не "@username"
@@ -509,10 +509,10 @@ public class QueueServiceTests(TestDatabase db)
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 10, "a");
         TestDb.User(ctx, 20, "b");
-        TestDb.Topic(ctx, 10, 1000, Base, true);
-        TestDb.Topic(ctx, 20, 2000, Base.AddHours(1), true);
-        TestDb.QueueElement(ctx, 10, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.Zero);
-        TestDb.QueueElement(ctx, 20, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.Zero);
+        TestDb.Topic(ctx, 10, 1000, _base, true);
+        TestDb.Topic(ctx, 20, 2000, _base.AddHours(1), true);
+        TestDb.QueueElement(ctx, 10, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
+        TestDb.QueueElement(ctx, 20, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
         await ctx.DisposeAsync();
 
@@ -520,7 +520,7 @@ public class QueueServiceTests(TestDatabase db)
 
         // Не NewContext(): он делает EnsureDeleted+EnsureCreated и стирает засеянные данные.
         // Создаём два независимых контекста поверх той же БД.
-        var options = new DbContextOptionsBuilder<FeedbackBotContext>()
+        DbContextOptions<FeedbackBotContext> options = new DbContextOptionsBuilder<FeedbackBotContext>()
             .UseNpgsql(db.ConnectionString).Options;
         await using FeedbackBotContext ctx1 = new(options);
         await using FeedbackBotContext ctx2 = new(options);
@@ -545,11 +545,11 @@ public class QueueServiceTests(TestDatabase db)
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 10, "a");
         TestDb.User(ctx, 20, "b");
-        TestDb.Topic(ctx, 10, 1000, Base, true);
-        TestDb.Topic(ctx, 20, 2000, Base.AddHours(1), true);
-        TestDb.Topic(ctx, 1, 3000, Base.AddHours(2), true);
-        TestDb.QueueElement(ctx, 10, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.Zero);
-        TestDb.QueueElement(ctx, 20, lastAssignmentTime: Base, assignmentPenalty: TimeSpan.Zero);
+        TestDb.Topic(ctx, 10, 1000, _base, true);
+        TestDb.Topic(ctx, 20, 2000, _base.AddHours(1), true);
+        TestDb.Topic(ctx, 1, 3000, _base.AddHours(2), true);
+        TestDb.QueueElement(ctx, 10, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
+        TestDb.QueueElement(ctx, 20, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         (Mock<ITelegramBotClient> mock, ITelegramBotClient client) = NewBot();

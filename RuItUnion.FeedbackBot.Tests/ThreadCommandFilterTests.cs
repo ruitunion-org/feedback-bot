@@ -9,11 +9,11 @@ namespace RuItUnion.FeedbackBot.Tests;
 
 public class ThreadCommandFilterTests
 {
-    private const int CHAT_ID = -100123;
+    private const int _chatId = -100123;
 
     private readonly ThreadCommandFilterMiddleware _commandFilterMiddleware = new(new OptionsWrapper<AppOptions>(new()
     {
-        FeedbackChatId = CHAT_ID,
+        FeedbackChatId = _chatId,
         Start = "",
     }), null!);
 
@@ -52,8 +52,8 @@ public class ThreadCommandFilterTests
             Properties =
             {
                 { "CommandName", "help" },
-                { "ChatId", (long?)CHAT_ID },
-                { "UserId", (long?)CHAT_ID },
+                { "ChatId", (long?)_chatId },
+                { "UserId", (long?)_chatId },
                 { "ThreadId", (int?)2 },
             },
         }, CancellationToken.None);
@@ -76,8 +76,8 @@ public class ThreadCommandFilterTests
             Properties =
             {
                 { "CommandName", "help" },
-                { "ChatId", (long?)CHAT_ID },
-                { "UserId", (long?)CHAT_ID + 1 },
+                { "ChatId", (long?)_chatId },
+                { "UserId", (long?)_chatId + 1 },
                 { "ThreadId", (int?)2 },
             },
         }, CancellationToken.None);
