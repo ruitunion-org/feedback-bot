@@ -43,7 +43,11 @@ public class QueueService(
         if (queueElement.InQueue) return EnqueueResult.AlreadyInQueue;
 
         bool isMentor = await db.Mentors.AnyAsync(x => x.MentorId == userId, cts).ConfigureAwait(false);
-        if (isMentor) return EnqueueResult.Mentor;
+        if (isMentor)
+        {
+            await db.SaveChangesAsync(cts).ConfigureAwait(false);
+            return EnqueueResult.Mentor;
+        }
 
         queueElement.InQueue = true;
         await db.SaveChangesAsync(cts).ConfigureAwait(false);
@@ -76,7 +80,7 @@ public class QueueService(
                 if (queueElement is null) return;
                 if (topic.LastLeavedUserId == queueElement.UserId)
                 {
-                    queueElement = await GetQueue().Skip(1).FirstOrDefaultAsync(ct).ConfigureAwait(false);
+                    queueElement = await GetQueue().Include(x => x.User).Skip(1).FirstOrDefaultAsync(ct).ConfigureAwait(false);
                     if (queueElement is null) return;
                 }
 
