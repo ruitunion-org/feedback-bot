@@ -1,17 +1,18 @@
-﻿using System.Diagnostics.Metrics;
-using System.Globalization;
-using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
 using Moq;
 using RuItUnion.FeedbackBot.Data;
 using RuItUnion.FeedbackBot.Data.Models;
+using RuItUnion.FeedbackBot.Middlewares;
 using RuItUnion.FeedbackBot.Options;
 using RuItUnion.FeedbackBot.Services;
+using System.Diagnostics.Metrics;
+using System.Globalization;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.CompilerServices;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Requests;
@@ -317,5 +318,34 @@ public static class QueueServiceFactory
             botClient,
             new(db),
             clock ?? new TestTimeProvider(DefaultNow));
+    }
+}
+
+/// <summary>
+///     Фабрика реального InterceptReactionsMiddleware поверх тестовой БД.
+/// </summary>
+public static class InterceptReactionsMiddlewareFactory
+{
+    public static readonly TimeSpan DefaultLockDuration = TimeSpan.FromHours(1);
+
+    public static InterceptReactionsMiddleware Create(
+        FeedbackBotContext db, ITelegramBotClient botClient,
+        FrameUpdateDelegate? next = null,
+        TimeProvider? clock = null, TimeSpan? lockDuration = null)
+    {
+        var options = new OptionsWrapper<AppOptions>(new()
+        {
+            FeedbackChatId = QueueServiceFactory.FEEDBACK_CHAT_ID,
+            LockDuration = lockDuration ?? DefaultLockDuration,
+            Start = string.Empty,
+            CooldownDuration = TimeSpan.FromHours(6),
+        });
+        InterceptReactionsMiddleware mw = new(
+            db,
+            options,
+            clock ?? new TestTimeProvider(QueueServiceFactory.DefaultNow),
+            botClient);
+        TestReflection.SetNext(mw, next ?? ((_, _, _) => Task.CompletedTask));
+        return mw;
     }
 }
