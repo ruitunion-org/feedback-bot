@@ -138,62 +138,61 @@ public class AssignmentController(
             return;
         }
 
-        if (topic.AssigneeId == Context.GetUserId())
+
+        if (topic.AssigneeId == userId)
         {
-            if (topic.AssigneeId == userId)
+            if (await db.Mentors.AnyAsync(x => x.NoviceId == userId, CancellationToken).ConfigureAwait(false))
             {
-                if (await db.Mentors.AnyAsync(x => x.NoviceId == userId, CancellationToken).ConfigureAwait(false))
-                {
-                    await SendReplyMessage(
-                            ResourceManager.GetString(nameof(AssignmentController_AbandonNovice),
-                                Context.GetCultureInfo())!,
-                            CancellationToken)
-                        .ConfigureAwait(false);
-                }
-                else
-                {
-                    topic.ResetIntercept(DateTime.MinValue);
-                    topic.LastLeavedUserId = topic.AssigneeId;
-                    topic.AssigneeId = null;
-                    topic.IsQueued = true;
-
-                    DbQueue? queueElement =
-                        await db.Queue.FirstOrDefaultAsync(x => x.UserId == userId, CancellationToken)
-                            .ConfigureAwait(false);
-                    queueElement?.AssignmentPenalty = queueElement.AssignmentPenalty.Add(TimeSpan.FromDays(1));
-
-                    await db.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
-
-                    await SendReplyMessage(
-                            ResourceManager.GetString(nameof(AssignmentController_AbandonSuccess),
-                                Context.GetCultureInfo())!,
-                            CancellationToken)
-                        .ConfigureAwait(false);
-
-                    await queueService.AssignQueue(CancellationToken).ConfigureAwait(false);
-                }
+                await SendReplyMessage(
+                        ResourceManager.GetString(nameof(AssignmentController_AbandonNovice),
+                            Context.GetCultureInfo())!,
+                        CancellationToken)
+                    .ConfigureAwait(false);
             }
-            else if (await db.Mentors
-                         .AnyAsync(x => x.NoviceId == topic.AssigneeId && x.MentorId == userId, CancellationToken)
-                         .ConfigureAwait(false))
+            else
             {
                 topic.ResetIntercept(DateTime.MinValue);
                 topic.LastLeavedUserId = topic.AssigneeId;
                 topic.AssigneeId = null;
                 topic.IsQueued = true;
 
+                DbQueue? queueElement =
+                    await db.Queue.FirstOrDefaultAsync(x => x.UserId == userId, CancellationToken)
+                        .ConfigureAwait(false);
+                queueElement?.AssignmentPenalty = queueElement.AssignmentPenalty.Add(TimeSpan.FromDays(1));
+
+                await db.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
+
                 await SendReplyMessage(
-                    ResourceManager.GetString(nameof(AssignmentController_AbandonMentor), Context.GetCultureInfo())!,
-                    CancellationToken).ConfigureAwait(false);
+                        ResourceManager.GetString(nameof(AssignmentController_AbandonSuccess),
+                            Context.GetCultureInfo())!,
+                        CancellationToken)
+                    .ConfigureAwait(false);
 
                 await queueService.AssignQueue(CancellationToken).ConfigureAwait(false);
             }
-            else
-            {
-                await SendReplyMessage(
-                    ResourceManager.GetString(nameof(AssignmentController_AbandonForbidden), Context.GetCultureInfo())!,
-                    CancellationToken).ConfigureAwait(false);
-            }
+        }
+        else if (await db.Mentors
+                     .AnyAsync(x => x.NoviceId == topic.AssigneeId && x.MentorId == userId, CancellationToken)
+                     .ConfigureAwait(false))
+        {
+            topic.ResetIntercept(DateTime.MinValue);
+            topic.LastLeavedUserId = topic.AssigneeId;
+            topic.AssigneeId = null;
+            topic.IsQueued = true;
+            await db.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
+
+            await SendReplyMessage(
+                ResourceManager.GetString(nameof(AssignmentController_AbandonMentor), Context.GetCultureInfo())!,
+                CancellationToken).ConfigureAwait(false);
+
+            await queueService.AssignQueue(CancellationToken).ConfigureAwait(false);
+        }
+        else
+        {
+            await SendReplyMessage(
+                ResourceManager.GetString(nameof(AssignmentController_AbandonForbidden), Context.GetCultureInfo())!,
+                CancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -250,7 +249,7 @@ public class AssignmentController(
                     .ConfigureAwait(false);
                 break;
             case { IsQueued: false, AssigneeId: null }:
-                topic.ResetIntercept(clock.GetUtcNow().DateTime);
+                topic.ResetIntercept(clock.GetUtcNow().UtcDateTime);
                 topic.AssigneeId = Context.GetUserId();
 
                 await db.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
@@ -300,6 +299,7 @@ public class AssignmentController(
                         .ConfigureAwait(false);
                     return;
                 }
+
                 if (interceptUser.Id == topic.AssigneeId)
                 {
                     await SendReplyMessage(
