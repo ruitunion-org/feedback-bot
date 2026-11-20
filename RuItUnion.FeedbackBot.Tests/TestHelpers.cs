@@ -1,4 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.Metrics;
+using System.Globalization;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
@@ -8,11 +13,6 @@ using RuItUnion.FeedbackBot.Data.Models;
 using RuItUnion.FeedbackBot.Middlewares;
 using RuItUnion.FeedbackBot.Options;
 using RuItUnion.FeedbackBot.Services;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Requests;
@@ -333,7 +333,7 @@ public static class InterceptReactionsMiddlewareFactory
         FrameUpdateDelegate? next = null,
         TimeProvider? clock = null, TimeSpan? lockDuration = null)
     {
-        var options = new OptionsWrapper<AppOptions>(new()
+        OptionsWrapper<AppOptions> options = new(new()
         {
             FeedbackChatId = QueueServiceFactory.FEEDBACK_CHAT_ID,
             LockDuration = lockDuration ?? DefaultLockDuration,

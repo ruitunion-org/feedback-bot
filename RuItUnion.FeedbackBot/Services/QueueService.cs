@@ -80,7 +80,8 @@ public class QueueService(
                 if (queueElement is null) return;
                 if (topic.LastLeavedUserId == queueElement.UserId)
                 {
-                    queueElement = await GetQueue().Include(x => x.User).Skip(1).FirstOrDefaultAsync(ct).ConfigureAwait(false);
+                    queueElement = await GetQueue().Include(x => x.User).Skip(1).FirstOrDefaultAsync(ct)
+                        .ConfigureAwait(false);
                     if (queueElement is null) return;
                 }
 
@@ -100,12 +101,13 @@ public class QueueService(
                 await db.SaveChangesAsync(ct).ConfigureAwait(false);
                 metrics.Dequeue(queueElement.UserId, true);
                 await botClient.SendMessage(_chatId,
-                        string.Format(ResourceManager.GetString(nameof(AssignmentController_InterceptFast))!, queueElement.User.UserName is not null
-                            ? @"@" + queueElement.User.UserName
-                            : Tools.MentionHtml(topic.AssigneeId.Value, queueElement.User.FirstName
-                                                                        + (queueElement.User.LastName?.Length > 0
-                                                                            ? @" " + queueElement.User.LastName
-                                                                            : string.Empty))),
+                        string.Format(ResourceManager.GetString(nameof(AssignmentController_InterceptFast))!,
+                            queueElement.User.UserName is not null
+                                ? @"@" + queueElement.User.UserName
+                                : Tools.MentionHtml(topic.AssigneeId.Value, queueElement.User.FirstName
+                                                                            + (queueElement.User.LastName?.Length > 0
+                                                                                ? @" " + queueElement.User.LastName
+                                                                                : string.Empty))),
                         messageThreadId: topic.ThreadId,
                         disableNotification: false, parseMode: ParseMode.Html, cancellationToken: ct)
                     .ConfigureAwait(false);

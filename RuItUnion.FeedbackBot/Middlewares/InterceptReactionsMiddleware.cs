@@ -1,6 +1,6 @@
-﻿using Microsoft.FeatureManagement.Mvc;
+﻿using System.Collections.Concurrent;
+using Microsoft.FeatureManagement.Mvc;
 using RuItUnion.FeedbackBot.Data.Models;
-using System.Collections.Concurrent;
 using Telegram.Bot.Extensions.Markup;
 using Telegram.Bot.Types.Enums;
 
@@ -65,7 +65,8 @@ public class InterceptReactionsMiddleware(
                                     ? @$"{user.FirstName} {user.LastName}"
                                     : user.FirstName;
                             await botClient.SendMessage(options.Value.FeedbackChatId,
-                                    ResourceManager.GetString(nameof(InterceptReactionsMiddleware_Result), context.GetCultureInfo())
+                                    ResourceManager.GetString(nameof(InterceptReactionsMiddleware_Result),
+                                        context.GetCultureInfo())
                                     + Tools.MentionMarkdown(topic.AssigneeId.GetValueOrDefault(), name),
                                     messageThreadId: topic.ThreadId,
                                     replyParameters: new()

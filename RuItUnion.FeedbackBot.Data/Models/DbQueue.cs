@@ -24,7 +24,8 @@ public class DbQueue : IEntityTypeConfiguration<DbQueue>, IEquatable<DbQueue>
         entity.Property(x => x.Version).IsRowVersion();
 
         entity.HasOne(x => x.User).WithOne().HasForeignKey<DbQueue>(x => x.UserId);
-        entity.HasMany(x => x.Mentors).WithOne().HasPrincipalKey(x => x.UserId).HasForeignKey(x => x.NoviceId).IsRequired(false).IsConstrained(false);
+        entity.HasMany(x => x.Mentors).WithOne().HasPrincipalKey(x => x.UserId).HasForeignKey(x => x.NoviceId)
+            .IsRequired(false).IsConstrained(false);
     }
 
     public bool Equals(DbQueue? other)
