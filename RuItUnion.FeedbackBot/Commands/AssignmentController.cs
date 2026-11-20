@@ -154,6 +154,7 @@ public class AssignmentController(
                 {
                     topic.ResetIntercept(DateTime.MinValue);
                     topic.LastLeavedUserId = topic.AssigneeId;
+                    topic.AssigneeId = null;
                     topic.IsQueued = true;
 
                     DbQueue? queueElement =
@@ -178,7 +179,8 @@ public class AssignmentController(
             {
                 topic.ResetIntercept(DateTime.MinValue);
                 topic.LastLeavedUserId = topic.AssigneeId;
-                topic.IsQueued = false;
+                topic.AssigneeId = null;
+                topic.IsQueued = true;
 
                 await SendReplyMessage(
                     ResourceManager.GetString(nameof(AssignmentController_AbandonMentor), Context.GetCultureInfo())!,
@@ -289,7 +291,16 @@ public class AssignmentController(
                 long userId = Context.GetUserId() ?? throw new ArgumentNullException(nameof(Context));
                 DbUser? interceptUser = await db.Users.AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == userId, CancellationToken).ConfigureAwait(false);
-                if (interceptUser!.Id == topic.AssigneeId)
+                if (interceptUser is null)
+                {
+                    logger.LogError(@"User with id = {id} not found", userId);
+                    await SendReplyMessage(ResourceManager.GetString(nameof(AssignmentController_UserNotFound),
+                                Context.GetCultureInfo())!,
+                            CancellationToken)
+                        .ConfigureAwait(false);
+                    return;
+                }
+                if (interceptUser.Id == topic.AssigneeId)
                 {
                     await SendReplyMessage(
                             ResourceManager.GetString(nameof(AssignmentController_InterceptSelf),
@@ -391,10 +402,10 @@ public class AssignmentController(
         }
 
         DbUser? mentor = mentorship?.Mentor
-                         ?? await db.Users.FirstOrDefaultAsync(x => x.Id == noviceId, CancellationToken)
+                         ?? await db.Users.FirstOrDefaultAsync(x => x.Id == mentorId, CancellationToken)
                              .ConfigureAwait(false);
         DbUser? novice = mentorship?.Novice
-                         ?? await db.Users.FirstOrDefaultAsync(x => x.Id == mentorId, CancellationToken)
+                         ?? await db.Users.FirstOrDefaultAsync(x => x.Id == noviceId, CancellationToken)
                              .ConfigureAwait(false);
 
         if (mentor is null || novice is null)
