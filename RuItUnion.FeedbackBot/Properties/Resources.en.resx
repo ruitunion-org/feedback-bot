@@ -384,4 +384,13 @@ This command has a shortened hash syntax: "#tag_name tag_value." The hash syntax
 
 Arguments work similarly to the /SetMentor command</value>
   </data>
+  <data name="Command_Description_Assignee" xml:space="preserve">
+    <value>In the topic, the current assignee is answered</value>
+  </data>
+  <data name="AssignmentController_UserNotFound" xml:space="preserve">
+    <value>User not found</value>
+  </data>
+  <data name="InterceptReactionsMiddleware_Result" xml:space="preserve">
+    <value>The topic was intercepted, a new one was assigned — </value>
+  </data>
 </root>

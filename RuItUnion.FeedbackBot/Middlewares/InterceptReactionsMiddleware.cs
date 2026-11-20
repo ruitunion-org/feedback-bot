@@ -65,7 +65,7 @@ public class InterceptReactionsMiddleware(
                                     ? @$"{user.FirstName} {user.LastName}"
                                     : user.FirstName;
                             await botClient.SendMessage(options.Value.FeedbackChatId,
-                                    "Произведен перехват заявки, новый назначенный — "
+                                    ResourceManager.GetString(nameof(InterceptReactionsMiddleware_Result), context.GetCultureInfo())
                                     + Tools.MentionMarkdown(topic.AssigneeId.GetValueOrDefault(), name),
                                     messageThreadId: topic.ThreadId,
                                     replyParameters: new()

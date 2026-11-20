@@ -367,4 +367,10 @@
   <data name="AssignmentController_AssigneeNone" xml:space="preserve">
     <value>У темы нет назначенного, используйте /Intercept для назначения её на себя</value>
   </data>
+  <data name="AssignmentController_UserNotFound" xml:space="preserve">
+    <value>Пользователь не найден</value>
+  </data>
+  <data name="InterceptReactionsMiddleware_Result" xml:space="preserve">
+    <value>Произведен перехват темы, новый назначенный — </value>
+  </data>
 </root>

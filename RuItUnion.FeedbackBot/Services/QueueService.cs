@@ -96,7 +96,7 @@ public class QueueService(
                 await db.SaveChangesAsync(ct).ConfigureAwait(false);
                 metrics.Dequeue(queueElement.UserId, true);
                 await botClient.SendMessage(_chatId,
-                        string.Format("Тема назначена на {0}", queueElement.User.UserName is not null
+                        string.Format(ResourceManager.GetString(nameof(AssignmentController_InterceptFast))!, queueElement.User.UserName is not null
                             ? @"@" + queueElement.User.UserName
                             : Tools.MentionHtml(topic.AssigneeId.Value, queueElement.User.FirstName
                                                                         + (queueElement.User.LastName?.Length > 0

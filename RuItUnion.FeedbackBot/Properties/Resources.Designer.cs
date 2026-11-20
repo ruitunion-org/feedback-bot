@@ -313,6 +313,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Пользователь не найден.
+        /// </summary>
+        public static string AssignmentController_UserNotFound {
+            get {
+                return ResourceManager.GetString("AssignmentController_UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Команды, позволяющее управлять назначениями на темы и взаимодействовать с очередью на темы.
         /// </summary>
         public static string Category_Description_Assignment {
@@ -633,6 +642,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string Command_Description_TopicList {
             get {
                 return ResourceManager.GetString("Command_Description_TopicList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Произведен перехват темы, новый назначенный — .
+        /// </summary>
+        public static string InterceptReactionsMiddleware_Result {
+            get {
+                return ResourceManager.GetString("InterceptReactionsMiddleware_Result", resourceCulture);
             }
         }
         
