@@ -139,7 +139,9 @@
     <value>Opens a topic</value>
   </data>
   <data name="Command_Description_Close" xml:space="preserve">
-    <value>Closes a topic</value>
+    <value>Closes a topic.
+
+Unless specified otherwise, the command must be used within the topic itself. The version without arguments will not close the topic unless a title has been previously set using the command "#header value". Calling the command with "/close true" will close the topic even if it lacks a title. If the command is called with a text argument before closing the topic, it will assign the specified argument as the topic title; a call with a numerical argument allows closing any topic by its number.</value>
   </data>
   <data name="Command_Description_Delete" xml:space="preserve">
     <value>Deletes a message in a user chat. The command must be used in response to a user's message.</value>
@@ -264,5 +266,131 @@ This command has a shortened hash syntax: "#tag_name tag_value." The hash syntax
   </data>
   <data name="TagController_Tag_EmptyTagName" xml:space="preserve">
     <value>The tag name cannot be empty</value>
+  </data>
+  <data name="AssignmentController_QueueIsEmpty" xml:space="preserve">
+    <value>Queue is empty</value>
+  </data>
+  <data name="AssignmentController_NotInQueue" xml:space="preserve">
+    <value>You are not in the queue</value>
+  </data>
+  <data name="AssignmentController_QueueNumber" xml:space="preserve">
+    <value>Your position in the queue: {0:D}</value>
+  </data>
+  <data name="AssignmentController_EnqueueOk" xml:space="preserve">
+    <value>You have been added to the queue for the topic</value>
+  </data>
+  <data name="AssignmentController_EnqueueAlreadyInQueue" xml:space="preserve">
+    <value>You are already in the queue</value>
+  </data>
+  <data name="AssignmentController_EnqueueMentor" xml:space="preserve">
+    <value>ou are a mentor. The person who should receive the request in the queue must be one of your novices, not you personally</value>
+  </data>
+  <data name="AssignmentController_DequeueOk" xml:space="preserve">
+    <value>You are no longer in the queue for the topic</value>
+  </data>
+  <data name="AssignmentController_DequeueNotModified" xml:space="preserve">
+    <value>You were not previously in the queue for the topic</value>
+  </data>
+  <data name="AssignmentController_AbandonNovice" xml:space="preserve">
+    <value>A novice cannot abandon the topic themselves, contact your mentor</value>
+  </data>
+  <data name="AssignmentController_AbandonSuccess" xml:space="preserve">
+    <value>You have dropped the topic and received low priority in the queue for one day</value>
+  </data>
+  <data name="AssignmentController_AbandonMentor" xml:space="preserve">
+    <value>You dropped your novice's topic</value>
+  </data>
+  <data name="AssignmentController_AbandonForbidden" xml:space="preserve">
+    <value>You cannot drop someone else's topic</value>
+  </data>
+  <data name="AssignmentController_MentorNotFound" xml:space="preserve">
+    <value>Mentorship not found</value>
+  </data>
+  <data name="AssignmentController_FreeMentorSuccess" xml:space="preserve">
+    <value>Mentor {0} is freed from novice {1}</value>
+  </data>
+  <data name="AssignmentController_MentorOrNoviceNotFound" xml:space="preserve">
+    <value>Mentor or novice not found</value>
+  </data>
+  <data name="AssignmentController_SetMentorSuccess" xml:space="preserve">
+    <value>Mentor {0} is assigned to novice {1}</value>
+  </data>
+  <data name="AssignmentController_SetMentorConflict" xml:space="preserve">
+    <value>The specified mentor is already assigned to the novice</value>
+  </data>
+  <data name="AssignmentController_SetMentorSelf" xml:space="preserve">
+    <value>A novice cannot be a mentor to themselves</value>
+  </data>
+  <data name="AssignmentController_SetMentorInvalidReply" xml:space="preserve">
+    <value>Could not identify participants — reply to the novice's message</value>
+  </data>
+  <data name="AssignmentController_InterceptStart" xml:space="preserve">
+    <value>Voting has started to change the assigned person for the topic to {0}.\r\n\r\nPlease react 👍 if you agree to the transfer.</value>
+  </data>
+  <data name="AssignmentController_InterceptSelf" xml:space="preserve">
+    <value>You are already the assignee on this topic</value>
+  </data>
+  <data name="AssignmentController_InterceptConflict" xml:space="preserve">
+    <value>Interception of the topic has already been requested</value>
+  </data>
+  <data name="AssignmentController_InterceptFast" xml:space="preserve">
+    <value>The topic is assigned to {0}</value>
+  </data>
+  <data name="AssignmentController_InterceptQueue" xml:space="preserve">
+    <value>Join the queue using the /enqueue command to receive this topic</value>
+  </data>
+  <data name="AssignmentController_InterceptInvalid" xml:space="preserve">
+    <value>The command must be applied in a user correspondence topic</value>
+  </data>
+  <data name="AssignmentController_AssigneeOk" xml:space="preserve">
+    <value>Current assignee for the topic: {0}</value>
+  </data>
+  <data name="AssignmentController_AssigneeNone" xml:space="preserve">
+    <value>The topic has no assignee, use /Intercept to assign it to yourself</value>
+  </data>
+  <data name="Category_Name_Assignment" xml:space="preserve">
+    <value>Assignment and Queue</value>
+  </data>
+  <data name="Category_Description_Assignment" xml:space="preserve">
+    <value>Commands that allow you to manage topic assignments and interact with the topic queue</value>
+  </data>
+  <data name="Command_Description_Queue" xml:space="preserve">
+    <value>Displays the list of participants in the queue and their order. The command with /queue true will also display the values used to determine priority</value>
+  </data>
+  <data name="Command_Description_QueueStatus" xml:space="preserve">
+    <value>Shows the current queue position of the command caller</value>
+  </data>
+  <data name="Command_Description_Enqueue" xml:space="preserve">
+    <value>Adds you to the topic queue. Mentors cannot join the queue themselves and participate in their novices' topics</value>
+  </data>
+  <data name="Command_Description_Dequeue" xml:space="preserve">
+    <value>Removes you from the topic queue</value>
+  </data>
+  <data name="Command_Description_Abandon" xml:space="preserve">
+    <value>When used in the novice's topic, it removes the assignment from you. The novice's mentor must invoke this command for the novice. If the topic was not assigned to the novice who dropped it, a penalty is applied to the queue.</value>
+  </data>
+  <data name="Command_Description_Intercept" xml:space="preserve">
+    <value>If entered in the novice's topic, it starts a vote to reassign the topic from the current assignee to you. If started less than 8 hours after the last message, 2 votes are required; otherwise, one. Voting stops if the assignee replies to the novice's message. In case of successful reassignment, a penalty is applied to the previous assignee in the queue.</value>
+  </data>
+  <data name="Command_Description_SetMentor" xml:space="preserve">
+    <value>Sets a mentor for a novice.
+
+- The command without arguments is applied in response to the novice's message and assigns you as the mentor
+- The command with one argument assigns you to a novice with the specified ID
+- The command with two arguments assigns a mentor with an ID in the first argument to a novice with an ID in the second argument</value>
+  </data>
+  <data name="Command_Description_FreeMentor" xml:space="preserve">
+    <value>Frees a mentor from a novice
+
+Arguments work similarly to the /SetMentor command</value>
+  </data>
+  <data name="Command_Description_Assignee" xml:space="preserve">
+    <value>In the topic, the current assignee is answered</value>
+  </data>
+  <data name="AssignmentController_UserNotFound" xml:space="preserve">
+    <value>User not found</value>
+  </data>
+  <data name="InterceptReactionsMiddleware_Result" xml:space="preserve">
+    <value>The topic was intercepted, a new one was assigned — </value>
   </data>
 </root>

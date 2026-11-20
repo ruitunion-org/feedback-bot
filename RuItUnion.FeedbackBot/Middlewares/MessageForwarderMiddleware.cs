@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Net;
+using Microsoft.FeatureManagement;
 using RuItUnion.FeedbackBot.Data.Models;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types.Enums;
@@ -13,7 +14,10 @@ public class MessageForwarderMiddleware(
     IFeedbackBotContext db,
     FeedbackMetricsService feedbackMetricsService,
     TopicTitleGenerator topicTitleGenerator,
-    ILogger<MessageForwarderMiddleware> logger) : FrameMiddleware
+    IVariantFeatureManager featureManager,
+    ILogger<MessageForwarderMiddleware> logger,
+    TimeProvider clock,
+    QueueService? queueService = null) : FrameMiddleware
 {
     private readonly long _chatId = options.Value.FeedbackChatId;
 
@@ -116,6 +120,12 @@ public class MessageForwarderMiddleware(
             IsOpen = true,
             UserChatId = message.Chat.Id,
             User = user,
+            InterceptCandidateId = null,
+            InterceptMessageId = null,
+            IsQueued = true,
+            LockedFrom = clock.GetUtcNow().UtcDateTime,
+            LastLeavedUserId = null,
+            AssigneeId = null,
         };
         string topicName = topicTitleGenerator.GetTopicTitle(dbTopic);
         ForumTopic topic = await botClient
@@ -137,6 +147,9 @@ public class MessageForwarderMiddleware(
 
         await CreateInfoMessage(context, dbTopic, user, topicName, ct).ConfigureAwait(false);
         feedbackMetricsService.IncOpenedTopics(dbTopic.ThreadId);
+        if (queueService is not null && await featureManager.IsEnabledAsync(@"Queue", ct).ConfigureAwait(false))
+            await queueService.AssignQueue(ct).ConfigureAwait(false);
+
         return dbTopic;
     }
 
