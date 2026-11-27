@@ -70,6 +70,314 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы не можете бросить чужую тему.
+        /// </summary>
+        public static string AssignmentController_AbandonForbidden {
+            get {
+                return ResourceManager.GetString("AssignmentController_AbandonForbidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы бросили тему своего новичка.
+        /// </summary>
+        public static string AssignmentController_AbandonMentor {
+            get {
+                return ResourceManager.GetString("AssignmentController_AbandonMentor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Новичок не может самостоятельно бросить заявку, обратитесь к своему ментору.
+        /// </summary>
+        public static string AssignmentController_AbandonNovice {
+            get {
+                return ResourceManager.GetString("AssignmentController_AbandonNovice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы бросили заявку и получили низкий приоритет в очереди на сутки.
+        /// </summary>
+        public static string AssignmentController_AbandonSuccess {
+            get {
+                return ResourceManager.GetString("AssignmentController_AbandonSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тема уже в очереди.
+        /// </summary>
+        public static string AssignmentController_AddQueue_NotModified {
+            get {
+                return ResourceManager.GetString("AssignmentController_AddQueue_NotModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тема добавлена в очередь.
+        /// </summary>
+        public static string AssignmentController_AddQueue_Ok {
+            get {
+                return ResourceManager.GetString("AssignmentController_AddQueue_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на У темы нет назначенного, используйте /Intercept для назначения её на себя.
+        /// </summary>
+        public static string AssignmentController_AssigneeNone {
+            get {
+                return ResourceManager.GetString("AssignmentController_AssigneeNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий назначенный на тему: {0}.
+        /// </summary>
+        public static string AssignmentController_AssigneeOk {
+            get {
+                return ResourceManager.GetString("AssignmentController_AssigneeOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы не стояли в очереди на тему ранее.
+        /// </summary>
+        public static string AssignmentController_DequeueNotModified {
+            get {
+                return ResourceManager.GetString("AssignmentController_DequeueNotModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы более не стоите в очереди на тему.
+        /// </summary>
+        public static string AssignmentController_DequeueOk {
+            get {
+                return ResourceManager.GetString("AssignmentController_DequeueOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы уже в очереди.
+        /// </summary>
+        public static string AssignmentController_EnqueueAlreadyInQueue {
+            get {
+                return ResourceManager.GetString("AssignmentController_EnqueueAlreadyInQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы являетесь ментором. Для получения темы в очереди должен быть один из ваших новичков, а не вы лично.
+        /// </summary>
+        public static string AssignmentController_EnqueueMentor {
+            get {
+                return ResourceManager.GetString("AssignmentController_EnqueueMentor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы добавлены в очередь на тему.
+        /// </summary>
+        public static string AssignmentController_EnqueueOk {
+            get {
+                return ResourceManager.GetString("AssignmentController_EnqueueOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ментор {0} освобожден от новичка {1}.
+        /// </summary>
+        public static string AssignmentController_FreeMentorSuccess {
+            get {
+                return ResourceManager.GetString("AssignmentController_FreeMentorSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Уже заявлен перехват темы.
+        /// </summary>
+        public static string AssignmentController_InterceptConflict {
+            get {
+                return ResourceManager.GetString("AssignmentController_InterceptConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тема назначена на {0}.
+        /// </summary>
+        public static string AssignmentController_InterceptFast {
+            get {
+                return ResourceManager.GetString("AssignmentController_InterceptFast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Команду необходимо применить в теме переписки с пользователем.
+        /// </summary>
+        public static string AssignmentController_InterceptInvalid {
+            get {
+                return ResourceManager.GetString("AssignmentController_InterceptInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Встанте в очередь с помощью команды /enqueue для получения этой темы.
+        /// </summary>
+        public static string AssignmentController_InterceptQueue {
+            get {
+                return ResourceManager.GetString("AssignmentController_InterceptQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы уже являетесь исполнителем на этой теме.
+        /// </summary>
+        public static string AssignmentController_InterceptSelf {
+            get {
+                return ResourceManager.GetString("AssignmentController_InterceptSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Начато голосование за смену назначенного на тему в пользу {0}.
+        ///
+        ///Установите реакцию 👍, если вы согласны с передачей..
+        /// </summary>
+        public static string AssignmentController_InterceptStart {
+            get {
+                return ResourceManager.GetString("AssignmentController_InterceptStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Менторство не найдено.
+        /// </summary>
+        public static string AssignmentController_MentorNotFound {
+            get {
+                return ResourceManager.GetString("AssignmentController_MentorNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ментор или новичок не найден.
+        /// </summary>
+        public static string AssignmentController_MentorOrNoviceNotFound {
+            get {
+                return ResourceManager.GetString("AssignmentController_MentorOrNoviceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вас нет в очереди.
+        /// </summary>
+        public static string AssignmentController_NotInQueue {
+            get {
+                return ResourceManager.GetString("AssignmentController_NotInQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Очередь пуста.
+        /// </summary>
+        public static string AssignmentController_QueueIsEmpty {
+            get {
+                return ResourceManager.GetString("AssignmentController_QueueIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ваша позиция в очереди: {0:D}.
+        /// </summary>
+        public static string AssignmentController_QueueNumber {
+            get {
+                return ResourceManager.GetString("AssignmentController_QueueNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Снять тему из очереди может только назначенный на нее.
+        /// </summary>
+        public static string AssignmentController_RemoveQueue_Forbidden {
+            get {
+                return ResourceManager.GetString("AssignmentController_RemoveQueue_Forbidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тема уже вне очереди.
+        /// </summary>
+        public static string AssignmentController_RemoveQueue_NotModified {
+            get {
+                return ResourceManager.GetString("AssignmentController_RemoveQueue_NotModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тема изъята из очереди.
+        /// </summary>
+        public static string AssignmentController_RemoveQueue_Ok {
+            get {
+                return ResourceManager.GetString("AssignmentController_RemoveQueue_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Новичку уже назначен указанный ментор.
+        /// </summary>
+        public static string AssignmentController_SetMentorConflict {
+            get {
+                return ResourceManager.GetString("AssignmentController_SetMentorConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось определить участников — ответьте на сообщение новичка.
+        /// </summary>
+        public static string AssignmentController_SetMentorInvalidReply {
+            get {
+                return ResourceManager.GetString("AssignmentController_SetMentorInvalidReply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Новичок не может быть ментором для самого себя.
+        /// </summary>
+        public static string AssignmentController_SetMentorSelf {
+            get {
+                return ResourceManager.GetString("AssignmentController_SetMentorSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ментор {0} назначен новичку {1}.
+        /// </summary>
+        public static string AssignmentController_SetMentorSuccess {
+            get {
+                return ResourceManager.GetString("AssignmentController_SetMentorSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пользователь не найден.
+        /// </summary>
+        public static string AssignmentController_UserNotFound {
+            get {
+                return ResourceManager.GetString("AssignmentController_UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Команды, позволяющее управлять назначениями на темы и взаимодействовать с очередью на темы.
+        /// </summary>
+        public static string Category_Description_Assignment {
+            get {
+                return ResourceManager.GetString("Category_Description_Assignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Команды-псевдонимы, повторяющие команды из старых версий бота.
         /// </summary>
         public static string Category_Description_Legacy {
@@ -111,6 +419,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string Category_Description_ThreadInternal {
             get {
                 return ResourceManager.GetString("Category_Description_ThreadInternal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Назначение и очередь.
+        /// </summary>
+        public static string Category_Name_Assignment {
+            get {
+                return ResourceManager.GetString("Category_Name_Assignment", resourceCulture);
             }
         }
         
@@ -160,6 +477,33 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на При вводе в теме обратившегося, снимает с вас назначение с темы. За новичка вызывать эту команду должен его ментор. Если тема не была назначена новичку, бросившему тему назначается штраф в очереди..
+        /// </summary>
+        public static string Command_Description_Abandon {
+            get {
+                return ResourceManager.GetString("Command_Description_Abandon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Добавляет в очередь тему, если она не включена в нее.
+        /// </summary>
+        public static string Command_Description_AddQueue {
+            get {
+                return ResourceManager.GetString("Command_Description_AddQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на В теме с обратившимся отвечает текущим назначенным.
+        /// </summary>
+        public static string Command_Description_Assignee {
+            get {
+                return ResourceManager.GetString("Command_Description_Assignee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Закрывает тему.
         ///
         ///Команда, если не описано иное, должна применятся в самой теме, вариант без аргументов не закрывает тему без предварительно установленного заголовка через команду &quot;#header значение&quot;. Вызов команды во варианте &quot;/close true&quot; закроет тему, несмотря на отсутствие заголовка. Команда, вызванная с текстовым аргументом перед закрытием темы присвоит указанный в аргументе заголовок, а вызов с числовым аргументом позволяет закрыть любую тему по ее номеру..
@@ -189,6 +533,44 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Исключает вас из очереди на тему.
+        /// </summary>
+        public static string Command_Description_Dequeue {
+            get {
+                return ResourceManager.GetString("Command_Description_Dequeue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Добавляет вас в очередь на тему. Менторы не могут самостоятельно присоединяться к очереди и участвуют в темах своих новичков.
+        /// </summary>
+        public static string Command_Description_Enqueue {
+            get {
+                return ResourceManager.GetString("Command_Description_Enqueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Освобождает ментора от новичка
+        ///
+        ///Аргументы работают аналогично команде /SetMentor.
+        /// </summary>
+        public static string Command_Description_FreeMentor {
+            get {
+                return ResourceManager.GetString("Command_Description_FreeMentor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Если введена в теме обратившегося, начинает голосование за переназначение темы с текущего назначенного на вас. Если начато менее, чем через 8 часов с последнего сообщения, необходимо 2 голоса; в ином случае один. Голосование прекращается, если назначенный ответил на сообщение обратившегося. В случае успешного переназначения предыдущему назначенному назначается штраф в очереди..
+        /// </summary>
+        public static string Command_Description_Intercept {
+            get {
+                return ResourceManager.GetString("Command_Description_Intercept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Отвечает ссылкой на последнее сообщение указанной в аргументе теме.
         /// </summary>
         public static string Command_Description_Link {
@@ -203,6 +585,46 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string Command_Description_Open {
             get {
                 return ResourceManager.GetString("Command_Description_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отображает список участвующих в очереди и их порядок. Команда во варианте `/queue true` отобразит также значения, по которым определяется приоритет.
+        /// </summary>
+        public static string Command_Description_Queue {
+            get {
+                return ResourceManager.GetString("Command_Description_Queue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отвечает текущей позицией в очереди вызвавшего команду.
+        /// </summary>
+        public static string Command_Description_QueueStatus {
+            get {
+                return ResourceManager.GetString("Command_Description_QueueStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Изымает из очереди тему и снимает назначенного. Команду необходимо вводить самому назначенному.
+        /// </summary>
+        public static string Command_Description_RemoveQueue {
+            get {
+                return ResourceManager.GetString("Command_Description_RemoveQueue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Устанавливает ментора для новичка
+        ///
+        ///- Команда без аргументов применяется в ответ на сообщение новичка и назначает ментором вас
+        ///- Команда с одним аргументом назначает вас новичку с указанным ID
+        ///- Команда с двумя аргументами назначает ментора с ID в первом аргументе новичку с ID во втором аргументе.
+        /// </summary>
+        public static string Command_Description_SetMentor {
+            get {
+                return ResourceManager.GetString("Command_Description_SetMentor", resourceCulture);
             }
         }
         
@@ -271,7 +693,7 @@ namespace RuItUnion.FeedbackBot.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Формирует CSV файл с информацией по всем заявкам. Используя аргументы возможно ограничить выборку файла определенными датами: первый аргумент — минимальная дата, а вторая — максимальная.
+        ///   Ищет локализованную строку, похожую на Формирует CSV файл с информацией по всем заявкам. Используя аргументы возможно ограничить выборку файла определенными датами: первый аргумент — минимальная дата, а вторая — максимальная..
         /// </summary>
         public static string Command_Description_TopicCsv {
             get {
@@ -285,6 +707,15 @@ namespace RuItUnion.FeedbackBot.Properties {
         public static string Command_Description_TopicList {
             get {
                 return ResourceManager.GetString("Command_Description_TopicList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Произведен перехват темы, новый назначенный — .
+        /// </summary>
+        public static string InterceptReactionsMiddleware_Result {
+            get {
+                return ResourceManager.GetString("InterceptReactionsMiddleware_Result", resourceCulture);
             }
         }
         

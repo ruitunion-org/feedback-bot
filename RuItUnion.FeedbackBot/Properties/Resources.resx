@@ -209,7 +209,7 @@
     <value>Удаляет указанный в строковом аргументе тег. Вариант с одним аргументом необходимо применять в теме с пользователем, вариант с числовым аргументом позволяет явно указать номер темы.</value>
   </data>
   <data name="Command_Description_TopicCsv" xml:space="preserve">
-    <value>Формирует CSV файл с информацией по всем заявкам. Используя аргументы возможно ограничить выборку файла определенными датами: первый аргумент — минимальная дата, а вторая — максимальная</value>
+    <value>Формирует CSV файл с информацией по всем заявкам. Используя аргументы возможно ограничить выборку файла определенными датами: первый аргумент — минимальная дата, а вторая — максимальная.</value>
   </data>
   <data name="Command_Description_TopicList" xml:space="preserve">
     <value>Отвечает списком ссылок на открытые темы</value>
@@ -246,5 +246,154 @@
   </data>
   <data name="TagController_Tag_EmptyTagName" xml:space="preserve">
     <value>Название тега не может быть пустым</value>
+  </data>
+  <data name="Category_Name_Assignment" xml:space="preserve">
+    <value>Назначение и очередь</value>
+  </data>
+  <data name="Category_Description_Assignment" xml:space="preserve">
+    <value>Команды, позволяющее управлять назначениями на темы и взаимодействовать с очередью на темы</value>
+  </data>
+  <data name="Command_Description_Queue" xml:space="preserve">
+    <value>Отображает список участвующих в очереди и их порядок. Команда во варианте `/queue true` отобразит также значения, по которым определяется приоритет</value>
+  </data>
+  <data name="Command_Description_QueueStatus" xml:space="preserve">
+    <value>Отвечает текущей позицией в очереди вызвавшего команду</value>
+  </data>
+  <data name="Command_Description_Enqueue" xml:space="preserve">
+    <value>Добавляет вас в очередь на тему. Менторы не могут самостоятельно присоединяться к очереди и участвуют в темах своих новичков</value>
+  </data>
+  <data name="Command_Description_Dequeue" xml:space="preserve">
+    <value>Исключает вас из очереди на тему</value>
+  </data>
+  <data name="Command_Description_Abandon" xml:space="preserve">
+    <value>При вводе в теме обратившегося, снимает с вас назначение с темы. За новичка вызывать эту команду должен его ментор. Если тема не была назначена новичку, бросившему тему назначается штраф в очереди.</value>
+  </data>
+  <data name="Command_Description_Intercept" xml:space="preserve">
+    <value>Если введена в теме обратившегося, начинает голосование за переназначение темы с текущего назначенного на вас. Если начато менее, чем через 8 часов с последнего сообщения, необходимо 2 голоса; в ином случае один. Голосование прекращается, если назначенный ответил на сообщение обратившегося. В случае успешного переназначения предыдущему назначенному назначается штраф в очереди.</value>
+  </data>
+  <data name="Command_Description_SetMentor" xml:space="preserve">
+    <value>Устанавливает ментора для новичка
+
+- Команда без аргументов применяется в ответ на сообщение новичка и назначает ментором вас
+- Команда с одним аргументом назначает вас новичку с указанным ID
+- Команда с двумя аргументами назначает ментора с ID в первом аргументе новичку с ID во втором аргументе</value>
+  </data>
+  <data name="Command_Description_FreeMentor" xml:space="preserve">
+    <value>Освобождает ментора от новичка
+
+Аргументы работают аналогично команде /SetMentor</value>
+  </data>
+  <data name="Command_Description_Assignee" xml:space="preserve">
+    <value>В теме с обратившимся отвечает текущим назначенным</value>
+  </data>
+  <data name="AssignmentController_QueueIsEmpty" xml:space="preserve">
+    <value>Очередь пуста</value>
+  </data>
+  <data name="AssignmentController_NotInQueue" xml:space="preserve">
+    <value>Вас нет в очереди</value>
+  </data>
+  <data name="AssignmentController_QueueNumber" xml:space="preserve">
+    <value>Ваша позиция в очереди: {0:D}</value>
+  </data>
+  <data name="AssignmentController_EnqueueOk" xml:space="preserve">
+    <value>Вы добавлены в очередь на тему</value>
+  </data>
+  <data name="AssignmentController_EnqueueAlreadyInQueue" xml:space="preserve">
+    <value>Вы уже в очереди</value>
+  </data>
+  <data name="AssignmentController_EnqueueMentor" xml:space="preserve">
+    <value>Вы являетесь ментором. Для получения темы в очереди должен быть один из ваших новичков, а не вы лично</value>
+  </data>
+  <data name="AssignmentController_DequeueOk" xml:space="preserve">
+    <value>Вы более не стоите в очереди на тему</value>
+  </data>
+  <data name="AssignmentController_DequeueNotModified" xml:space="preserve">
+    <value>Вы не стояли в очереди на тему ранее</value>
+  </data>
+  <data name="AssignmentController_AbandonNovice" xml:space="preserve">
+    <value>Новичок не может самостоятельно бросить заявку, обратитесь к своему ментору</value>
+  </data>
+  <data name="AssignmentController_AbandonSuccess" xml:space="preserve">
+    <value>Вы бросили заявку и получили низкий приоритет в очереди на сутки</value>
+  </data>
+  <data name="AssignmentController_AbandonMentor" xml:space="preserve">
+    <value>Вы бросили тему своего новичка</value>
+  </data>
+  <data name="AssignmentController_AbandonForbidden" xml:space="preserve">
+    <value>Вы не можете бросить чужую тему</value>
+  </data>
+  <data name="AssignmentController_MentorNotFound" xml:space="preserve">
+    <value>Менторство не найдено</value>
+  </data>
+  <data name="AssignmentController_FreeMentorSuccess" xml:space="preserve">
+    <value>Ментор {0} освобожден от новичка {1}</value>
+  </data>
+  <data name="AssignmentController_MentorOrNoviceNotFound" xml:space="preserve">
+    <value>Ментор или новичок не найден</value>
+  </data>
+  <data name="AssignmentController_SetMentorSuccess" xml:space="preserve">
+    <value>Ментор {0} назначен новичку {1}</value>
+  </data>
+  <data name="AssignmentController_SetMentorConflict" xml:space="preserve">
+    <value>Новичку уже назначен указанный ментор</value>
+  </data>
+  <data name="AssignmentController_SetMentorSelf" xml:space="preserve">
+    <value>Новичок не может быть ментором для самого себя</value>
+  </data>
+  <data name="AssignmentController_SetMentorInvalidReply" xml:space="preserve">
+    <value>Не удалось определить участников — ответьте на сообщение новичка</value>
+  </data>
+  <data name="AssignmentController_InterceptStart" xml:space="preserve">
+    <value>Начато голосование за смену назначенного на тему в пользу {0}.
+
+Установите реакцию 👍, если вы согласны с передачей.</value>
+  </data>
+  <data name="AssignmentController_InterceptSelf" xml:space="preserve">
+    <value>Вы уже являетесь исполнителем на этой теме</value>
+  </data>
+  <data name="AssignmentController_InterceptConflict" xml:space="preserve">
+    <value>Уже заявлен перехват темы</value>
+  </data>
+  <data name="AssignmentController_InterceptFast" xml:space="preserve">
+    <value>Тема назначена на {0}</value>
+  </data>
+  <data name="AssignmentController_InterceptQueue" xml:space="preserve">
+    <value>Встанте в очередь с помощью команды /enqueue для получения этой темы</value>
+  </data>
+  <data name="AssignmentController_InterceptInvalid" xml:space="preserve">
+    <value>Команду необходимо применить в теме переписки с пользователем</value>
+  </data>
+  <data name="AssignmentController_AssigneeOk" xml:space="preserve">
+    <value>Текущий назначенный на тему: {0}</value>
+  </data>
+  <data name="AssignmentController_AssigneeNone" xml:space="preserve">
+    <value>У темы нет назначенного, используйте /Intercept для назначения её на себя</value>
+  </data>
+  <data name="AssignmentController_UserNotFound" xml:space="preserve">
+    <value>Пользователь не найден</value>
+  </data>
+  <data name="InterceptReactionsMiddleware_Result" xml:space="preserve">
+    <value>Произведен перехват темы, новый назначенный — </value>
+  </data>
+  <data name="AssignmentController_AddQueue_Ok" xml:space="preserve">
+    <value>Тема добавлена в очередь</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_Forbidden" xml:space="preserve">
+    <value>Снять тему из очереди может только назначенный на нее</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_NotModified" xml:space="preserve">
+    <value>Тема уже вне очереди</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_Ok" xml:space="preserve">
+    <value>Тема изъята из очереди</value>
+  </data>
+  <data name="AssignmentController_AddQueue_NotModified" xml:space="preserve">
+    <value>Тема уже в очереди</value>
+  </data>
+  <data name="Command_Description_AddQueue" xml:space="preserve">
+    <value>Добавляет в очередь тему, если она не включена в нее</value>
+  </data>
+  <data name="Command_Description_RemoveQueue" xml:space="preserve">
+    <value>Изымает из очереди тему и снимает назначенного. Команду необходимо вводить самому назначенному</value>
   </data>
 </root>

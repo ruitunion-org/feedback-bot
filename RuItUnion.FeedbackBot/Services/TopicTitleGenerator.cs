@@ -10,7 +10,13 @@ public sealed class TopicTitleGenerator(FeedbackBotContext dataContext)
     {
         int topicId = topic.Id;
         long userId = topic.UserChatId;
-        string result = (topic.IsOpen ? "\uD83D\uDFE9" : @"❌")
+        string emoji = topic.IsOpen switch
+        {
+            true when topic.AssigneeId is null => @"🟩",
+            true => @"🔷",
+            false => @"❌",
+        };
+        string result = emoji
                         + "\t" + (topicId == 0 ? string.Empty : topicId.ToString("D") + ":")
                         + (string.IsNullOrWhiteSpace(topic.Header) ? string.Empty : "\t") + topic.Header + "\t"
                         + (topic.User?.ToString()

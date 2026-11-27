@@ -10,8 +10,10 @@ public sealed class FeedbackMetricsService : IDisposable
     private readonly Counter<int> _messagesForwarded;
     private readonly Meter _meter;
     private readonly UpDownCounter<int> _openedTopics;
+    private readonly UpDownCounter<int> _queue;
     private readonly Counter<int> _spamDetected;
     private readonly Counter<int> _tagsSet;
+    private readonly Counter<int> _topicsAbandoned;
 
     public FeedbackMetricsService(IMeterFactory meterFactory)
     {
@@ -24,6 +26,8 @@ public sealed class FeedbackMetricsService : IDisposable
         _openedTopics = _meter.CreateUpDownCounter<int>(@"opened_topics");
         _spamDetected = _meter.CreateCounter<int>(@"spam_detected");
         _tagsSet = _meter.CreateCounter<int>(@"tags_set");
+        _queue = _meter.CreateUpDownCounter<int>(@"queue");
+        _topicsAbandoned = _meter.CreateCounter<int>(@"topics_abandoned");
     }
 
     public void Dispose() => _meter.Dispose();
@@ -67,4 +71,23 @@ public sealed class FeedbackMetricsService : IDisposable
             new(@"thread_id", threadId),
             new(@"key", key),
             new(@"value", value));
+
+    public void Enqueue(in long userId)
+    {
+        _queue.Add(+1, (KeyValuePair<string, object?>)new(@"user_id", userId));
+    }
+
+    public void Dequeue(in long userId, in bool topicAssigned = false)
+    {
+        _queue.Add(-1,
+            new(@"user_id", userId),
+            new(@"topic_assigned", topicAssigned));
+    }
+
+    public void TopicAbandon(in long userId, in int threadId)
+    {
+        _topicsAbandoned.Add(+1,
+            new(@"user_id", userId),
+            new(@"thread_id", threadId));
+    }
 }
