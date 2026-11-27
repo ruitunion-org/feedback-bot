@@ -15,7 +15,7 @@ namespace RuItUnion.FeedbackBot.Tests;
 [Collection(nameof(FeedbackBotDatabaseCollection))]
 public class InterceptReactionsMiddlewareTests(TestDatabase db)
 {
-    private const long _chatId = QueueServiceFactory.FEEDBACK_CHAT_ID;
+    private const long CHAT_ID = QueueServiceFactory.FEEDBACK_CHAT_ID;
     private static readonly DateTime _base = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     private FeedbackBotContext NewContext() => db.CreateContext();
@@ -78,7 +78,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
 
         Update update = new()
         {
-            Message = new() { Id = 1, Chat = new() { Id = _chatId } },
+            Message = new() { Id = 1, Chat = new() { Id = CHAT_ID } },
         };
         await mw.InvokeAsync(update, TestReflection.Context(), TestContext.Current.CancellationToken);
 
@@ -123,7 +123,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             Func<int> nextCalls) = NewClient(ctx);
 
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, null, newReaction: [Like()]),
+            ReactionUpdate(CHAT_ID, 500, null, newReaction: [Like()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id,
@@ -147,7 +147,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             Func<int> nextCalls) = NewClient(ctx);
 
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 999, 3, newReaction: [Like()]),
+            ReactionUpdate(CHAT_ID, 999, 3, newReaction: [Like()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id,
@@ -172,7 +172,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
 
         // Кандидат 2 голосует за себя
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 2, newReaction: [Like()]),
+            ReactionUpdate(CHAT_ID, 500, 2, newReaction: [Like()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id,
@@ -203,7 +203,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             Func<int> nextCalls) = NewClient(ctx);
 
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 3, newReaction: [Like()]),
+            ReactionUpdate(CHAT_ID, 500, 3, newReaction: [Like()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id,
@@ -241,7 +241,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             Func<int> nextCalls) = NewClient(ctx);
 
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 4, newReaction: [Like()]),
+            ReactionUpdate(CHAT_ID, 500, 4, newReaction: [Like()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
 
@@ -259,7 +259,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
         Assert.Equal(TimeSpan.FromDays(3), q.AssignmentPenalty);
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock) ?? throw new("SendMessage not called");
-        Assert.Equal(_chatId, msg.ChatId);
+        Assert.Equal(CHAT_ID, msg.ChatId);
         Assert.Equal(1000, msg.MessageThreadId);
         Assert.Equal(ParseMode.MarkdownV2, msg.ParseMode);
         Assert.True(msg.DisableNotification);
@@ -293,7 +293,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             Func<int> nextCalls) = NewClient(ctx);
 
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 3, newReaction: [Like()]),
+            ReactionUpdate(CHAT_ID, 500, 3, newReaction: [Like()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id,
@@ -331,7 +331,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
 
         // "повторный лайк" (в реальности Telegram обычно не шлёт, но защищаемся)
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 3, newReaction: [Like()]),
+            ReactionUpdate(CHAT_ID, 500, 3, newReaction: [Like()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id,
@@ -363,7 +363,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             Func<int> nextCalls) = NewClient(ctx);
 
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 3,
+            ReactionUpdate(CHAT_ID, 500, 3,
                 [Like()], []),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
@@ -393,7 +393,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             Func<int> nextCalls) = NewClient(ctx);
 
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 3,
+            ReactionUpdate(CHAT_ID, 500, 3,
                 [Like()], []),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
@@ -423,7 +423,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             Func<int> nextCalls) = NewClient(ctx);
 
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 3, newReaction: [Heart()]),
+            ReactionUpdate(CHAT_ID, 500, 3, newReaction: [Heart()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id,
@@ -460,13 +460,13 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
             ctx, TestBotClient.Create().Object, next);
 
         await mw.InvokeAsync(
-            new() { Message = new() { Id = 1, Chat = new() { Id = _chatId } } },
+            new() { Message = new() { Id = 1, Chat = new() { Id = CHAT_ID } } },
             TestReflection.Context(), TestContext.Current.CancellationToken);
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 3, newReaction: [Like()]),
+            ReactionUpdate(CHAT_ID, 500, 3, newReaction: [Like()]),
             TestReflection.Context(), TestContext.Current.CancellationToken);
         await mw.InvokeAsync(
-            ReactionUpdate(_chatId, 500, 3, [Like()], []),
+            ReactionUpdate(CHAT_ID, 500, 3, [Like()], []),
             TestReflection.Context(), TestContext.Current.CancellationToken);
 
         Assert.Equal(3, calls);
