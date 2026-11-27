@@ -325,7 +325,9 @@ This command has a shortened hash syntax: "#tag_name tag_value." The hash syntax
     <value>Could not identify participants — reply to the novice's message</value>
   </data>
   <data name="AssignmentController_InterceptStart" xml:space="preserve">
-    <value>Voting has started to change the assigned person for the topic to {0}.\r\n\r\nPlease react 👍 if you agree to the transfer.</value>
+    <value>Voting has started to change the assigned person for the topic to {0}.
+
+Please react 👍 if you agree to the transfer.</value>
   </data>
   <data name="AssignmentController_InterceptSelf" xml:space="preserve">
     <value>You are already the assignee on this topic</value>

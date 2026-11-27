@@ -344,7 +344,9 @@
     <value>Не удалось определить участников — ответьте на сообщение новичка</value>
   </data>
   <data name="AssignmentController_InterceptStart" xml:space="preserve">
-    <value>Начато голосование за смену назначенного на тему в пользу {0}.\r\n\r\nУстановите реакцию 👍, если вы согласны с передачей.</value>
+    <value>Начато голосование за смену назначенного на тему в пользу {0}.
+
+Установите реакцию 👍, если вы согласны с передачей.</value>
   </data>
   <data name="AssignmentController_InterceptSelf" xml:space="preserve">
     <value>Вы уже являетесь исполнителем на этой теме</value>
