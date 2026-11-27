@@ -8,7 +8,7 @@ namespace RuItUnion.FeedbackBot.SpamFilters;
 [FeatureGate("ChinaSpamFilter")]
 public class ChinaSpamFilter : ISpamFilter
 {
-    private const double _triggerPercent = 0.15;
+    private const double TRIGGER_PERCENT = 0.15;
 
     private static readonly (int start, int end)[] _nonBmpRanges =
     [
@@ -43,7 +43,7 @@ public class ChinaSpamFilter : ISpamFilter
                 cjkCount++;
         }
 
-        return (double)cjkCount / count >= _triggerPercent;
+        return (double)cjkCount / count >= TRIGGER_PERCENT;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

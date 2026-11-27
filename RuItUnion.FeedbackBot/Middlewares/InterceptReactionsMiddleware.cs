@@ -14,7 +14,7 @@ public class InterceptReactionsMiddleware(
     ITelegramBotClient botClient)
     : FrameMiddleware
 {
-    private static readonly ReactionTypeEmoji _likeEmoji = new() { Emoji = @"👍" };
+    private static readonly ReactionTypeEmoji likeEmoji = new() { Emoji = @"👍" };
 
     public static readonly ConcurrentDictionary<int, SemaphoreSlim> ThreadLockers = [];
 
@@ -35,7 +35,7 @@ public class InterceptReactionsMiddleware(
                 try
                 {
                     if (update.MessageReaction.NewReaction.Any(x =>
-                            x is ReactionTypeEmoji emoji && emoji.Emoji == _likeEmoji.Emoji)
+                            x is ReactionTypeEmoji emoji && emoji.Emoji == likeEmoji.Emoji)
                         && !topic.InterceptVotes.Contains(update.MessageReaction.User!.Id))
                     {
                         topic.InterceptVotes.Add(update.MessageReaction.User.Id);
@@ -86,9 +86,9 @@ public class InterceptReactionsMiddleware(
                     }
                     else if (topic.InterceptVotes.Contains(update.MessageReaction.User!.Id)
                              && update.MessageReaction.OldReaction.Any(x =>
-                                 x is ReactionTypeEmoji emoji && emoji.Emoji == _likeEmoji.Emoji)
+                                 x is ReactionTypeEmoji emoji && emoji.Emoji == likeEmoji.Emoji)
                              && !update.MessageReaction.NewReaction.Any(x =>
-                                 x is ReactionTypeEmoji emoji && emoji.Emoji == _likeEmoji.Emoji))
+                                 x is ReactionTypeEmoji emoji && emoji.Emoji == likeEmoji.Emoji))
                     {
                         topic.InterceptVotes.Remove(update.MessageReaction.User.Id);
                         await db.SaveChangesAsync(ct).ConfigureAwait(false);

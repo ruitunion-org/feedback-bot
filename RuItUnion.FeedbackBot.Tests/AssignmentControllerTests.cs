@@ -17,9 +17,9 @@ namespace RuItUnion.FeedbackBot.Tests;
 [Collection(nameof(FeedbackBotDatabaseCollection))]
 public class AssignmentControllerTests(TestDatabase db)
 {
-    private const long _chatId = QueueServiceFactory.FEEDBACK_CHAT_ID;
-    private const long _adminId = 100L;
-    private const int _threadId = 1000;
+    private const long CHAT_ID = QueueServiceFactory.FEEDBACK_CHAT_ID;
+    private const long ADMIN_ID = 100L;
+    private const int THREAD_ID = 1000;
     private static readonly DateTime _base = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     private FeedbackBotContext NewContext() => db.CreateContext();
@@ -34,7 +34,7 @@ public class AssignmentControllerTests(TestDatabase db)
         mock ??= TestBotClient.Create();
         OptionsWrapper<AppOptions> options = new(new()
         {
-            FeedbackChatId = _chatId,
+            FeedbackChatId = CHAT_ID,
             Start = string.Empty,
             QueueLockDuration = TimeSpan.FromHours(1),
             QueueCooldownDuration = TimeSpan.FromHours(6),
@@ -52,18 +52,18 @@ public class AssignmentControllerTests(TestDatabase db)
 
     private static void Bind(
         AssignmentController controller,
-        long? userId = _adminId,
-        int? threadId = _threadId,
+        long? userId = ADMIN_ID,
+        int? threadId = THREAD_ID,
         int? messageId = 1)
     {
         FrameContext context = TestReflection.Context(
-            _chatId, userId, threadId, messageId);
+            CHAT_ID, userId, threadId, messageId);
         Update update = new()
         {
             Message = new()
             {
                 Id = messageId ?? 1,
-                Chat = new() { Id = _chatId },
+                Chat = new() { Id = CHAT_ID },
                 MessageThreadId = threadId,
                 From = new() { Id = userId ?? 0, IsBot = false, FirstName = "Test" },
             },
@@ -88,8 +88,8 @@ public class AssignmentControllerTests(TestDatabase db)
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock)
                                  ?? throw new InvalidOperationException("SendMessage not called");
-        Assert.Equal(_chatId, msg.ChatId);
-        Assert.Equal(_threadId, msg.MessageThreadId);
+        Assert.Equal(CHAT_ID, msg.ChatId);
+        Assert.Equal(THREAD_ID, msg.MessageThreadId);
         Assert.Equal(ParseMode.Html, msg.ParseMode);
         Assert.Equal(TestResources.GetString("AssignmentController_QueueIsEmpty"), msg.Text);
     }
@@ -157,10 +157,10 @@ public class AssignmentControllerTests(TestDatabase db)
     public async Task QueueStatus_InQueue_SendsNumber()
     {
         FeedbackBotContext ctx = NewContext();
-        TestDb.User(ctx, _adminId);
+        TestDb.User(ctx, ADMIN_ID);
         TestDb.User(ctx, 11);
         TestDb.QueueElement(ctx, 11, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.Zero);
-        TestDb.QueueElement(ctx, _adminId, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.FromHours(1));
+        TestDb.QueueElement(ctx, ADMIN_ID, lastAssignmentTime: _base, assignmentPenalty: TimeSpan.FromHours(1));
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -180,7 +180,7 @@ public class AssignmentControllerTests(TestDatabase db)
     public async Task Enqueue_NewUser_SendsOk()
     {
         FeedbackBotContext ctx = NewContext();
-        TestDb.User(ctx, _adminId);
+        TestDb.User(ctx, ADMIN_ID);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -194,7 +194,7 @@ public class AssignmentControllerTests(TestDatabase db)
         Assert.Equal(TestResources.GetString("AssignmentController_EnqueueOk"), msg.Text);
 
         DbQueue q = await ctx.Queue.IgnoreQueryFilters()
-            .SingleAsync(x => x.UserId == _adminId, TestContext.Current.CancellationToken);
+            .SingleAsync(x => x.UserId == ADMIN_ID, TestContext.Current.CancellationToken);
         Assert.True(q.InQueue);
     }
 
@@ -202,8 +202,8 @@ public class AssignmentControllerTests(TestDatabase db)
     public async Task Enqueue_AlreadyInQueue_SendsAlreadyInQueue()
     {
         FeedbackBotContext ctx = NewContext();
-        TestDb.User(ctx, _adminId);
-        TestDb.QueueElement(ctx, _adminId);
+        TestDb.User(ctx, ADMIN_ID);
+        TestDb.QueueElement(ctx, ADMIN_ID);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -221,10 +221,10 @@ public class AssignmentControllerTests(TestDatabase db)
     public async Task Enqueue_Mentor_SendsMentor()
     {
         FeedbackBotContext ctx = NewContext();
-        TestDb.User(ctx, _adminId);
+        TestDb.User(ctx, ADMIN_ID);
         TestDb.User(ctx, 200);
         TestDb.QueueElement(ctx, 200);
-        TestDb.Mentor(ctx, _adminId, 200);
+        TestDb.Mentor(ctx, ADMIN_ID, 200);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -244,8 +244,8 @@ public class AssignmentControllerTests(TestDatabase db)
     public async Task Dequeue_InQueue_SendsOk()
     {
         FeedbackBotContext ctx = NewContext();
-        TestDb.User(ctx, _adminId);
-        TestDb.QueueElement(ctx, _adminId);
+        TestDb.User(ctx, ADMIN_ID);
+        TestDb.QueueElement(ctx, ADMIN_ID);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -259,7 +259,7 @@ public class AssignmentControllerTests(TestDatabase db)
         Assert.Equal(TestResources.GetString("AssignmentController_DequeueOk"), msg.Text);
 
         int active = await ctx.Queue.IgnoreQueryFilters()
-            .CountAsync(x => x.UserId == _adminId && x.InQueue, TestContext.Current.CancellationToken);
+            .CountAsync(x => x.UserId == ADMIN_ID && x.InQueue, TestContext.Current.CancellationToken);
         Assert.Equal(0, active);
     }
 
@@ -267,8 +267,8 @@ public class AssignmentControllerTests(TestDatabase db)
     public async Task Dequeue_NotInQueue_SendsNotModified()
     {
         FeedbackBotContext ctx = NewContext();
-        TestDb.User(ctx, _adminId);
-        TestDb.QueueElement(ctx, _adminId, false);
+        TestDb.User(ctx, ADMIN_ID);
+        TestDb.QueueElement(ctx, ADMIN_ID, false);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -306,8 +306,8 @@ public class AssignmentControllerTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.User(ctx, _adminId);
-        TestDb.Topic(ctx, 1, _threadId, _base, false, 1);
+        TestDb.User(ctx, ADMIN_ID);
+        TestDb.Topic(ctx, 1, THREAD_ID, _base, false, 1);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -315,7 +315,7 @@ public class AssignmentControllerTests(TestDatabase db)
         AssignmentController controller = NewController(ctx, mock);
         Bind(controller);
 
-        await controller.Abandon(_threadId);
+        await controller.Abandon(THREAD_ID);
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock)!;
         Assert.Equal(
@@ -327,10 +327,10 @@ public class AssignmentControllerTests(TestDatabase db)
     public async Task Abandon_Success_QueuesTopicAndAddsPenalty()
     {
         FeedbackBotContext ctx = NewContext();
-        TestDb.User(ctx, _adminId);
-        DbTopic topic = TestDb.Topic(ctx, _adminId, _threadId, _base,
-            false, _adminId);
-        TestDb.QueueElement(ctx, _adminId, assignmentPenalty: TimeSpan.FromDays(1));
+        TestDb.User(ctx, ADMIN_ID);
+        DbTopic topic = TestDb.Topic(ctx, ADMIN_ID, THREAD_ID, _base,
+            false, ADMIN_ID);
+        TestDb.QueueElement(ctx, ADMIN_ID, assignmentPenalty: TimeSpan.FromDays(1));
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -339,7 +339,7 @@ public class AssignmentControllerTests(TestDatabase db)
         AssignmentController controller = NewController(ctx, mock);
         Bind(controller);
 
-        await controller.Abandon(_threadId);
+        await controller.Abandon(THREAD_ID);
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock)!;
         Assert.Equal(TestResources.GetString("AssignmentController_AbandonSuccess"), msg.Text);
@@ -347,11 +347,11 @@ public class AssignmentControllerTests(TestDatabase db)
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id, TestContext.Current.CancellationToken);
         Assert.True(reloaded.IsQueued);
         Assert.Null(reloaded.AssigneeId);
-        Assert.Equal(_adminId, reloaded.LastLeavedUserId);
+        Assert.Equal(ADMIN_ID, reloaded.LastLeavedUserId);
         Assert.Equal(DateTime.MinValue, reloaded.LockedFrom);
 
         DbQueue q = await ctx.Queue.IgnoreQueryFilters()
-            .SingleAsync(x => x.UserId == _adminId, TestContext.Current.CancellationToken);
+            .SingleAsync(x => x.UserId == ADMIN_ID, TestContext.Current.CancellationToken);
         Assert.Equal(TimeSpan.FromDays(2), q.AssignmentPenalty);
     }
 
@@ -359,11 +359,11 @@ public class AssignmentControllerTests(TestDatabase db)
     public async Task Abandon_UserIsNovice_SendsAbandonNovice()
     {
         FeedbackBotContext ctx = NewContext();
-        TestDb.User(ctx, _adminId);
+        TestDb.User(ctx, ADMIN_ID);
         TestDb.User(ctx, 300);
-        TestDb.Mentor(ctx, 300, _adminId); // 300 — ментор, AdminId — новичок
-        DbTopic topic = TestDb.Topic(ctx, _adminId, _threadId, _base,
-            false, _adminId);
+        TestDb.Mentor(ctx, 300, ADMIN_ID); // 300 — ментор, AdminId — новичок
+        DbTopic topic = TestDb.Topic(ctx, ADMIN_ID, THREAD_ID, _base,
+            false, ADMIN_ID);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -371,13 +371,13 @@ public class AssignmentControllerTests(TestDatabase db)
         AssignmentController controller = NewController(ctx, mock);
         Bind(controller);
 
-        await controller.Abandon(_threadId);
+        await controller.Abandon(THREAD_ID);
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock)!;
         Assert.Equal(TestResources.GetString("AssignmentController_AbandonNovice"), msg.Text);
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id, TestContext.Current.CancellationToken);
-        Assert.Equal(_adminId, reloaded.AssigneeId);
+        Assert.Equal(ADMIN_ID, reloaded.AssigneeId);
     }
 
     // ================= Assignee =================
@@ -404,7 +404,7 @@ public class AssignmentControllerTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.Topic(ctx, 1, _threadId, _base);
+        TestDb.Topic(ctx, 1, THREAD_ID, _base);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -412,7 +412,7 @@ public class AssignmentControllerTests(TestDatabase db)
         AssignmentController controller = NewController(ctx, mock);
         Bind(controller);
 
-        await controller.Assignee(_threadId);
+        await controller.Assignee(THREAD_ID);
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock)!;
         Assert.Equal(TestResources.GetString("AssignmentController_AssigneeNone"), msg.Text);
@@ -423,8 +423,8 @@ public class AssignmentControllerTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1, firstName: "Иван");
-        TestDb.User(ctx, _adminId);
-        TestDb.Topic(ctx, 1, _threadId, _base, assigneeId: _adminId);
+        TestDb.User(ctx, ADMIN_ID);
+        TestDb.Topic(ctx, 1, THREAD_ID, _base, assigneeId: ADMIN_ID);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -432,11 +432,11 @@ public class AssignmentControllerTests(TestDatabase db)
         AssignmentController controller = NewController(ctx, mock);
         Bind(controller);
 
-        await controller.Assignee(_threadId);
+        await controller.Assignee(THREAD_ID);
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock)!;
         Assert.StartsWith(Prefix(TestResources.GetString("AssignmentController_AssigneeOk")), msg.Text);
-        Assert.Contains("tg://user?id=" + _adminId, msg.Text);
+        Assert.Contains("tg://user?id=" + ADMIN_ID, msg.Text);
     }
 
     // ================= Intercept =================
@@ -461,20 +461,20 @@ public class AssignmentControllerTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.Topic(ctx, 1, _threadId, _base);
+        TestDb.Topic(ctx, 1, THREAD_ID, _base);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
         TestBotClient.WithSendMessage(mock);
         AssignmentController controller = NewController(ctx, mock);
-        TestReflection.SetControllerProperties(controller, TestReflection.Context(_chatId, _adminId, _threadId, 1),
+        TestReflection.SetControllerProperties(controller, TestReflection.Context(CHAT_ID, ADMIN_ID, THREAD_ID, 1),
             new()
             {
                 Message = new()
                 {
                     Id = 1,
                     Chat = new() { Id = -999 }, // wrong chat
-                    MessageThreadId = _threadId,
+                    MessageThreadId = THREAD_ID,
                 },
             }, TestContext.Current.CancellationToken);
 
@@ -489,7 +489,7 @@ public class AssignmentControllerTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.Topic(ctx, 1, _threadId, _base, true);
+        TestDb.Topic(ctx, 1, THREAD_ID, _base, true);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -508,8 +508,8 @@ public class AssignmentControllerTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.User(ctx, _adminId, "admin");
-        DbTopic topic = TestDb.Topic(ctx, 1, _threadId, _base);
+        TestDb.User(ctx, ADMIN_ID, "admin");
+        DbTopic topic = TestDb.Topic(ctx, 1, THREAD_ID, _base);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -521,7 +521,7 @@ public class AssignmentControllerTests(TestDatabase db)
         await controller.Intercept();
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id, TestContext.Current.CancellationToken);
-        Assert.Equal(_adminId, reloaded.AssigneeId);
+        Assert.Equal(ADMIN_ID, reloaded.AssigneeId);
         Assert.False(reloaded.IsQueued);
         Assert.Equal(1, TestBotClient.Count(mock, typeof(SendMessageRequest)));
     }
@@ -532,8 +532,8 @@ public class AssignmentControllerTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
         TestDb.User(ctx, 2);
-        TestDb.User(ctx, _adminId);
-        TestDb.Topic(ctx, 1, _threadId, _base, false,
+        TestDb.User(ctx, ADMIN_ID);
+        TestDb.Topic(ctx, 1, THREAD_ID, _base, false,
             2, 2, 100);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -553,8 +553,8 @@ public class AssignmentControllerTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.User(ctx, _adminId);
-        TestDb.Topic(ctx, 1, _threadId, _base, false, _adminId);
+        TestDb.User(ctx, ADMIN_ID);
+        TestDb.Topic(ctx, 1, THREAD_ID, _base, false, ADMIN_ID);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -573,8 +573,8 @@ public class AssignmentControllerTests(TestDatabase db)
     {
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
-        TestDb.User(ctx, _adminId);
-        DbTopic topic = TestDb.Topic(ctx, 1, _threadId, _base, false,
+        TestDb.User(ctx, ADMIN_ID);
+        DbTopic topic = TestDb.Topic(ctx, 1, THREAD_ID, _base, false,
             1);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -586,7 +586,7 @@ public class AssignmentControllerTests(TestDatabase db)
         await controller.Intercept();
 
         DbTopic reloaded = await ctx.Topics.SingleAsync(x => x.Id == topic.Id, TestContext.Current.CancellationToken);
-        Assert.Equal(_adminId, reloaded.InterceptCandidateId);
+        Assert.Equal(ADMIN_ID, reloaded.InterceptCandidateId);
         Assert.Equal(42, reloaded.InterceptMessageId);
         Assert.Empty(reloaded.InterceptVotes);
         Assert.Equal(1, reloaded.AssigneeId); // исполнитель не меняется
@@ -603,7 +603,7 @@ public class AssignmentControllerTests(TestDatabase db)
         FeedbackBotContext ctx = NewContext();
         TestDb.User(ctx, 1);
         // AdminId отсутствует в БД
-        TestDb.Topic(ctx, 1, _threadId, _base, false, 1);
+        TestDb.Topic(ctx, 1, THREAD_ID, _base, false, 1);
         await ctx.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
@@ -643,7 +643,7 @@ public class AssignmentControllerTests(TestDatabase db)
         AssignmentController controller = NewController(ctx, mock);
         Bind(controller);
 
-        await controller.SetMentor(_adminId, _adminId);
+        await controller.SetMentor(ADMIN_ID, ADMIN_ID);
 
         SendMessageRequest msg = TestBotClient.LastSendMessage(mock)!;
         Assert.Equal(TestResources.GetString("AssignmentController_SetMentorSelf"), msg.Text);
