@@ -41,7 +41,7 @@ public class InterceptReactionsMiddleware(
                         topic.InterceptVotes.Add(update.MessageReaction.User.Id);
                         DateTimeOffset now = clock.GetUtcNow();
                         if (topic.InterceptVotes.Count >= 2
-                            || (topic.LockedFrom + options.Value.LockDuration < now
+                            || (topic.LockedFrom + options.Value.QueueLockDuration < now
                                 && topic.InterceptVotes.Count >= 1))
                         {
                             topic.LastLeavedUserId = topic.AssigneeId;
@@ -67,7 +67,8 @@ public class InterceptReactionsMiddleware(
                             await botClient.SendMessage(options.Value.FeedbackChatId,
                                     ResourceManager.GetString(nameof(InterceptReactionsMiddleware_Result),
                                         context.GetCultureInfo())
-                                    + Tools.MentionMarkdown(topic.AssigneeId.GetValueOrDefault(), name),
+                                    + Tools.MentionMarkdown(topic.AssigneeId.GetValueOrDefault(),
+                                        Tools.EscapeMarkdown(name)),
                                     messageThreadId: topic.ThreadId,
                                     replyParameters: new()
                                     {

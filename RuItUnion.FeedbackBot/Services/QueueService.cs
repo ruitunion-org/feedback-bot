@@ -90,7 +90,7 @@ public class QueueService(
                 TimeSpan remaining = queueElement.AssignmentPenalty - (now - queueElement.LastAssignmentTime);
                 if (remaining < TimeSpan.Zero) remaining = TimeSpan.Zero;
                 queueElement.AssignmentPenalty =
-                    TimeSpan.FromTicks(remaining.Ticks / 2L).Add(options.Value.CooldownDuration);
+                    TimeSpan.FromTicks(remaining.Ticks / 2L).Add(options.Value.QueueCooldownDuration);
 
                 queueElement.LastAssignmentTime = now;
 

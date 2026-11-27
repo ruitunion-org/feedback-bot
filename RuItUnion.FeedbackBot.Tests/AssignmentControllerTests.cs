@@ -36,8 +36,8 @@ public class AssignmentControllerTests(TestDatabase db)
         {
             FeedbackChatId = _chatId,
             Start = string.Empty,
-            LockDuration = TimeSpan.FromHours(1),
-            CooldownDuration = TimeSpan.FromHours(6),
+            QueueLockDuration = TimeSpan.FromHours(1),
+            QueueCooldownDuration = TimeSpan.FromHours(6),
         });
         Mock<ILogger<AssignmentController>> logger = new(MockBehavior.Loose);
         return new(
@@ -467,15 +467,16 @@ public class AssignmentControllerTests(TestDatabase db)
         Mock<ITelegramBotClient> mock = TestBotClient.Create();
         TestBotClient.WithSendMessage(mock);
         AssignmentController controller = NewController(ctx, mock);
-        TestReflection.SetControllerProperties(controller, TestReflection.Context(_chatId, _adminId, _threadId, 1), new()
-        {
-            Message = new()
+        TestReflection.SetControllerProperties(controller, TestReflection.Context(_chatId, _adminId, _threadId, 1),
+            new()
             {
-                Id = 1,
-                Chat = new() { Id = -999 }, // wrong chat
-                MessageThreadId = _threadId,
-            },
-        }, TestContext.Current.CancellationToken);
+                Message = new()
+                {
+                    Id = 1,
+                    Chat = new() { Id = -999 }, // wrong chat
+                    MessageThreadId = _threadId,
+                },
+            }, TestContext.Current.CancellationToken);
 
         await controller.Intercept();
 

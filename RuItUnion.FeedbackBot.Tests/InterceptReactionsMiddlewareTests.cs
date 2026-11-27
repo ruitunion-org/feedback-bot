@@ -192,7 +192,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2, "candidate");
         TestDb.User(ctx, 3, "voter");
-        // LockDuration = 1h; LockedFrom = now - 30min → не истёк
+        // QueueLockDuration = 1h; LockedFrom = now - 30min → не истёк
         DbTopic topic = TestDb.Topic(ctx, 1, 1000, _base, true,
             1, 2, 500,
             lockedFrom: QueueServiceFactory.DefaultNow.AddMinutes(-30));
@@ -282,7 +282,7 @@ public class InterceptReactionsMiddlewareTests(TestDatabase db)
         TestDb.User(ctx, 1, "owner");
         TestDb.User(ctx, 2, "candidate");
         TestDb.User(ctx, 3, "voter");
-        // LockDuration = 1h; LockedFrom = now - 2h → истёк, одного голоса достаточно
+        // QueueLockDuration = 1h; LockedFrom = now - 2h → истёк, одного голоса достаточно
         DbTopic topic = TestDb.Topic(ctx, 1, 1000, _base, true,
             1, 2, 500,
             lockedFrom: QueueServiceFactory.DefaultNow.AddHours(-2));

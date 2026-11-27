@@ -19,6 +19,7 @@ public record AppOptions
     public string? DbConnectionString { get; init; }
     public string? FeedbackBotToken { get; init; }
     public string OverrideCultureTag { get; set; } = string.Empty;
-    public TimeSpan LockDuration { get; set; } = TimeSpan.FromHours(8);
-    public TimeSpan CooldownDuration { get; set; } = TimeSpan.FromHours(6);
+    public double QueuePercent { get; init; } = 1.00;
+    public TimeSpan QueueLockDuration { get; set; } = TimeSpan.FromHours(8);
+    public TimeSpan QueueCooldownDuration { get; set; } = TimeSpan.FromHours(6);
 }

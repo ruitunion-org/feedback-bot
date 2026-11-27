@@ -375,4 +375,25 @@
   <data name="InterceptReactionsMiddleware_Result" xml:space="preserve">
     <value>Произведен перехват темы, новый назначенный — </value>
   </data>
+  <data name="AssignmentController_AddQueue_Ok" xml:space="preserve">
+    <value>Тема добавлена в очередь</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_Forbidden" xml:space="preserve">
+    <value>Снять тему из очереди может только назначенный на нее</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_NotModified" xml:space="preserve">
+    <value>Тема уже вне очереди</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_Ok" xml:space="preserve">
+    <value>Тема изъята из очереди</value>
+  </data>
+  <data name="AssignmentController_AddQueue_NotModified" xml:space="preserve">
+    <value>Тема уже в очереди</value>
+  </data>
+  <data name="Command_Description_AddQueue" xml:space="preserve">
+    <value>Добавляет в очередь тему, если она не включена в нее</value>
+  </data>
+  <data name="Command_Description_RemoveQueue" xml:space="preserve">
+    <value>Изымает из очереди тему и снимает назначенного. Команду необходимо вводить самому назначенному</value>
+  </data>
 </root>

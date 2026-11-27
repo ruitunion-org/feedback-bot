@@ -308,7 +308,7 @@ public static class QueueServiceFactory
         {
             FeedbackChatId = FEEDBACK_CHAT_ID,
             Start = string.Empty,
-            CooldownDuration = cooldownDuration ?? TimeSpan.FromHours(6),
+            QueueCooldownDuration = cooldownDuration ?? TimeSpan.FromHours(6),
         });
         return new(
             options,
@@ -336,9 +336,9 @@ public static class InterceptReactionsMiddlewareFactory
         OptionsWrapper<AppOptions> options = new(new()
         {
             FeedbackChatId = QueueServiceFactory.FEEDBACK_CHAT_ID,
-            LockDuration = lockDuration ?? DefaultLockDuration,
+            QueueLockDuration = lockDuration ?? DefaultLockDuration,
             Start = string.Empty,
-            CooldownDuration = TimeSpan.FromHours(6),
+            QueueCooldownDuration = TimeSpan.FromHours(6),
         });
         InterceptReactionsMiddleware mw = new(
             db,

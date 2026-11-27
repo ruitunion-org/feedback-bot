@@ -395,4 +395,25 @@ Arguments work similarly to the /SetMentor command</value>
   <data name="InterceptReactionsMiddleware_Result" xml:space="preserve">
     <value>The topic was intercepted, a new one was assigned — </value>
   </data>
+  <data name="AssignmentController_AddQueue_Ok" xml:space="preserve">
+    <value>Topic added to the queue</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_Forbidden" xml:space="preserve">
+    <value>Only the person assigned to a topic can remove it from the queue</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_NotModified" xml:space="preserve">
+    <value>This topic is already without the queue</value>
+  </data>
+  <data name="AssignmentController_RemoveQueue_Ok" xml:space="preserve">
+    <value>The topic has been removed from the queue</value>
+  </data>
+  <data name="AssignmentController_AddQueue_NotModified" xml:space="preserve">
+    <value>The topic is already in the queue</value>
+  </data>
+  <data name="Command_Description_AddQueue" xml:space="preserve">
+    <value>Adds a topic to the queue if it is not already in it</value>
+  </data>
+  <data name="Command_Description_RemoveQueue" xml:space="preserve">
+    <value>Removes a topic from the queue and removes the assigned user. The command must be entered by the assigned user</value>
+  </data>
 </root>

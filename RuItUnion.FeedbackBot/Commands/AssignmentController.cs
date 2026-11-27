@@ -427,6 +427,9 @@ public class AssignmentController(
         else
             mentorship.IsActive = true;
 
+        await db.Queue.Where(x => x.UserId == mentorId).ExecuteUpdateAsync(x => x.SetProperty(y => y.InQueue, false))
+            .ConfigureAwait(false);
+
         await db.SaveChangesAsync(CancellationToken).ConfigureAwait(false);
 
         await queueService.AssignQueue(CancellationToken).ConfigureAwait(false);
@@ -475,6 +478,87 @@ public class AssignmentController(
             mentor.Mentor, mentor.Novice)).ConfigureAwait(false);
     }
 
+    [Command(nameof(AddQueue))]
+    [Restricted("admin")]
+    public Task AddQueue() => Abandon(Context.GetThreadId().GetValueOrDefault(-1));
+
+    [Command(nameof(AddQueue))]
+    [Restricted("admin")]
+    public async Task AddQueue(long threadId)
+    {
+        long? userId = Context.GetUserId();
+        DbTopic? topic = threadId == -1
+            ? null
+            : await db.Topics
+                .AsTracking()
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.ThreadId == threadId, CancellationToken).ConfigureAwait(false);
+        if (topic == null)
+        {
+            await SendReplyMessage(
+                ResourceManager.GetString(nameof(InternalThreadController_Close_TopicNotFound),
+                    Context.GetCultureInfo())!, CancellationToken).ConfigureAwait(false);
+            return;
+        }
+        if (!topic.IsQueued)
+        {
+            await SendReplyMessage(ResourceManager.GetString(nameof(AssignmentController_AddQueue_NotModified),
+                Context.GetCultureInfo())!, CancellationToken).ConfigureAwait(false);
+        }
+
+        topic.IsQueued = true;
+        await db.SaveChangesAsync().ConfigureAwait(false);
+
+        await queueService.AssignQueue().ConfigureAwait(false);
+        await SendReplyMessage(ResourceManager.GetString(nameof(AssignmentController_AddQueue_Ok),
+            Context.GetCultureInfo())!, CancellationToken).ConfigureAwait(false);
+    }
+
+    [Command(nameof(RemoveQueue))]
+    [Restricted("admin")]
+    public Task RemoveQueue() => Abandon(Context.GetThreadId().GetValueOrDefault(-1));
+
+    [Command(nameof(RemoveQueue))]
+    [Restricted("admin")]
+    public async Task RemoveQueue(long threadId)
+    {
+        long? userId = Context.GetUserId();
+        DbTopic? topic = threadId == -1
+            ? null
+            : await db.Topics
+                .AsTracking()
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.ThreadId == threadId, CancellationToken).ConfigureAwait(false);
+        if (topic == null)
+        {
+            await SendReplyMessage(
+                ResourceManager.GetString(nameof(InternalThreadController_Close_TopicNotFound),
+                    Context.GetCultureInfo())!, CancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        if (!topic.IsQueued)
+        {
+            await SendReplyMessage(ResourceManager.GetString(nameof(AssignmentController_RemoveQueue_NotModified),
+                Context.GetCultureInfo())!, CancellationToken).ConfigureAwait(false);
+        }
+
+        if (topic.AssigneeId is not null && (userId != topic.AssigneeId || !await db.RoleMembers.AnyAsync(x => x.RoleId == -50 && x.UserId == userId).ConfigureAwait(false)))
+        {
+            await SendReplyMessage(ResourceManager.GetString(nameof(AssignmentController_RemoveQueue_Forbidden),
+                Context.GetCultureInfo())!, CancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        topic.IsQueued = false;
+        topic.AssigneeId = null;
+        topic.ResetIntercept(clock.GetUtcNow().UtcDateTime);
+        await db.SaveChangesAsync().ConfigureAwait(false);
+
+        await queueService.AssignQueue().ConfigureAwait(false);
+        await SendReplyMessage(ResourceManager.GetString(nameof(AssignmentController_RemoveQueue_Ok),
+            Context.GetCultureInfo())!, CancellationToken).ConfigureAwait(false);
+    }
 
     private async Task<Message> SendReplyMessage(string text, CancellationToken cts = default) =>
         await botClient.SendMessage(Context.GetChatId()!,

@@ -122,7 +122,7 @@ public class MessageForwarderMiddleware(
             User = user,
             InterceptCandidateId = null,
             InterceptMessageId = null,
-            IsQueued = true,
+            IsQueued = Random.Shared.NextDouble() < options.Value.QueuePercent,
             LockedFrom = clock.GetUtcNow().UtcDateTime,
             LastLeavedUserId = null,
             AssigneeId = null,
